@@ -2,7 +2,7 @@ source src_tramites
 {
     type = mysql
 
-    sql_host = localhost
+    sql_host =
     sql_user =
     sql_pass =
     sql_db =
@@ -122,7 +122,6 @@ indexer
 
 searchd
 {
-    listen = 9312
-    pid_file = /tmp/searchd.pid
-
+   pid_file = /run/sphinx/searchd.pid
+   log = /var/log/sphinx/searchd.log
 }

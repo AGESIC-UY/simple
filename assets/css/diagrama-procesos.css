@@ -1,0 +1,129 @@
+#areaDibujo{
+    width: 100%;
+    
+    
+    height: 60px;
+}
+
+#drawWrapper{
+    width: 100%;
+    height: 810px;
+    overflow: auto;
+}
+
+#draw{
+    background: url(../img/bg_pm.gif);
+    position: relative;
+}
+
+#areaDibujo h1{
+
+    font-size: 20px;
+}
+
+#areaDibujo .botonera{
+    position: fixed;
+    top: 220px;
+    right: 20px;
+    z-index: 1000;
+}
+
+#draw .box{
+    padding: 10px 30px;
+    background: #006699;
+    color: #fff;
+    position: absolute;
+    border-radius: 5px;
+    cursor: move;
+    z-index: 100;
+}
+#draw .box.actual{
+    background: goldenrod;
+}
+#draw .box.completado{
+    background: green;
+}
+#draw .box.selected{
+    background: #666;
+}
+
+#draw .box .inicial{
+    background: url(../img/inicial.gif);
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    margin-left: -15px;
+}
+
+#draw .box .final-secuencial{
+    background: url(../img/final_secuencial.gif);
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    margin-left: -12px;
+}
+#draw .box .final{
+    background: url(../img/final.jpg);
+    width: 38px;
+    height: 38px;
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    margin-left: 10px;
+}
+
+#draw .box .conector{
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    margin-left: -12px;
+}
+
+#draw .box .conector.evaluacion{
+    background: url(../img/evaluacion.gif);
+}
+
+#draw .box .conector.paralelo{
+    background: url(../img/paralelo.gif);
+}
+
+#draw .box .conector.paralelo_evaluacion{
+    background: url(../img/paralelo_evaluacion.gif);
+}
+
+#draw .box .conector.secuencial{
+    background: url(../img/secuencial-bar.gif);
+}
+
+#draw .box .union{
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    margin-left: -12px;
+    background: url(../img/union.gif);
+}
+
+#draw ._jsPlumb_connector{
+    cursor: pointer;
+}
+
+/*
+.endpoint1{
+    margin-top: 12px !important;
+    z-index: 1000;
+    cursor: pointer;
+}
+.endpoint2{
+    margin-top: -18px !important;
+    z-index: 1000;
+    cursor: pointer;
+}
+*/

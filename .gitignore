@@ -1,0 +1,10 @@
+config.php
+database.php
+nbproject
+uploads
+email.php
+application/libraries/tcpdf/cache
+sphinx/index
+sphinx/run
+sphinx.conf
+searchd.log

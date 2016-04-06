@@ -1,0 +1,15 @@
+
+#areaFormulario .btn-toolbar{
+    margin-bottom: 20px;
+}
+
+#areaFormulario .control-group{
+        padding: 5px 0;
+
+        margin: 0;
+}
+
+#areaFormulario .control-group:hover{
+    background: #eee;
+    cursor: move;
+}

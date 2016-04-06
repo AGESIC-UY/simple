@@ -1,0 +1,138 @@
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.clearfix:after {
+  clear: both;
+}
+.hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+.input-block-level {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+header {
+  margin-top: 10px;
+}
+header .container,
+header .container-fluid {
+  border-bottom: 1px solid #ddd;
+}
+header h1 {
+  color: #666;
+  font-size: 18px;
+  line-height: 1.2;
+}
+header h1#logo {
+  border-right: 1px solid #ddd;
+  padding-right: 20px;
+  margin: 0 0 20px 0;
+}
+header #userMenu > li > a {
+  background: #ddd;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  color: #333;
+}
+#main {
+  min-height: 480px;
+}
+footer {
+  margin-top: 100px;
+  margin-bottom: 40px;
+}
+footer a {
+  color: #59758D;
+}
+footer a:hover {
+  color: #fff;
+}
+footer ul {
+  color: white;
+}
+footer h3 {
+  font-size: 16px;
+  font-weight: normal;
+  margin: 0 0 10px 0;
+  line-height: 1.2;
+  color: #ddd;
+}
+footer address {
+  margin: 0;
+}
+footer .col {
+  padding: 10px;
+}
+footer .ministerio {
+  color: #ddd;
+}
+footer .area1 {
+  background: #232A30;
+  padding: 0;
+  padding: 10px 0;
+}
+footer .area2 {
+  background: #000;
+  padding: 10px 0;
+}
+footer .area2 .container,
+footer .area2 .container-fluid {
+  position: relative;
+}
+footer .area2 .container .footerGob,
+footer .area2 .container-fluid .footerGob {
+  position: absolute;
+  bottom: -20px;
+  right: 10px;
+}
+.ajaxForm {
+  position: relative;
+}
+.ajaxForm .ajaxLoader {
+  width: 80px;
+  height: 24px;
+  background: #000000 url("../img/ajax-loader.gif") 25px 16px no-repeat;
+  color: #fff;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  position: absolute;
+  text-align: center;
+  padding-top: 56px;
+}
+.dynaForm legend {
+  border: none;
+  margin: 0;
+  color: #005181;
+  font-weight: bold;
+}
+.dynaForm label {
+  color: #666;
+}
+.dynaForm .help-block {
+  color: #999;
+}
+.dynaForm .form-actions {
+  background: none;
+  border: none;
+}
+.dynaForm .grid table th,
+.dynaForm .grid table td {
+  white-space: pre-line;
+  max-width: 100px;
+}

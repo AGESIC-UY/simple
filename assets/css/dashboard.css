@@ -1,0 +1,142 @@
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.clearfix:after {
+  clear: both;
+}
+.hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+.input-block-level {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+#dashboard {
+  margin-left: -10px;
+  margin-right: -10px;
+}
+#dashboard .widget {
+  position: relative;
+  width: 31.5%;
+  height: 460px;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+  -moz-perspective: 1000px;
+  -o-perspective: 1000px;
+  -ms-perspective: 1000px;
+}
+#dashboard .widget .front,
+#dashboard .widget .back {
+  -webkit-transition: 1s;
+  -moz-transition: 1s;
+  -o-transition: 1s;
+  transition: 1s;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ccc;
+  width: 100%;
+  height: 460px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+}
+#dashboard .widget .front .cabecera,
+#dashboard .widget .back .cabecera {
+  background: #75aadb;
+  color: #fff;
+  padding: 5px;
+  cursor: move;
+}
+#dashboard .widget .front .cabecera h3,
+#dashboard .widget .back .cabecera h3 {
+  font-size: 14px;
+  line-height: 1;
+}
+#dashboard .widget .front .contenido,
+#dashboard .widget .back .contenido {
+  padding: 5px;
+}
+#dashboard .widget .front {
+  background: #fff;
+  transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+  -moz-transform: rotateY(0deg);
+  -o-transform: rotateY(0deg);
+  -ms-transform: rotateY(0deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  z-index: 900;
+}
+#dashboard .widget .front .config {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+#dashboard .widget .back {
+  background: #eee;
+  transform: rotateY(-180deg);
+  -webkit-transform: rotateY(-180deg);
+  -moz-transform: rotateY(-180deg);
+  -o-transform: rotateY(-180deg);
+  -ms-transform: rotateY(-180deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  z-index: 800;
+}
+#dashboard .widget .back .volver {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+#dashboard .widget.flip .front {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
+  -ms-transform: rotateY(180deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  z-index: 900;
+}
+#dashboard .widget.flip .back {
+  transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+  -moz-transform: rotateY(0deg);
+  -o-transform: rotateY(0deg);
+  -ms-transform: rotateY(0deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  z-index: 1000;
+}

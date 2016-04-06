@@ -1,0 +1,81 @@
+Licencia SIMPLE:
+
+Copyright (c) 2013, Ministerio Secretaría General de la Presidencia de Chile
+Todos los derechos reservados.
+
+La redistribución y el uso en las formas de código fuente y binario, con o sin
+modificaciones, están permitidos siempre que se cumplan las siguientes condiciones:
+1. Las redistribuciones del código fuente deben conservar el aviso de copyright
+   anterior, esta lista de condiciones y el siguiente descargo de responsabilidad.
+2. Las redistribuciones en formato binario deben reproducir el aviso de copyright
+   anterior, esta lista de condiciones y la siguiente renuncia en la documentación
+   y/u otros materiales suministrados con la distribución.
+3. Ni el nombre de los titulares de derechos de autor ni los nombres de sus
+   colaboradores pueden usarse para apoyar o promocionar productos derivados de
+   este software sin permiso previo y por escrito.
+
+ESTE SOFTWARE SE SUMINISTRA POR MINISTERIO SECRETARÍA GENERAL DE LA PRESIDENCIA DE CHILE ''COMO ESTÁ'' Y CUALQUIER
+GARANTÍA EXPRESA O IMPLÍCITAS, INCLUYENDO, PERO NO LIMITADO A, LAS GARANTÍAS
+IMPLÍCITAS DE COMERCIALIZACIÓN Y APTITUD PARA UN PROPÓSITO DETERMINADO SON
+RECHAZADAS. EN NINGÚN CASO MINISTERIO SECRETARÍA GENERAL DE LA PRESIDENCIA DE CHILE SERÁ RESPONSABLE POR NINGÚN
+DAÑO DIRECTO, INDIRECTO, INCIDENTAL, ESPECIAL, EJEMPLAR O CONSECUENTE (INCLUYENDO,
+PERO NO LIMITADO A, LA ADQUISICIÓN DE BIENES O SERVICIOS; LA PÉRDIDA DE USO, DE
+DATOS O DE BENEFICIOS; O INTERRUPCIÓN DE LA ACTIVIDAD EMPRESARIAL) O POR
+CUALQUIER TEORÍA DE RESPONSABILIDAD, YA SEA POR CONTRATO, RESPONSABILIDAD ESTRICTA
+O AGRAVIO (INCLUYENDO NEGLIGENCIA O CUALQUIER OTRA CAUSA) QUE SURJA DE CUALQUIER
+MANERA DEL USO DE ESTE SOFTWARE, INCLUSO SI SE HA ADVERTIDO DE LA POSIBILIDAD DE
+TALES DAÑOS.
+
+Licencia CodeIgniter:
+
+Copyright (c) 2008 - 2011, EllisLab, Inc.
+All rights reserved.
+
+This license is a legal agreement between you and EllisLab Inc. for the use
+of CodeIgniter Software (the "Software").  By obtaining the Software you
+agree to comply with the terms and conditions of this license.
+
+PERMITTED USE
+You are permitted to use, copy, modify, and distribute the Software and its
+documentation, with or without modification, for any purpose, provided that
+the following conditions are met:
+
+1. A copy of this license agreement must be included with the distribution.
+
+2. Redistributions of source code must retain the above copyright notice in
+   all source code files.
+
+3. Redistributions in binary form must reproduce the above copyright notice
+   in the documentation and/or other materials provided with the distribution.
+
+4. Any files that have been modified must carry notices stating the nature
+   of the change and the names of those who changed them.
+
+5. Products derived from the Software must include an acknowledgment that
+   they are derived from CodeIgniter in their documentation and/or other
+   materials provided with the distribution.
+
+6. Products derived from the Software may not be called "CodeIgniter",
+   nor may "CodeIgniter" appear in their name, without prior written
+   permission from EllisLab, Inc.
+
+INDEMNITY
+You agree to indemnify and hold harmless the authors of the Software and
+any contributors for any direct, indirect, incidental, or consequential
+third-party claims, actions or suits, as well as any related expenses,
+liabilities, damages, settlements or fees arising from your use or misuse
+of the Software, or a violation of any terms of this license.
+
+DISCLAIMER OF WARRANTY
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESSED OR
+IMPLIED, INCLUDING, BUT NOT LIMITED TO, WARRANTIES OF QUALITY, PERFORMANCE,
+NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+
+LIMITATIONS OF LIABILITY
+YOU ASSUME ALL RISK ASSOCIATED WITH THE INSTALLATION AND USE OF THE SOFTWARE.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS OF THE SOFTWARE BE LIABLE
+FOR CLAIMS, DAMAGES OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION
+WITH THE SOFTWARE. LICENSE HOLDERS ARE SOLELY RESPONSIBLE FOR DETERMINING THE
+APPROPRIATENESS OF USE AND ASSUME ALL RISKS ASSOCIATED WITH ITS USE, INCLUDING
+BUT NOT LIMITED TO THE RISKS OF PROGRAM ERRORS, DAMAGE TO EQUIPMENT, LOSS OF
+DATA OR SOFTWARE PROGRAMS, OR UNAVAILABILITY OR INTERRUPTION OF OPERATIONS.

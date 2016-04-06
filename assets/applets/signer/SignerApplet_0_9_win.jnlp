@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="http://localhost:80/simple_bpm/assets/applets/signer"  href="">
+    <information>
+        <title>Firmado PDF AgileSigner MinSegPres V0.9w</title>
+        <vendor>Agile Ingenieria y Consultoria</vendor>
+    </information>
+     <security>
+      <all-permissions/>
+  </security>
+    <resources>
+        <!-- Application Resources -->
+        <j2se version="1.6+"
+            href="http://java.sun.com/products/autodl/j2se" />
+        <jar href="SignerAppletMinSegPress_0_9_windows.jar" main="true" />
+
+    </resources>
+    <applet-desc 
+         name="Firmado PDF AgileSigner MinSegPres V0.9w"
+         main-class="cl.agile.pdf.applet.SignerAppletMinSegPress"
+         width="350"
+         height="25">
+     </applet-desc>
+     <update check="background"/>
+</jnlp>             

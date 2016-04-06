@@ -1,0 +1,111 @@
+/*#sideMenu {
+  background: #f0f7fb;
+}
+#sideMenu li {
+  font-size: 14px;
+  line-height: 30px;
+  text-shadow: none;
+  color: #005181;
+}
+#sideMenu li.nav-header {
+  border-right: 10px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  margin-top: 0;
+  font-size: 18px;
+  text-transform: none;
+}
+#sideMenu li:last-child a {
+  border-bottom: none;
+}
+#sideMenu li a {
+  color: #005181;
+  border-right: 10px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  text-shadow: none;
+}
+#sideMenu li.iniciar a {
+  color: #005181;
+  font-size: 18px;
+  background: #e2f0f8;
+}
+#sideMenu li.active a {
+  color: #fff;
+  background: #005181;
+  position: relative;
+}
+#sideMenu li.active a:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -20px;
+  background: url(../img/triangle.png);
+  width: 20px;
+  height: 36px;
+}*/
+h2 {
+  font-size: 21px;
+  color: #005181;
+}
+#mainTable tr td {
+  font-size: 12px;
+  color: #999;
+}
+#mainTable tr td.name {
+  font-size: 14px;
+  color: #333;
+}
+#mainTable tr td.name a {
+  color: inherit;
+}
+#mainTable tr td.actions {
+  width: 1px;
+  white-space: nowrap;
+}
+#mainTable tr td.time {
+  font-size: 12px;
+  color: #0B5DA5;
+}
+#loginView .simple .wrapper {
+  padding: 20px 20px 0 20px;
+}
+#loginView .claveunica {
+  background: #E1ECF6;
+  height: 70px;
+}
+#loginView .claveunica .wrapper {
+  padding: 20px;
+}
+#loginView .claveunica .wrapper p {
+  float: left;
+  line-height: 30px;
+}
+#loginView .claveunica .wrapper a {
+  float: right;
+}
+.olvido {
+  font-size: 11px;
+}
+.saltar li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.saltar a {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: 9999;
+  list-style-type: none;
+}
+.saltar a:focus {
+  position: absolute;
+  top: 0;
+  left: 40%;
+  background: #fff;
+  width: auto;
+  height: auto;
+  padding: 10px;
+}

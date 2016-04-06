@@ -1,0 +1,94 @@
+@import "bootstrap/variables.less";
+@import "bootstrap/mixins.less";
+
+.rotateY (@deg) {
+    transform: rotateY(@deg);
+    -webkit-transform: rotateY(@deg);
+    -moz-transform: rotateY(@deg);
+    -o-transform: rotateY(@deg);
+    -ms-transform: rotateY(@deg);
+    backface-visibility:hidden;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -o-backface-visibility: hidden;
+    -ms-backface-visibility: hidden;
+}
+.perspective (@distance) {
+    perspective: @distance;
+    -webkit-perspective: @distance;
+    -moz-perspective: @distance;
+    -o-perspective: @distance;
+    -ms-perspective: @distance;
+}
+
+#dashboard {
+    margin-left: -10px;
+    margin-right: -10px;
+    .widget {
+        position: relative;
+        width: 31.5%;
+        height: 460px;
+        float: left;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 20px;
+        .perspective(1000px);
+        .front,.back{
+            .transition(1s);
+            .box-shadow(0 1px 4px rgba(0, 0, 0, 0.1));
+            border: 1px solid #ccc;
+            width: 100%;
+            height: 460px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            .cabecera{
+                background: #75aadb;
+                color: #fff;
+                padding: 5px;
+                cursor: move;
+                h3{
+                    font-size: 14px;
+                    line-height: 1;
+                }
+            }
+            .contenido{
+                padding: 5px;
+                
+                }
+            }
+        .front{
+            background: #fff;
+            .rotateY(0deg);
+            z-index: 900;
+            .config{
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }
+        }
+        .back{
+            background: #eee;
+            .rotateY(-180deg);
+            z-index: 800;
+            .volver{
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }
+        }
+
+    }
+
+    .widget.flip {
+        .front {
+            .rotateY(180deg);
+            z-index: 900;
+        }
+        .back {
+            .rotateY(0deg);
+            z-index: 1000;
+        }
+    }
+}

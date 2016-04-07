@@ -207,7 +207,7 @@ parameters:
   name: SIMPLE_SMTP_PASSWORD
 - description: SMTP Port for email notifications
   name: SIMPLE_SMTP_PORT
-  value: 25
+  value: '25'
 - description: Encryption Key for SIMPLE data 
   from: '[a-zA-Z0-9]{20}'
   generate: expression

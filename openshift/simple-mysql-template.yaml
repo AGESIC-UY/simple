@@ -97,14 +97,22 @@ objects:
             value: ${DATABASE_USER}
           - name: DATABASE_PASSWORD
             value: ${DATABASE_PASSWORD}
-          - name: CAKEPHP_SECRET_TOKEN
-            value: ${CAKEPHP_SECRET_TOKEN}
-          - name: CAKEPHP_SECURITY_SALT
-            value: ${CAKEPHP_SECURITY_SALT}
-          - name: CAKEPHP_SECURITY_CIPHER_SEED
-            value: ${CAKEPHP_SECURITY_CIPHER_SEED}
           - name: OPCACHE_REVALIDATE_FREQ
             value: ${OPCACHE_REVALIDATE_FREQ}
+          - name: SIMPLE_DOMAIN 
+            value: ${SIMPLE_DOMAIN}
+          - name: SIMPLE_LOG_DIR 
+            value: ${SIMPLE_LOG_DIR}
+          - name: SIMPLE_SMTP_HOST 
+            value: ${SIMPLE_SMTP_HOST}
+          - name: SIMPLE_SMTP_USER
+            value: ${SIMPLE_SMTP_USER}
+          - name: SIMPLE_SMTP_PASSWORD
+            value: ${SIMPLE_SMTP_PASSWORD}
+          - name: SIMPLE_SMTP_PORT
+            value: ${SIMPLE_SMTP_PORT}
+          - name: SIMPLE_ENCRYPTION_KEY
+            value: ${SIMPLE_ENCRYPTION_KEY}
           image: simple-mysql
           name: simple-mysql
           ports:
@@ -186,6 +194,24 @@ parameters:
 - description: The exposed hostname that will route to the CakePHP service, if left
     blank a value will be defaulted.
   name: APPLICATION_DOMAIN
+- description: Log dir for SIMPLE app
+  name: SIMPLE_LOG_DIR 
+  value: /var/log/simple
+- description: Default domain name for logins
+  name: SIMPLE_DOMAIN
+- description: SMTP Host for email notifications
+  name: SIMPLE_SMTP_HOST
+- description: SMTP Username for email notifications
+  name: SIMPLE_SMTP_USER
+- description: SMTP Password for email notifications
+  name: SIMPLE_SMTP_PASSWORD
+- description: SMTP Port for email notifications
+  name: SIMPLE_SMTP_PORT
+  value: 25
+- description: Encryption Key for SIMPLE data 
+  from: '[a-zA-Z0-9]{20}'
+  generate: expression
+  name: SIMPLE_ENCRYPTION_KEY 
 - description: A secret string used to configure the GitHub webhook
   from: '[a-zA-Z0-9]{40}'
   generate: expression
@@ -206,19 +232,8 @@ parameters:
   from: '[a-zA-Z0-9]{16}'
   generate: expression
   name: DATABASE_PASSWORD
-- description: Set this to a long random string
-  from: '[\w]{50}'
-  generate: expression
-  name: CAKEPHP_SECRET_TOKEN
-- description: Security salt for session hash
-  from: '[a-zA-Z0-9]{40}'
-  generate: expression
-  name: CAKEPHP_SECURITY_SALT
-- description: Security cipher seed for session hash
-  from: '[0-9]{30}'
-  generate: expression
-  name: CAKEPHP_SECURITY_CIPHER_SEED
 - description: The How often to check script timestamps for updates, in seconds. 0
     will result in OPcache checking for updates on every request.
   name: OPCACHE_REVALIDATE_FREQ
   value: "2"
+

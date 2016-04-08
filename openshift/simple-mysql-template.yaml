@@ -227,7 +227,7 @@ parameters:
   value: default
 - description: Database user name
   name: DATABASE_USER
-  value: cakephp
+  value: simple
 - description: Database user password
   from: '[a-zA-Z0-9]{16}'
   generate: expression

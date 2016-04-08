@@ -99,6 +99,8 @@ objects:
             value: ${DATABASE_PASSWORD}
           - name: OPCACHE_REVALIDATE_FREQ
             value: ${OPCACHE_REVALIDATE_FREQ}
+          - name: TEMPLATE_NAME 
+            value: simple-mysql 
           - name: APPLICATION_DOMAIN 
             value: ${APPLICATION_DOMAIN}
           - name: SIMPLE_DOMAIN 

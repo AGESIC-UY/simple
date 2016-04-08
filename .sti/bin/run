@@ -14,6 +14,10 @@ export OPCACHE_MEMORY_CONSUMPTION=${OPCACHE_MEMORY_CONSUMPTION:-16M}
 
 export OPCACHE_REVALIDATE_FREQ=${OPCACHE_REVALIDATE_FREQ:-2}
 
+if [ -z ${APPLICATION_DOMAIN} ]; then
+    export APPLICATION_NAME=${OPENSHIFT_TEMPLATE_NAME}-${OPENSHIFT_BUILD_NAMESPACE}.app.paas.agesic.red.uy
+fi
+
 export PHPRC=${PHPRC:-/etc/opt/rh/rh-php56/php.ini}
 export PHP_INI_SCAN_DIR=${PHP_INI_SCAN_DIR:-/etc/opt/rh/rh-php56/php.d}
 export TEMPLATE_DIR="openshift"

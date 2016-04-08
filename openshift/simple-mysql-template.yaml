@@ -188,6 +188,7 @@ parameters:
 - description: Set this to a branch name, tag or other ref of your repository if you
     are not using the default branch
   name: SOURCE_REPOSITORY_REF
+  value: rmedina
 - description: Set this to the relative path to your project if it is not in the root
     of your repository
   name: CONTEXT_DIR

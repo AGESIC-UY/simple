@@ -21,19 +21,9 @@ export TEMPLATE_DIR="openshift"
 envsubst < /opt/app-root/etc/php.ini.template > $PHPRC
 envsubst < /opt/app-root/etc/php.d/10-opcache.ini.template > $PHP_INI_SCAN_DIR/10-opcache.ini
 
-echo -n "Working Directory is: " >> /tmp/run.debug
-echo `pwd` >> /tmp/run.debug
-
-echo "Current shell is: ${SHELL}" >> /tmp/run.debug
-echo "Processing files: " >> /tmp/run.debug
-
 for i in `find ${TEMPLATE_DIR} -iname "*.template"`; do
     FILE_NAME=`expr ${i} : "${TEMPLATE_DIR}/*\(.*\).template"` 
     envsubst < ${i} > ${FILE_NAME}
-    echo "${i} into ${FILE_NAME}" >> /tmp/run.debug
 done
-echo "Finished processing files" >> /tmp/run.debug
-
-echo "Starting Apache"
 
 exec httpd -D FOREGROUND

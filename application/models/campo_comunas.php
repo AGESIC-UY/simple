@@ -13,7 +13,7 @@ class CampoComunas extends Campo{
         }
 
         $display  = '<div class="control-group">';
-        $display.= '<label class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*' : ' (Opcional)') . '</label>';
+        $display.= '<label class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ' (Opcional):') . '</label>';
         $display.='<div class="controls data-fieldset="'.$this->fieldset.'"">';
         $display.='<select class="regiones" data-id="'.$this->id.'" name="' . $this->nombre . '[region]" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display.='<option value="">Seleccione región</option>';

@@ -85,9 +85,7 @@
                 $(campoDestino).val(string);
             }
         }
-
     });
-
 </script>
 
 <div class="modal-header">
@@ -96,7 +94,7 @@
 </div>
 <form id="formEditarCampo" class="ajaxForm" method="POST" action="<?= site_url('backend/formularios/editar_campo_form/' . ($edit ? $campo->id : '')) ?>">
   <div class="modal-body">
-        <div class="validacion"></div>
+        <div class="validacion validacion-error"></div>
         <?php if (!$edit): ?>
             <input type="hidden" name="formulario_id" value="<?= $formulario->id ?>" />
             <input type="hidden" name="tipo" value="<?= $campo->tipo ?>" />
@@ -181,12 +179,12 @@
             <div class="datos">
                 <script type="text/javascript">
                     $(document).ready(function(){
-                        $('#formEditarCampo .datos .nuevo').click(function(){
+                        $('#formEditarCampo .datos .nuevo').click(function() {
                             var pos=$('#formEditarCampo .datos table tbody tr').size();
                             var html='<tr>';
                             html+='<td><label class="hidden-accessible" for="etiqueta'+pos+'">etiqueta'+pos+'</label><input id="etiqueta'+pos+'" type="text" name="datos['+pos+'][etiqueta]" /></td>';
                             html+='<td><label class="hidden-accessible" for="valor'+pos+'">valor'+pos+'</label><input id="valor'+pos+'" type="text" name="datos['+pos+'][valor]" /></td>';
-                            html+='<td class="actions"><button type="button" class="btn btn-danger"><span class="icon-trash icon-white"></span></button></td>';
+                            html+='<td class="actions"><button type="button" class="btn btn-danger eliminar"><span class="icon-trash icon-white"></span></button></td>';
                             html+='</tr>';
 
                             $('#formEditarCampo .datos table tbody').append(html);
@@ -214,7 +212,7 @@
                         <tr>
                           <td><label class="hidden-accessible" for="etiqueta<?= $i ?>">etiqueta<?= $i ?></label><input id="etiqueta<?= $i ?>" type="text" name="datos[<?= $i ?>][etiqueta]" value="<?= $d->etiqueta ?>" /></td>
                           <td><label class="hidden-accessible" for="valor<?= $i ?>">valor<?= $i ?></label><input id="valor<?= $i ?>" type="text" name="datos[<?= $i ?>][valor]" value="<?= $d->valor ?>" /></td>
-                          <td class="actions"><button type="button" class="btn btn-danger"><span class="icon-white icon-trash"></span></button></td>
+                          <td class="actions"><button type="button" class="btn btn-danger eliminar"><span class="icon-white icon-trash"></span></button></td>
                         </tr>
                         <?php $i++ ?>
                       <?php endforeach; ?>
@@ -225,8 +223,6 @@
         <?php endif; ?>
 
         <?=$campo->backendExtraFields()?>
-
-
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-primary">Guardar</button>

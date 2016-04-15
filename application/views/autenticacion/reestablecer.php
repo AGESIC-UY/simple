@@ -13,7 +13,7 @@
                         <fieldset>
                             <legend>Reestablecer contraseña</legend>
                             <?php $this->load->view('messages') ?>
-                            <div class="validacion"></div>
+                            <div class="validacion validacion-error"></div>
 
                             <label>Usuario</label>
                             <input type="text" class="input-xlarge" value="<?=$usuario->usuario?>" disabled>

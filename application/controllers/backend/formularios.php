@@ -11,8 +11,9 @@ class Formularios extends MY_BackendController {
         UsuarioBackendSesion::force_login();
 
         if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
-            echo 'No tiene permisos para acceder a esta seccion.';
-            exit;
+            //echo 'No tiene permisos para acceder a esta seccion.';
+            //exit;
+            redirect('backend');
         }
     }
 
@@ -43,7 +44,7 @@ class Formularios extends MY_BackendController {
 
         $formulario=new Formulario();
         $formulario->proceso_id=$proceso->id;
-        $formulario->nombre='Formulario';
+        $formulario->nombre='Formulario-'.$this->generar_codigo_formulario();
         $formulario->save();
 
         redirect('backend/formularios/editar/'.$formulario->id);
@@ -105,17 +106,17 @@ class Formularios extends MY_BackendController {
         $this->form_validation->set_rules('nombre','Nombre','required');
 
         $respuesta=new stdClass();
-        if($this->form_validation->run()==TRUE){
+        if ($this->form_validation->run()==TRUE) {
             $formulario->nombre=$this->input->post('nombre');
             $formulario->save();
 
             $respuesta->validacion=TRUE;
             $respuesta->redirect=site_url('backend/formularios/editar/'.$formulario->id);
 
-        } else{
+        }
+        else {
             $respuesta->validacion=FALSE;
             $respuesta->errores=validation_errors();
-
         }
 
         echo json_encode($respuesta);
@@ -220,8 +221,8 @@ class Formularios extends MY_BackendController {
                 $campo_nuevo=Campo::factory($campo_bloque->tipo);
                 $campo_nuevo->formulario_id=$formulario_id;
 
-                if($campo_bloque->tipo == 'fieldset') {
-                  $campo_nuevo->nombre=$this->input->post('nombre').'.'.$campo_bloque->nombre;
+                if(($campo_bloque->tipo == 'fieldset') || ($campo_bloque->tipo == 'encuesta')) {
+                  $campo_nuevo->nombre='BLOQUE_'.$this->input->post('nombre').'.'.$campo_bloque->nombre;
                 }
                 else {
                     $campo_nuevo->nombre=$campo_bloque->nombre;
@@ -311,5 +312,20 @@ class Formularios extends MY_BackendController {
 
     function clean_validacion($validacion){
         return preg_replace('/\|\s*$/','',$validacion);
+    }
+
+    public function generar_codigo_formulario($length=6) {
+      $arr = array('A', 'B', 'C', 'D', 'E', 'F',
+               'G', 'H', 'I', 'J', 'K', 'L',
+               'M', 'N', 'O', 'P', 'R', 'S',
+               'T', 'U', 'V', 'X', 'Y', 'Z',
+               '1', '2', '3', '4', '5', '6',
+               '7', '8', '9', '0');
+      $token = "";
+      for ($i = 0; $i < $length; $i++) {
+          $index = rand(0, count($arr) - 1);
+          $token .= $arr[$index];
+      }
+      return $token;
     }
 }

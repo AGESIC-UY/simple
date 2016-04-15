@@ -12,7 +12,7 @@
                     <form method="post" class="ajaxForm" action="<?= site_url('autenticacion/registrar_form') ?>">
                         <fieldset>
                             <legend>Registrarse en el sistema</legend>
-                            <div class="validacion"></div>
+                            <div class="validacion validacion-error"></div>
                             <label>Nombre de Usuario</label>
                             <input name="usuario" type="text" class="input-xlarge">
                             <label>Nombres</label>

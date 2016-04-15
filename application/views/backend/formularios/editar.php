@@ -48,7 +48,6 @@
         </div>
         <div class="btn-group">
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'bloque')">Bloques</button>
-            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'instituciones_gob')">Instituciones</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'paises')">Paises</button>
             <button class="btn btn-inverse hidden" onclick="return agregarCampo(<?= $formulario->id ?>,'comunas')">Comunas</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'moneda')">Moneda</button>

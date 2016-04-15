@@ -13,7 +13,7 @@
                         <fieldset>
                             <legend>¿Olvidaste tu contraseña?</legend>
                             <?php $this->load->view('messages') ?>
-                            <div class="validacion"></div>
+                            <div class="validacion validacion-error"></div>
 
                             <p>Al hacer click en Reestablecer se te enviara un email indicando las instrucciones para reestablecer tu contraseña.</p>
 

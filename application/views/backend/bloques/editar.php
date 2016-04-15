@@ -13,12 +13,12 @@
 <div class="titulo-form">
   <h2><?= $bloque->nombre ?></h2>
 </div>
-<form action="<?=site_url('backend/bloques/editar_form/'.$bloque->id)?>" method="post" class="form-horizontal dynaForm debugForm">
+<form id="formEditarFormulario" action="<?=site_url('backend/bloques/editar_form/'.$bloque->id)?>" method="post" class="form-horizontal dynaForm debugForm">
 	<input type="hidden" name="bloque_id" value="<?= $bloque->id ?>" />
   <div class="control-group">
-    <label for="nombre" class="control-label">Nombre</label>
+    <label for="nombre_bloque" class="control-label">Nombre</label>
     <div class="controls">
-      <input id="nombre" class="input-xlarge" type="text" value="<?= $bloque->nombre ?>" name="nombre" />
+      <input id="nombre" class="input-xlarge" type="text" value="<?= $bloque->nombre ?>" name="nombre_bloque" />
       <input class="btn btn-primary" type="submit" value="Guardar" />
     </div>
   </div>
@@ -30,7 +30,6 @@
 	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'subtitle')">Subtítulo</button>
 	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'step_title')">Título del paso</button>
 	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'paragraph')">Parrafo</button>
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'documento')">Documento</button>
 	        </div>
 	        <div class="btn-group">
 	            <button class="btn btn-inverse campo_no_requerido" onclick="return agregarCampo(<?= $formulario->id ?>,'error')">Mensaje de error</button>
@@ -46,12 +45,8 @@
 	        </div>
 	        <div class="btn-group">
 	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'encuesta')">Encuesta</button>
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'instituciones_gob')">Instituciones</button>
 	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'paises')">Paises</button>
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'comunas')">Comunas</button>
 	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'moneda')">Moneda</button>
-	        </div>
-	        <div class="btn-group">
 	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'javascript')">Javascript</button>
 	        </div>
 	    </div>

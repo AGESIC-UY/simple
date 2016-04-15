@@ -8,6 +8,7 @@ class ProcesoTable extends Doctrine_Table {
         $query=Doctrine_Query::create()
                 ->from('Proceso p, p.Cuenta c, p.Tareas t')
                 ->where('t.inicial = 1')
+                ->where('p.nombre != "BLOQUE"')
                 //Si el usuario tiene permisos de acceso
                 //->andWhere('(t.acceso_modo="grupos_usuarios" AND u.id = ?) OR (t.acceso_modo = "registrados") OR (t.acceso_modo = "claveunica") OR (t.acceso_modo="publico")',$usuario->id)
                 //Si la tarea se encuentra activa

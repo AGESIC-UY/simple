@@ -3,30 +3,24 @@ $(document).ready(function(){
     diagram = new go.Diagram("draw");
     //diagram.contentAlignment=go.Spot.AllSides;
     $$ = go.GraphObject.make;
-    
+
 });
 
 
 
 function drawFromModel(model,width,height){
-    
+
     //Convertimos el width y height a valores numericos. Puede venir con % o con px
     width=width.search("%")>=0?parseInt(width)/100*diagram.viewportBounds.width-30:parseInt(width);
     height=height.search("%")>=0?parseInt(height)/100*diagram.viewportBounds.height-30:parseInt(height);
-    
+
     //Parche para que gojs no haga un scrolling raro cuando el tamaño del diagrama es menor que el viewport.
     if(diagram.viewportBounds.width>width) width=diagram.viewportBounds.width-30;
     if(diagram.viewportBounds.height>height) height=diagram.viewportBounds.height-30;
-    
-    
-    
 
-    
-    
     diagram.fixedBounds=new go.Rect(0,0,width,height);
-    
-    diagram.allowClipboard=false;
 
+    diagram.allowClipboard=false;
 
       //diagram.grid.visible=true;
       diagram.grid =$$(go.Panel, go.Panel.Grid,
@@ -35,7 +29,7 @@ function drawFromModel(model,width,height){
             $$(go.Shape, "LineV", { stroke: "#C1D8E5" }));
       diagram.toolManager.draggingTool.isGridSnapEnabled = true;
       diagram.toolManager.draggingTool.gridSnapCellSize = new go.Size(10, 10);
-      
+
       diagram.nodeTemplate = $$(go.Node,
         go.Panel.Spot,
         new go.Binding("location", "loc"),
@@ -56,15 +50,15 @@ function drawFromModel(model,width,height){
             visible: false },
             new go.Binding("visible", "start"))
         );
-      
-      
+
+
       diagram.linkTemplate = $$(go.Link,
       { routing: go.Link.AvoidsNodes, corner: 5, curve: go.Link.JumpOver, toEndSegmentLength: 30, fromEndSegmentLength: 30 },  // link route should avoid nodes
       $$(go.Shape, {strokeWidth: 2}),
       $$(go.Picture, { segmentIndex: 0, segmentOffset: new go.Point(12, 0)  },new go.Binding("source", "type", function(v){return v!="union"?base_url+"assets/img/"+v+".gif":""})),
       $$(go.Picture, { segmentIndex: -1, segmentOffset: new go.Point(-12, 0)  },new go.Binding("source", "type", function(v){return v=="union"?base_url+"assets/img/"+v+".gif":""})),
       $$(go.Shape, { toArrow: "Standard" }));
-  
+
   var nodeDataArray=new Array();
   for(var i in model.elements){
       nodeDataArray.push({
@@ -92,12 +86,6 @@ function drawFromModel(model,width,height){
       });
       }
   }
-  
-  
-  
-  diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-  
-  
-      
-}
 
+  diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+}

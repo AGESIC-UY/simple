@@ -3,7 +3,7 @@
 <form method="POST" class="ajaxForm dynaForm" action="<?= site_url('etapas/ejecutar_fin_form/' . $etapa->id.($qs?'?'.$qs:'')) ?>">
     <fieldset>
         <legend>Paso final</legend>
-        <div class="validacion"></div>
+        <div class="validacion validacion-error"></div>
         <?php if ($tareas_proximas->estado == 'pendiente'): ?>
             <?php foreach ($tareas_proximas->tareas as $t): ?>
                 <p>Para confirmar y enviar el formulario a la siguiente etapa haga click en Finalizar.</p>
@@ -29,14 +29,14 @@
       <li class="action-buttons-primary">
         <ul>
           <li>
-            <?php if($tareas_proximas->estado!='sincontinuacion'):?><button class="btn btn-primary" type="submit"><span class="icon-ok icon-white"></span> Finalizar</button><?php endif?>
+            <?php if($tareas_proximas->estado!='sincontinuacion'):?><button class="btn btn-primary btn-lg" type="submit"><span class="icon-ok icon-white"></span> Finalizar</button><?php endif?>
             </li>
           </ul>
         </li>
         <li class="action-buttons-second">
           <ul>
             <li class="float-left">
-              <a class="btn btn-link" href="<?= site_url('etapas/ejecutar/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables()) - 1).($qs?'?'.$qs:'')) ?>"><span class="icon-chevron-left"></span> Volver</a>
+              <a class="btn btn-link btn-lg" href="<?= site_url('etapas/ejecutar/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables()) - 1).($qs?'?'.$qs:'')) ?>"><span class="icon-chevron-left"></span> Volver</a>
             </li>
           </ul>
         </li>

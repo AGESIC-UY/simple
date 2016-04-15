@@ -4,11 +4,10 @@ class UsuarioManagerSesion {
     private static $user;
 
     private function __construct() {
-        
+
     }
 
     public static function usuario() {
-
         if (!isset(self::$user)) {
 
             $CI = & get_instance();
@@ -26,15 +25,15 @@ class UsuarioManagerSesion {
 
         return self::$user;
     }
-    
+
     public static function force_login(){
         $CI = & get_instance();
-        
+
         if(!self::usuario()){
             $CI->session->set_flashdata('redirect',current_url());
             redirect('/manager/autenticacion/login');
         }
-            
+
     }
 
     public static function login($usuario, $password) {
@@ -87,6 +86,12 @@ class UsuarioManagerSesion {
         trigger_error('Clone is not allowed.', E_USER_ERROR);
     }
 
+    public function registrado_saml() {
+      if(isset($_COOKIE['simple_bpm_saml_session_ref_k'])) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
 }
-
-?>

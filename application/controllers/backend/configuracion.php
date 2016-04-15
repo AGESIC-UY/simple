@@ -9,10 +9,11 @@ class Configuracion extends MY_BackendController {
         parent::__construct();
 
         UsuarioBackendSesion::force_login();
-        
+
         if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='configuracion'){
-            echo 'No tiene permisos para acceder a esta seccion.';
-            exit;
+            //echo 'No tiene permisos para acceder a esta seccion.';
+            //exit;
+            redirect('backend');
         }
     }
 
@@ -132,7 +133,7 @@ class Configuracion extends MY_BackendController {
                 exit;
             }
         }
-        
+
         if(!$usuario){
             $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required|alpha_dash|callback_check_existe_usuario');
             $this->form_validation->set_rules('password', 'Contraseña', 'required|min_length[6]|matches[password_confirm]');
@@ -153,8 +154,9 @@ class Configuracion extends MY_BackendController {
                 $usuario->usuario = $this->input->post('usuario');
             }
 
-            
+
             if($this->input->post('password')) $usuario->setPasswordWithSalt($this->input->post('password'));
+            $usuario->usuario = $this->input->post('usuario');
             $usuario->nombres = $this->input->post('nombres');
             $usuario->apellido_paterno = $this->input->post('apellido_paterno');
             $usuario->apellido_materno = $this->input->post('apellido_materno');
@@ -181,18 +183,18 @@ class Configuracion extends MY_BackendController {
             echo 'Usuario no tiene permisos para eliminar este usuario.';
             exit;
         }
-        
+
         if($usuario->Etapas->count()){
             $this->session->set_flashdata('message_error','No se puede eliminar usuario ya que participa en tramites existentes en el sistema.');
         }else{
             $usuario->delete();
         }
 
-        
+
 
         redirect('backend/configuracion/usuarios');
     }
-    
+
     public function backend_usuarios() {
         $data['usuarios'] = Doctrine::getTable('UsuarioBackend')->findByCuentaId(UsuarioBackendSesion::usuario()->cuenta_id);
 
@@ -201,7 +203,7 @@ class Configuracion extends MY_BackendController {
 
         $this->load->view('backend/template', $data);
     }
-    
+
     public function backend_usuario_editar($usuario_id = NULL) {
         if ($usuario_id) {
             $usuario = Doctrine::getTable('UsuarioBackend')->find($usuario_id);
@@ -219,7 +221,7 @@ class Configuracion extends MY_BackendController {
 
         $this->load->view('backend/template', $data);
     }
-    
+
     public function backend_usuario_editar_form($usuario_id = NULL) {
         $usuario=NULL;
         if ($usuario_id) {
@@ -231,12 +233,12 @@ class Configuracion extends MY_BackendController {
             }
         }
         if(!$usuario){
-            $this->form_validation->set_rules('email', 'E-Mail', 'required|valid_email|callback_check_existe_usuario_backend');
-            $this->form_validation->set_rules('password', 'Contraseña', 'required|min_length[6]|matches[password_confirm]');
+            $this->form_validation->set_rules('email', 'EMail', 'required|valid_email|callback_check_existe_usuario_backend');
+            $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_confirm]');
         }
         if($this->input->post('password')){
-            $this->form_validation->set_rules('password', 'Contraseña', 'required|min_length[6]|matches[password_confirm]');
-            $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
+            $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_confirm]');
+            $this->form_validation->set_rules('password_confirm', 'Password_confirm');
         }
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
         $this->form_validation->set_rules('apellidos', 'Apellidos', 'required');
@@ -249,7 +251,7 @@ class Configuracion extends MY_BackendController {
                 $usuario->email = $this->input->post('email');
             }
 
-            
+
             if($this->input->post('password')) $usuario->setPasswordWithSalt($this->input->post('password'));
             $usuario->nombre = $this->input->post('nombre');
             $usuario->apellidos = $this->input->post('apellidos');
@@ -266,7 +268,7 @@ class Configuracion extends MY_BackendController {
 
         echo json_encode($respuesta);
     }
-    
+
     public function backend_usuario_eliminar($usuario_id) {
         $usuario = Doctrine::getTable('UsuarioBackend')->find($usuario_id);
 
@@ -279,16 +281,16 @@ class Configuracion extends MY_BackendController {
 
         redirect('backend/configuracion/backend_usuarios');
     }
-    
+
     public function misitio(){
         $data['cuenta']=Doctrine::getTable('Cuenta')->find(UsuarioBackendSesion::usuario()->cuenta_id);
-        
+
         $data['title'] = 'Configuración de Usuarios';
         $data['content'] = 'backend/configuracion/misitio';
         $this->load->view('backend/template', $data);
     }
-    
-    public function misitio_form() {      
+
+    public function misitio_form() {
         $this->form_validation->set_rules('nombre_largo', 'Nombre largo', 'required');
 
         $respuesta=new stdClass();
@@ -309,36 +311,36 @@ class Configuracion extends MY_BackendController {
 
         echo json_encode($respuesta);
     }
-    
+
     function check_existe_usuario($email){
         $u=Doctrine::getTable('Usuario')->findOneByUsuario($email);
         if(!$u)
             return TRUE;
-        
+
         $this->form_validation->set_message('check_existe_usuario','%s ya existe');
         return FALSE;
-             
+
     }
-    
+
     function check_existe_email($email,$usuario_id){
         $u=Doctrine::getTable('Usuario')->findOneByEmail($email);
-        
+
         if(!$u || ($u && $u->id==$usuario_id))
             return TRUE;
-        
+
         $this->form_validation->set_message('check_existe_email','%s ya esta en uso por otro usuario');
         return FALSE;
-             
+
     }
-    
+
     function check_existe_usuario_backend($email){
         $u=Doctrine::getTable('UsuarioBackend')->findOneByEmail($email);
         if(!$u)
             return TRUE;
-        
+
         $this->form_validation->set_message('check_existe_usuario_backend','%s ya existe en cuenta: '.$u->Cuenta->nombre);
         return FALSE;
-             
+
     }
 
     function ajax_get_usuarios(){

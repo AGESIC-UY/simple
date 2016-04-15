@@ -198,7 +198,7 @@ class Etapas extends MY_Controller {
 
                   $respuesta->validacion = TRUE;
 
-                  // -- Si la tarea requiere trazabilidad. Solo traza la primera y ultima secuencia.
+                  // -- Si la tarea requiere trazabilidad. Solo traza la primera y ultima secuencia unicamente.
                   if($etapa->Tarea->trazabilidad) {
                     if (($secuencia == 0) || ($secuencia == sizeof($etapa->getPasosEjecutables()) - 1)) {
                       $args = array('tramite_id' => $etapa->Tramite->id, 'secuencia' => $secuencia,

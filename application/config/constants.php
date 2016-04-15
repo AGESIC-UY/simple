@@ -36,7 +36,6 @@ define('FOPEN_READ_WRITE_CREATE',				'a+b');
 define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
-
 /*
 |--------------------------------------------------------------------------
 | Webservices
@@ -47,10 +46,10 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 define('DIRECTORIO_SUBIDA_DOCUMENTOS', 'uploads/documentos/');
 define('WS_TIMEOUT_CONEXION', 10);
 define('WS_TIMEOUT_RESPUESTA', 10);
-define('WS_FIRMA_DOCUMENTOS', 'http://localhost:8080/AgesicFirmaWS/AgesicFirmaServer');
-define('WS_AGESIC_FIRMA','http://localhost:8080/AgesicFirmaWS/AgesicFirma?wsdl');
-define('WS_AGESIC_FIRMA_OK','http://localhost:80/simple_bpm/trunk/etapas/confirmar_firma');
-define('WS_AGESIC_FIRMA_CODEBASE','http://localhost:80/agesic_firma');
+define('WS_FIRMA_DOCUMENTOS', 'http://localhost:8080/AgesicFirmaWS/AgesicFirmaServer'); // -- Tomcat Webapp Firma
+define('WS_AGESIC_FIRMA','http://localhost:8080/AgesicFirmaWS/AgesicFirma?wsdl'); // -- Tomcat Webapp Firma
+define('WS_AGESIC_FIRMA_OK','http://localhost:80/simple_bpm/trunk/etapas/confirmar_firma'); // -- Apache Simple
+define('WS_AGESIC_FIRMA_CODEBASE','http://localhost:80/agesic_firma'); // -- Apache Simple
 define('WS_AGESIC_FIRMA_XPATH', "//*[local-name() = 'respuesta']/text()");
 define('WS_AGESIC_DOCUMENTO_XPATH', "//*[local-name() = 'doc']/text()");
 define('WS_AGESIC_DOCUMENTO_SERVIDOR_XPATH', "//*[local-name() = 'doc']/text()");
@@ -68,8 +67,7 @@ define('WS_VARIABLE_COD_TRAZABILIDAD', 'codigo_trazabilidad');
 |
 */
 define('SIMPLE_SAML_AUTHSOURCE', 'simplesaml');
-define('ORIGENES_CONFIABLES', serialize(array(0, 'http://simple.sofis.com.uy', 'http://localhost', 'http://127.0.0.1')));
-
+define('ORIGENES_CONFIABLES', serialize(array(0, 'http://localhost', 'http://127.0.0.1')));
 
 /*
 |--------------------------------------------------------------------------
@@ -79,7 +77,9 @@ define('ORIGENES_CONFIABLES', serialize(array(0, 'http://simple.sofis.com.uy', '
 |
 */
 define('HOST_SISTEMA', (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '');
-define('HOST_SISTEMA_DOMINIO', 'simple.sofis.com.uy');
+define('HOST_SISTEMA_DOMINIO', '');
 define('MAX_REGISTROS_PAGINA', 5);
 define('REDIS_HOST', '127.0.0.1');
 define('REDIS_PORT', '6379');
+define('DENEGAR_REMOVER_CAMPOS_BLOQUES', TRUE);
+define('LOGIN_ADMIN_COESYS', FALSE);

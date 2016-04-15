@@ -25,9 +25,7 @@ $(document).ready(function(){
             var left=event.pageX - $(this).position().left;
             var top=event.pageY - $(this).position().top;
 
-
             //Buscamos un id para asignarle
-
 
             var id=1;
             for (var i in diagram.model.nodeDataArray){
@@ -48,7 +46,6 @@ $(document).ready(function(){
         }
     });
 
-
     diagram.addDiagramListener("ObjectSingleClicked", function(e) {
         var part = e.subject.part;
 
@@ -67,25 +64,19 @@ $(document).ready(function(){
                     return;
                 }
 
-
                 diagram.model.addLinkData({
                     from:c.source,
                     to:c.target,
                     type:c.tipo
                 });
 
-
-
-
                 modo=null;
                 elements.length=0;
                 $("#areaDibujo .botonera .createConnection").removeClass("disabled");
                 $.post(site_url+"backend/procesos/ajax_crear_conexion/"+procesoId,"tarea_id_origen="+c.source+"&tarea_id_destino="+c.target+"&tipo="+c.tipo);
-
             }
         }
     });
-
 
     diagram.addDiagramListener("ObjectDoubleClicked", function(e) {
       var part = e.subject.part;
@@ -98,12 +89,7 @@ $(document).ready(function(){
           id=part.data.from;
           $('#modal').load(site_url+"backend/procesos/ajax_editar_conexiones/"+procesoId+"/"+id);
           $('#modal').modal({backdrop: 'static', keyboard: false, show: true});
-
       }
-
-
-
-
   });
 
   //Asigno el evento para editar el proceso al hacerle click al titulo
@@ -114,10 +100,6 @@ $(document).ready(function(){
     });
 
     diagram.addDiagramListener("SelectionMoved",updateModel);
-
-
-
-
 });
 
 function updateModel(){
@@ -125,7 +107,6 @@ function updateModel(){
     //model.nombre=$("#areaDibujo h1").text();
     model.elements=new Array();
     //model.connections=new Array();
-
 
      var nodes = diagram.model.nodeDataArray;
  for (var i in nodes) {
@@ -161,7 +142,6 @@ function updateModel(){
     */
 
     json=JSON.stringify(model);
-
 
     $.post(site_url+"backend/procesos/ajax_editar_modelo/"+procesoId,"modelo="+json);
 }

@@ -20,6 +20,7 @@
         <h3>Parámetros</h3>
 
         <table class="table table-bordered">
+          <caption class="hide-text">Parámetros</caption>
           <thead>
             <tr>
                 <th>Nombre del Parámetro</th>
@@ -33,13 +34,9 @@
                 <td>int</td>
                 <td>Identificador de un proceso.</td>
             </tr>
-          </tbody>
-          <thead>
             <tr>
-                <th colspan="3" style="text-align: center">Parametros Opcionales</th>
+                <td colspan="3" style="text-align: center"><strong class="tipo-td">Parámetros Opcionales</strong></td>
             </tr>
-          </thead>
-          <tbody>
             <tr>
                 <td>maxResults</td>
                 <td>int</td>
@@ -52,6 +49,7 @@
             </tr>
           </tbody>
         </table>
+
 
         <h3>Response HTTP</h3>
 
@@ -70,6 +68,7 @@
         <p>Las propiedades que incorpora esta respuesta son:</p>
 
         <table class="table table-bordered">
+          <caption class="hide-text">Propiedades de la respuesta</caption>
           <thead>
             <tr>
                 <th>Nombre del Parámetro</th>

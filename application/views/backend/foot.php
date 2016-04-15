@@ -16,7 +16,6 @@
 <script src="<?= base_url() ?>assets/js/jquery.chosen/chosen.jquery.min.js"></script>
 <script src="<?= base_url() ?>assets/js/jquery.select2/dist/js/select2.min.js"></script>
 <script src="<?= base_url() ?>assets/js/jquery.select2/dist/js/i18n/es.js"></script>
-<script src="<?= base_url() ?>assets/js/file-uploader/fileuploader.js"></script>
 <script src="<?= base_url() ?>assets/js/jquery-ui/js/jquery-ui-1.9.2.custom.min.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/jquery.ui.touch-punch/jquery.ui.touch-punch.min.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/jquery.ui.livedraggable/jquery.ui.livedraggable.js" type="text/javascript"></script>
@@ -26,7 +25,3 @@
 <script src="<?= base_url() ?>assets/js/common.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/backend.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/backend_extendido.js" type="text/javascript"></script>
-<script type="text/javascript">
-    var site_url = "<?= site_url() ?>";
-    var base_url = "<?= base_url() ?>";
-</script>

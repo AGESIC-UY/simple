@@ -10,13 +10,14 @@
             </li>
             <li class="active">Grupos de Usuarios</li>
         </ul>
-        <h2>Accesos Frontend: Usuarios</h2>
+        <h2>Accesos Frontend: Grupos de Usuarios</h2>
 
         <div class="acciones-generales">
           <a class="btn" href="<?=site_url('backend/configuracion/grupo_usuarios_editar')?>"><span class="icon-file"></span> Nuevo</a>
         </div>
 
         <table class="table">
+          <caption class="hide-text">Usuarios</caption>
           <thead>
             <tr>
                 <th>Id</th>
@@ -39,8 +40,8 @@
                     ?>
                 </td>
                 <td class="actions">
-                    <a class="btn btn-primary" href="<?=site_url('backend/configuracion/grupo_usuarios_editar/'.$u->id)?>"><span class="icon-edit icon-white"></span> Editar</a>
-                    <a class="btn btn-danger" href="<?=site_url('backend/configuracion/grupo_usuarios_eliminar/'.$u->id)?>" onclick="return confirm('¿Está seguro que desea eliminar?')"><span class="icon-trash icon-white"></span> Eliminar</a>
+                    <a class="btn btn-primary" href="<?=site_url('backend/configuracion/grupo_usuarios_editar/'.$u->id)?>"><span class="icon-edit icon-white"></span> Editar<span class="hidden-accessible"> <?=$u->nombre?></span></a>
+                    <a class="btn btn-danger" href="<?=site_url('backend/configuracion/grupo_usuarios_eliminar/'.$u->id)?>" onclick="return confirm('¿Está seguro que desea eliminar?')"><span class="icon-trash icon-white"></span> Eliminar<span class="hidden-accessible"> <?=$u->nombre?></span></a>
                 </td>
             </tr>
             <?php endforeach; ?>

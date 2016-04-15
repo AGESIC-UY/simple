@@ -9,7 +9,7 @@
         Accesos Frontend
     </li>
     <li class="<?=strpos($this->uri->segment(3),'usuario')===0?'active':''?>">
-        <a href="<?=site_url('backend/configuracion/usuarios')?>">Usuarios</a>
+        <a href="<?=site_url('backend/configuracion/usuarios')?>">Usuarios Frontend</a>
     </li>
     <li class="<?=strpos($this->uri->segment(3),'grupo')===0?'active':''?>">
         <a href="<?=site_url('backend/configuracion/grupos_usuarios')?>">Grupos de Usuarios</a>
@@ -18,7 +18,7 @@
         Accesos Backend
     </li>
     <li class="<?=strpos($this->uri->segment(3),'backend_usuario')===0?'active':''?>">
-        <a href="<?=site_url('backend/configuracion/backend_usuarios')?>">Usuarios</a>
+        <a href="<?=site_url('backend/configuracion/backend_usuarios')?>">Usuarios Backend</a>
     </li>
 
 </ul>

@@ -14,7 +14,7 @@
         <form class="ajaxForm" method="post" action="<?=site_url('backend/api/token_form')?>">
             <fieldset>
                 <legend>Configurar Código de Acceso</legend>
-                <div class="validacion"></div>
+                <div class="validacion validacion-error"></div>
                 <p>Para poder acceder a la API deberas configrar un código de acceso (token). Si dejas en blanco el token no se podra acceder a la API.</p>
                 <div class="form-horizontal margen-sup">
                   <div class="control-group">
@@ -30,14 +30,14 @@
                 <li class="action-buttons-primary">
                     <ul>
                         <li>
-                          <button class="btn btn-primary" type="submit">Guardar</button>
+                          <button class="btn btn-primary btn-lg" type="submit">Guardar</button>
                         </li>
                     </ul>
                 </li>
                 <li class="action-buttons-second">
                     <ul>
                         <li class="float-left">
-                          <a class="btn btn-link" href="<?=site_url('backend/api')?>">Cancelar</a>
+                          <a class="btn btn-link btn-lg" href="<?=site_url('backend/api')?>">Cancelar</a>
                         </li>
                     </ul>
                 </li>

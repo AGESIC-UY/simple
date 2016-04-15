@@ -14,7 +14,7 @@
             <button type="submit" class="volver btn btn-mini">ok</button>
         </div>
         <div class="contenido">
-            <div class="validacion"></div>
+            <div class="validacion validacion-error"></div>
             <label for="nombre_<?=$widget->id?>">Nombre</label>
             <input type="text" name="nombre" id="nombre_<?=$widget->id?>" value="<?=$widget->nombre?>" />
             <?= $widget->displayForm() ?>

@@ -6,7 +6,7 @@
 </ul>
 <h2><?=$pasarela->nombre ?></h2>
 <form class="ajaxForm" action="<?=site_url('backend/pasarela_pagos/editar_form/'.$pasarela->id)?>" method="post">
-  <div class="validacion"></div>
+  <div class="validacion validacion-error"></div>
   <fieldset>
     <legend>Datos generales</legend>
     <div class="form-horizontal">
@@ -69,7 +69,12 @@
           <?php
               if(isset($pasarela_metodo->vencimiento)) {
                   $datetime = date_create_from_format('YmdHi', $pasarela_metodo->vencimiento);
-                  $vencimiento = $datetime->format('d/m/Y H:i');
+                  if($datetime) {
+                      $vencimiento = $datetime->format('d/m/Y H:i');
+                  }
+                  else {
+                    $vencimiento = null;
+                  }
               }
               else {
                   $vencimiento = '';
@@ -104,14 +109,14 @@
       <li class="action-buttons-primary">
           <ul>
               <li>
-                <input class="btn btn-primary" type="submit" value="Guardar" />
+                <input class="btn btn-primary btn-lg" type="submit" value="Guardar" />
               </li>
           </ul>
       </li>
       <li class="action-buttons-second">
           <ul>
               <li class="float-left">
-                <a class="btn btn-link" href="<?=site_url('backend/pasarela_pagos')?>">Cancelar</a>
+                <a class="btn btn-link btn-lg" href="<?=site_url('backend/pasarela_pagos')?>">Cancelar</a>
               </li>
           </ul>
       </li>

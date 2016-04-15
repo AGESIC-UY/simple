@@ -43,9 +43,9 @@ class AccionEnviarCorreo extends Accion {
 
     public function validateForm() {
         $CI = & get_instance();
-        $CI->form_validation->set_rules('extra[para]', 'Para', 'required');
-        $CI->form_validation->set_rules('extra[tema]', 'Tema', 'required');
-        $CI->form_validation->set_rules('extra[contenido]', 'Contenido', 'required');
+        $CI->form_validation->set_rules('extra[para]', 'extra[para]', 'required');
+        $CI->form_validation->set_rules('extra[tema]', 'extra[tema]', 'required');
+        $CI->form_validation->set_rules('extra[contenido]', 'extra[contenido]', 'required');
     }
 
     public function ejecutar(Etapa $etapa) {
@@ -66,7 +66,9 @@ class AccionEnviarCorreo extends Accion {
 
         $CI = & get_instance();
         $cuenta=$etapa->Tramite->Proceso->Cuenta;
-        $CI->email->from($cuenta->nombre.'@'.$CI->config->item('main_domain'), $cuenta->nombre_largo);
+        ($CI->config->item('main_domain') == '') ? $from = $cuenta->nombre.'@simple' : $from = $cuenta->nombre.'@'.$CI->config->item('main_domain');
+
+        $CI->email->from($from, $cuenta->nombre_largo);
         $CI->email->to($to);
         if(isset($cc))$CI->email->cc($cc);
         if(isset($bcc))$CI->email->bcc($bcc);

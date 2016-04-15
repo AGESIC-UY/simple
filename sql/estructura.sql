@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 08-03-2016 a las 13:56:19
+-- Tiempo de generación: 01-04-2016 a las 12:01:42
 -- Versión del servidor: 5.1.37
 -- Versión de PHP: 5.3.0
 
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `accion` (
   `proceso_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_trigger_proceso1_idx` (`proceso_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=171 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=187 ;
 
 -- --------------------------------------------------------
 
@@ -37,9 +37,9 @@ CREATE TABLE IF NOT EXISTS `accion` (
 
 CREATE TABLE IF NOT EXISTS `bloque` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(64) NOT NULL,
+  `nombre` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=42 ;
 
 -- --------------------------------------------------------
 
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `bloque` (
 
 CREATE TABLE IF NOT EXISTS `campo` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(32) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
   `readonly` tinyint(1) NOT NULL DEFAULT '0',
   `valor_default` text NOT NULL,
   `posicion` int(10) unsigned NOT NULL,
@@ -63,13 +63,13 @@ CREATE TABLE IF NOT EXISTS `campo` (
   `dependiente_valor` varchar(256) DEFAULT NULL,
   `datos` text,
   `documento_id` int(10) unsigned DEFAULT NULL,
-  `fieldset` varchar(30) NOT NULL,
+  `fieldset` varchar(100) DEFAULT NULL,
   `extra` text,
   `dependiente_relacion` enum('==','!=') DEFAULT '==',
   PRIMARY KEY (`id`),
   KEY `fk_campo_formulario1` (`formulario_id`),
   KEY `fk_campo_documento1_idx` (`documento_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=788 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1045 ;
 
 -- --------------------------------------------------------
 
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `conexion` (
   UNIQUE KEY `tarea_origen_destino` (`tarea_id_origen`,`tarea_id_destino`),
   KEY `fk_ruta_tarea` (`tarea_id_origen`),
   KEY `fk_ruta_tarea1` (`tarea_id_destino`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=154 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=170 ;
 
 -- --------------------------------------------------------
 
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `dato_seguimiento` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre_etapa` (`nombre`,`etapa_id`),
   KEY `fk_dato_seguimiento_etapa1_idx` (`etapa_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2224 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2277 ;
 
 -- --------------------------------------------------------
 
@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `documento` (
   PRIMARY KEY (`id`),
   KEY `fk_documento_proceso1_idx` (`proceso_id`),
   KEY `fk_documento_hsm_configuracion1_idx` (`hsm_configuracion_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=63 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=71 ;
 
 -- --------------------------------------------------------
 
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `etapa` (
   KEY `fk_etapa_usuario1_idx` (`usuario_id`),
   KEY `fk_etapa_tramite1` (`tramite_id`),
   KEY `fk_etapa_etapa1_idx` (`etapa_ancestro_split_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=867 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=904 ;
 
 -- --------------------------------------------------------
 
@@ -194,7 +194,7 @@ CREATE TABLE IF NOT EXISTS `evento` (
   KEY `fk_evento_tarea1_idx` (`tarea_id`),
   KEY `fk_evento_accion1_idx` (`accion_id`),
   KEY `fk_evento_paso1_idx` (`paso_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=189 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=202 ;
 
 -- --------------------------------------------------------
 
@@ -230,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `file` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `filename_tipo` (`filename`,`tipo`),
   KEY `fk_file_tramite1_idx` (`tramite_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=29 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
 
 -- --------------------------------------------------------
 
@@ -245,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `formulario` (
   `bloque_id` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_formulario_proceso1_idx` (`proceso_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=238 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=302 ;
 
 -- --------------------------------------------------------
 
@@ -313,7 +313,7 @@ CREATE TABLE IF NOT EXISTS `pasarela_pago` (
   `metodo` varchar(64) NOT NULL,
   `activo` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
 
 -- --------------------------------------------------------
 
@@ -353,7 +353,7 @@ CREATE TABLE IF NOT EXISTS `paso` (
   PRIMARY KEY (`id`),
   KEY `fk_paso_formulario1_idx` (`formulario_id`),
   KEY `fk_paso_tarea1_idx` (`tarea_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=242 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=258 ;
 
 -- --------------------------------------------------------
 
@@ -369,7 +369,7 @@ CREATE TABLE IF NOT EXISTS `proceso` (
   `cuenta_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_proceso_cuenta1_idx` (`cuenta_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=46 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=80 ;
 
 -- --------------------------------------------------------
 
@@ -383,7 +383,7 @@ CREATE TABLE IF NOT EXISTS `proceso_trazabilidad` (
   `organismo_id` varchar(255) NOT NULL,
   `proceso_externo_id` varchar(255) NOT NULL,
   KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 -- --------------------------------------------------------
 
@@ -451,7 +451,7 @@ CREATE TABLE IF NOT EXISTS `tarea` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `identificador_proceso` (`identificador`,`proceso_id`),
   KEY `fk_tarea_proceso1` (`proceso_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=141 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=158 ;
 
 -- --------------------------------------------------------
 
@@ -482,7 +482,7 @@ CREATE TABLE IF NOT EXISTS `tramite` (
   `ended_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_tramite_proceso1_idx` (`proceso_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=735 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=766 ;
 
 -- --------------------------------------------------------
 
@@ -511,7 +511,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   UNIQUE KEY `usuario_unique` (`usuario`,`open_id`),
   KEY `fk_usuario_cuenta1_idx` (`cuenta_id`),
   KEY `email_idx` (`email`,`open_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3073 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3701 ;
 
 -- --------------------------------------------------------
 
@@ -522,6 +522,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 CREATE TABLE IF NOT EXISTS `usuario_backend` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `email` varchar(128) NOT NULL,
+  `usuario` varchar(128) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `nombre` varchar(128) NOT NULL,
   `apellidos` varchar(128) NOT NULL,
@@ -531,7 +532,7 @@ CREATE TABLE IF NOT EXISTS `usuario_backend` (
   `reset_token` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_usuario_backend_cuenta1_idx` (`cuenta_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -564,7 +565,7 @@ CREATE TABLE IF NOT EXISTS `widget` (
   `cuenta_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_widget_cuenta1_idx` (`cuenta_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -581,7 +582,7 @@ CREATE TABLE IF NOT EXISTS `ws_catalogo` (
   `conexion_timeout` int(3) NOT NULL,
   `respuesta_timeout` int(3) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=51 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
 
 -- --------------------------------------------------------
 
@@ -614,4 +615,4 @@ CREATE TABLE IF NOT EXISTS `ws_operacion_respuesta` (
   `respuesta_id` varchar(19) NOT NULL,
   `xslt` longtext NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=77 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=76 ;

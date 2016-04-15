@@ -24,16 +24,15 @@ class CampoEncuesta extends Campo{
             $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
             $regla=new Regla($this->valor_default);
             $valor_default=$regla->getExpresionParaOutput($etapa->id);
-        }else {
+        }
+        else {
             $valor_default=$this->valor_default;
         }
 
         $display  = '<fieldset class="custom-fieldset" id="encuesta_satisfaccion_form" ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' name="' . $this->nombre . '">';
         $display .= '<legend><span class="custom-fieldset-legend">'. $this->etiqueta .'</span></legend>';
-
         $display .= '<a class="btn btn-primary hidden" id="encuesta_satisfaccion_form_enviar" href="#">Siguiente <span class="icon-chevron-right icon-white"></span></a>';
         $display .= '</fieldset>';
-
 
         return $display;
     }

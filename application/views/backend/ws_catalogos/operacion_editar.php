@@ -12,7 +12,7 @@
 </ul>
 
 <form class="ajaxForm" action="<?=site_url('backend/ws_catalogos/operaciones_editar_form/'.$operacion->id)?>" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
-  <div class="validacion"></div>
+  <div class="validacion validacion-error"></div>
   <div class="titulo-form">
     <h2><?= $operacion->nombre ?></h2>
   </div>
@@ -65,7 +65,7 @@
                     <?php foreach($operacion_respuestas as $respuesta) { ?>
                         <div class="margen">
                           <label for="xsl<?=$respuesta->operacion_id?>">XSL</label>
-                          <textarea id="xsl<?=$respuesta->operacion_id?>" name="xslt[<?=$respuesta->operacion_id?>][<?=$respuesta->respuesta_id?>]" data-respuesta-id="<?=$respuesta->respuesta_id?>" spellcheck="false" class="large-textarea respuestas_campos_xslt" placeholder="Ingrese el XSL..."><?=$respuesta->xslt?></textarea>
+                          <textarea data-operacion-id="xsl<?=$respuesta->operacion_id?>" name="xslt[<?=$respuesta->operacion_id?>][<?=$respuesta->respuesta_id?>]" data-respuesta-id="<?=$respuesta->respuesta_id?>" spellcheck="false" class="large-textarea respuestas_campos_xslt" placeholder="Ingrese el XSL..."><?=$respuesta->xslt?></textarea>
                         </div>
                     <?php } ?>
                 </div>
@@ -76,14 +76,14 @@
       <li class="action-buttons-primary">
           <ul>
               <li>
-                <input class="btn btn-primary" type="submit" id="guardar_operacion" value="Guardar" />
+                <input class="btn btn-primary btn-lg" type="submit" id="guardar_operacion" value="Guardar" />
               </li>
           </ul>
       </li>
       <li class="action-buttons-second">
           <ul>
               <li class="float-left">
-                <a class="btn btn-link" href="<?=site_url('backend/ws_catalogos/'.$catalogo->id.'/operaciones')?>">Cancelar</a>
+                <a class="btn btn-link btn-lg" href="<?=site_url('backend/ws_catalogos/'.$catalogo->id.'/operaciones')?>">Cancelar</a>
               </li>
           </ul>
       </li>

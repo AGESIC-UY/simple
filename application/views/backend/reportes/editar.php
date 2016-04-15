@@ -8,7 +8,7 @@
 <form class="ajaxForm form-horizontal" method="POST" action="<?=site_url('backend/reportes/editar_form/'.($edit?$reporte->id:''))?>">
     <fieldset>
         <legend>Datos generales</legend>
-        <div class="validacion"></div>
+        <div class="validacion validacion-error"></div>
         <?php if(!$edit):?>
         <input type="hidden" name="proceso_id" value="<?=$proceso->id?>" />
         <?php endif; ?>
@@ -21,7 +21,7 @@
         <div class="control-group">
           <label class="control-label" for="campos">Campos</label>
           <div class="controls">
-            <select id="controls" name="campos[]" style="height: 240px;" multiple>
+            <select id="campos" name="campos[]" style="height: 240px;" multiple>
                 <?php foreach($proceso->getNombresDeDatos() as $c):?>
                 <option value="<?=$c?>" <?=$edit && in_array($c,$reporte->campos)?'selected':''?>><?=$c?></option>
                 <?php endforeach; ?>
@@ -34,14 +34,14 @@
         <li class="action-buttons-primary">
             <ul>
                 <li>
-                  <input class="btn btn-primary" type="submit" value="Guardar" />
+                  <input class="btn btn-primary btn-lg" type="submit" value="Guardar" />
                 </li>
             </ul>
         </li>
         <li class="action-buttons-second">
             <ul>
                 <li class="float-left">
-                  <a class="btn btn-link" href="<?=site_url('backend/reportes/listar/'.$proceso->id)?>">Cancelar</a>
+                  <a class="btn btn-link btn-lg" href="<?=site_url('backend/reportes/listar/'.$proceso->id)?>">Cancelar</a>
                 </li>
             </ul>
         </li>

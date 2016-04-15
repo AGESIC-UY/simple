@@ -13,7 +13,8 @@
         <link href="assets/js/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">
         <link href="assets/css/common.css" rel="stylesheet">
         <link href="assets/css/estilos_extendidos.css" rel="stylesheet">
-        <link href="assets/css/estilos-login.css" rel="stylesheet">
+        <link href="assets/css/estilos-formulario-tipo.css" rel="stylesheet">
+        <!-- link href="assets/css/estilos-login.css" rel="stylesheet" -->
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -25,45 +26,84 @@
     </head>
 
     <body>
-
-      <form method="post" class="ajaxForm login" action="<?= site_url('manager/autenticacion/login_form') ?>">
-          <fieldset>
-            <legend>Seleccionar el tipo de acceso</legend>
-
-            <div class="selector-header">
-              <h1>Ingrese a SIMPLE - manager</h1>
-      			</div>
-      			<div class="selector-wrap">
-      				<div class="selector seleccionado usuario"></div>
-      			</div>
-
-            <div id="tab1">
-              <div class="validacion"></div>
-              <input type="hidden" name="redirect" value="<?= $redirect ?>" />
-
-              <h2>Ingrese su código de usuario y contraseña</h2>
-              <div class="row">
-                <label for="usuario">Usuario:</label>
-      					<span class="input-col">
-                  <input id="usuario" name="usuario" type="text" >
-      					</span>
-      				</div>
-
-              <div class="row">
-                <label for="password">Contraseña:</label>
-      					<span class="input-col">
-                  <input id="password" name="password" type="password">
-      					</span>
-      				</div>
-
-              <div class="row">
-      					<div>
-                  <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
-      					</div>
-      				</div>
+      <ul id="skip">
+        <li><a href="#tab1">Ir al contenido</a></li>
+      </ul>
+      <div class="contenedorGeneral">
+        <header class="header-publico header-login">
+          <div class="container-fluid">
+              <div class="row-fluid">
+                  <div class="span7">
+                      <div id="logo">
+                          <span class="nombre-app"><?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->nombre_largo : '' ?>  - Manager</span>
+                      </div>
+                  </div>
+                  <div class="span5">
+                    <div class="logosSecundarios">
+                      <ul class="listaHorizontal">
+                        <li>
+                          <a href="https://www.presidencia.gub.uy/" title="Ir al sitio de Presidencia">
+                            <img src="<?= base_url() ?>assets/img/logoPresidencia.png" alt="Presidencia">
+                          </a>
+                        </li>
+                        <li>
+                          <a href="http://uruguaydigital.gub.uy/" title="Ir al sitio de Uruguay Digital">
+                            <img src="<?= base_url() ?>assets/img/logo-uruguayDigital.png" alt="Uruguay Digital">
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+              </div>
             </div>
-          </fieldset>
-      </form>
+        </header>
+        <div id="main" tabindex="-1">
+          <div class="container-fluid">
+            <h1>Ingrese a SIMPLE - Manager</h1>
+            <form method="post" class="ajaxForm" action="<?= site_url('manager/autenticacion/login_form') ?>">
+              <fieldset>
+                <legend>Ingreso de usuario</legend>
+
+                <div id="tab1" tabindex="-1">
+                  <div class="validacion validacion-error"></div>
+                  <input type="hidden" name="redirect" value="<?= $redirect ?>" />
+
+                  <div class="form-horizontal">
+                      <div class="control-group">
+                        <label class="control-label" for="email">Usuario:</label>
+                        <div class="controls">
+                          <input id="usuario" name="usuario" type="text" >
+                        </div>
+                      </div>
+
+                      <div class="control-group">
+                        <label class="control-label" for="password">Contraseña:</label>
+                        <div class="controls">
+                          <input id="password" name="password" type="password">
+                        </div>
+                      </div>
+
+                      <div class="control-group">
+                        <div class="controls">
+                          <button type="submit" class="btn-lg btn-primario">Ingresar</button>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+      <footer class="row-fluid">
+        <div class="area2">
+          <div class="container">
+            <div class="pull-right">
+                <img src="<?= base_url() ?>assets/img/logoTramites.png" alt="tramites.gub.uy">
+            </div>
+          </div>
+        </div>
+      </footer>
 
 
         <!-- Le javascript

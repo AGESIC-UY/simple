@@ -17,43 +17,49 @@
         <form class="ajaxForm" method="post" action="<?= site_url('backend/configuracion/backend_usuario_editar_form/' . (isset($usuario)?$usuario->id:'')) ?>">
             <fieldset>
               <legend>Editar usuario</legend>
-              <div class="validacion"></div>
+              <div class="validacion validacion-error"></div>
               <div class="form-horizontal">
                   <div class="control-group">
-                    <label for="id" class="control-label">E-Mail</label>
+                    <label for="usuario" class="control-label">Usuario</label>
                     <div class="controls">
-                      <input type="text" name="email" value="<?=isset($usuario)?$usuario->email:''?>" <?=  isset($usuario)?'disabled':''?>/>
+                      <input id="usuario" type="text" name="usuario" value="<?=isset($usuario)?$usuario->usuario:''?>" />
                     </div>
                   </div>
                   <div class="control-group">
-                    <label for="id" class="control-label">Contraseña</label>
+                    <label for="email" class="control-label">E-Mail</label>
                     <div class="controls">
-                      <input type="password" name="password" value=""/>
+                      <input id="email" type="text" name="email" value="<?=isset($usuario)?$usuario->email:''?>" <?=  isset($usuario)?'disabled':''?>/>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label for="password" class="control-label">Contraseña</label>
+                    <div class="controls">
+                      <input id="password" type="password" name="password" value=""/>
                       <?php if(isset($usuario)):?><span class="help-inline">Solo si desea modificarla</span><?php endif ?>
                     </div>
                   </div>
                   <div class="control-group">
-                    <label for="id" class="control-label">Confirmar contraseña</label>
+                    <label for="password_confirm" class="control-label">Confirmar contraseña</label>
                     <div class="controls">
-                      <input type="password" name="password_confirm" value=""/>
+                      <input id="password_confirm" type="password" name="password_confirm" value=""/>
                     </div>
                   </div>
                   <div class="control-group">
-                    <label for="id" class="control-label">Nombre</label>
+                    <label for="nombre" class="control-label">Nombre</label>
                     <div class="controls">
-                      <input type="text" name="nombre" value="<?=isset($usuario)?$usuario->nombre:''?>"/>
+                      <input id="nombre" type="text" name="nombre" value="<?=isset($usuario)?$usuario->nombre:''?>"/>
                     </div>
                   </div>
                   <div class="control-group">
-                    <label for="id" class="control-label">Apellidos</label>
+                    <label for="apellidos" class="control-label">Apellidos</label>
                     <div class="controls">
-                      <input type="text" name="apellidos" value="<?=isset($usuario)?$usuario->apellidos:''?>"/>
+                      <input id="apellidos" type="text" name="apellidos" value="<?=isset($usuario)?$usuario->apellidos:''?>"/>
                     </div>
                   </div>
                   <div class="control-group">
-                    <label for="id" class="control-label">Rol</label>
+                    <label for="rol" class="control-label">Rol</label>
                     <div class="controls">
-                      <select name="rol">
+                      <select id="rol" name="rol">
                           <option value="super" <?=  isset($usuario) && $usuario->rol=='super'?'selected':''?>>super</option>
                           <option value="modelamiento" <?=  isset($usuario) && $usuario->rol=='modelamiento'?'selected':''?>>modelamiento</option>
                           <option value="seguimiento" <?=  isset($usuario) && $usuario->rol=='seguimiento'?'selected':''?>>seguimiento</option>
@@ -81,14 +87,14 @@
                 <li class="action-buttons-primary">
                     <ul>
                         <li>
-                          <button class="btn btn-primary" type="submit">Guardar</button>
+                          <button class="btn btn-primary btn-lg" type="submit">Guardar</button>
                         </li>
                     </ul>
                 </li>
                 <li class="action-buttons-second">
                     <ul>
                         <li class="float-left">
-                          <a class="btn btn-link" href="<?=site_url('backend/configuracion/backend_usuarios')?>">Cancelar</a>
+                          <a class="btn btn-link btn-lg" href="<?=site_url('backend/configuracion/backend_usuarios')?>">Cancelar</a>
                         </li>
                     </ul>
                 </li>

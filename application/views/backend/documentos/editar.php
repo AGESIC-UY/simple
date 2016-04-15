@@ -37,12 +37,12 @@
     <div class="titulo-form">
       <h3><?= $edit ? $documento->nombre : 'Documento' ?></h3>
     </div>
+    <div class="validacion validacion-error"></div>
+    <?php if (!$edit): ?>
+        <input type="hidden" name="proceso_id" value="<?= $proceso->id ?>" />
+    <?php endif; ?>
     <fieldset>
         <legend>Datos generales</legend>
-        <div class="validacion"></div>
-        <?php if (!$edit): ?>
-            <input type="hidden" name="proceso_id" value="<?= $proceso->id ?>" />
-        <?php endif; ?>
         <div class="form-horizontal">
           <div class="control-group">
             <label for="nombre" class="control-label">Nombre</label>
@@ -229,14 +229,14 @@
           <li class="action-buttons-primary">
               <ul>
                   <li>
-                    <input class="btn btn-primary" type="submit" value="Guardar" />
+                    <input class="btn btn-primary btn-lg" type="submit" value="Guardar" />
                   </li>
               </ul>
           </li>
           <li class="action-buttons-second">
               <ul>
                   <li class="float-left">
-                    <a class="btn btn-link" href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Cancelar</a>
+                    <a class="btn btn-link btn-lg" href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Cancelar</a>
                   </li>
               </ul>
           </li>

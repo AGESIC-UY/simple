@@ -4,6 +4,7 @@ class UsuarioBackend extends Doctrine_Record {
 
     function setTableDefinition() {
         $this->hasColumn('id');
+        $this->hasColumn('usuario');
         $this->hasColumn('email');
         $this->hasColumn('password');
         $this->hasColumn('nombre');
@@ -16,27 +17,27 @@ class UsuarioBackend extends Doctrine_Record {
 
     function setUp() {
         parent::setUp();
-        
+
         $this->hasOne('Cuenta',array(
             'local'=>'cuenta_id',
             'foreign'=>'id'
         ));
     }
-    
-    function setPassword($password,$salt=null) {        
+
+    function setPassword($password,$salt=null) {
         $hashPassword = sha1($password.$this->salt);
         $this->_set('password', $hashPassword);
     }
-    
+
     function setPasswordWithSalt($password,$salt=null){
         if($salt!==null)
             $this->salt=$salt;
         else
             $this->salt=random_string ('alnum', 32);
-        
+
         $this->setPassword($password);
     }
-    
+
     public function setResetToken($llave){
         if($llave)
             $this->_set('reset_token',sha1($llave));
@@ -44,4 +45,12 @@ class UsuarioBackend extends Doctrine_Record {
             $this->_set('reset_token',null);
     }
 
+    public function registrado_saml() {
+      if(isset($_COOKIE['simple_bpm_saml_session_ref_k'])) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
 }

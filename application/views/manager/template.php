@@ -55,15 +55,27 @@
                   </li>
                 </ul>
               </div>
-              <div id="userMenu" class="pull-right userMenu">
-                <span class="btn-small">Bienvenido,</span>
-                <div class="btn-group">
-                  <a class="btn btn-small btn-link dropdown-toggle" data-toggle="dropdown" href="#"><span><?= UsuarioManagerSesion::usuario()->usuario ?></span> <span class="caret"></span></a>
-                  <ul class="dropdown-menu pull-right">
-                      <li><a href="<?= site_url('manager/autenticacion/logout') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
-                  </ul>
+              <?php if (UsuarioManagerSesion::registrado_saml()): ?>
+                <div id="userMenu" class="pull-right userMenu">
+                  <span class="btn-small">Bienvenido,</span>
+                  <div class="btn-group">
+                    <a class="btn btn-small btn-link dropdown-toggle" data-toggle="dropdown" href="#"><span><?= UsuarioManagerSesion::usuario()->usuario ?></span> <span class="caret"></span></a>
+                    <ul class="dropdown-menu pull-right">
+                        <li><a href="<?= site_url('autenticacion/logout_saml') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
+              <?php else: ?>
+                <div id="userMenu" class="pull-right userMenu">
+                  <span class="btn-small">Bienvenido,</span>
+                  <div class="btn-group">
+                    <a class="btn btn-small btn-link dropdown-toggle" data-toggle="dropdown" href="#"><span><?= UsuarioManagerSesion::usuario()->usuario ?></span> <span class="caret"></span></a>
+                    <ul class="dropdown-menu pull-right">
+                        <li><a href="<?= site_url('manager/autenticacion/logout') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                    </ul>
+                  </div>
+                </div>
+              <?php endif; ?>
             </div>
           </div>
         </div>

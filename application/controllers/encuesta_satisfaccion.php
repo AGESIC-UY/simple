@@ -13,7 +13,6 @@ class Encuesta_satisfaccion extends MY_Controller {
             $nueva_encuesta->fecha = date("Y-m-d H:i:s");
             $nueva_encuesta->reporte = json_encode($this->input->post('reporte'));
             $nueva_encuesta->save();
-
             echo 0;
         }
         else {

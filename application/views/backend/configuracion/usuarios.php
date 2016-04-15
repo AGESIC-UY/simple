@@ -18,6 +18,7 @@
         </div>
 
         <table class="table">
+          <caption class="hide-text">Usuarios</caption>
           <thead>
             <tr>
                 <th>Usuario</th>
@@ -46,8 +47,8 @@
                 </td>
                 <td><?=$u->vacaciones?'Si':'No'?></td>
                 <td class="actions">
-                    <a class="btn btn-primary" href="<?=site_url('backend/configuracion/usuario_editar/'.$u->id)?>"><span class="icon-edit icon-white"></span> Editar</a>
-                    <a class="btn btn-danger" href="<?=site_url('backend/configuracion/usuario_eliminar/'.$u->id)?>" onclick="return confirm('¿Está seguro que desea eliminar?')"><span class="icon-trash icon-white"></span> Eliminar</a>
+                    <a class="btn btn-primary" href="<?=site_url('backend/configuracion/usuario_editar/'.$u->id)?>"><span class="icon-edit icon-white"></span> Editar<span class="hidden-accessible"> <?=$u->usuario?></span></a>
+                    <a class="btn btn-danger" href="<?=site_url('backend/configuracion/usuario_eliminar/'.$u->id)?>" onclick="return confirm('¿Está seguro que desea eliminar?')"><span class="icon-trash icon-white"></span> Eliminar<span class="hidden-accessible"> <?=$u->usuario?></span></a>
                 </td>
             </tr>
             <?php endforeach; ?>

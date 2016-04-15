@@ -33,6 +33,7 @@
         <p>Los diferentes métodos de esta interfaz de programación requieren distintos atributos como parte de la URL, como parámetros de la consulta. Adicionalmente hay parámetros que son comunes para todos los métodos:</p>
 
         <table class="table table-bordered">
+          <caption class="hide-text">Parámetros comunes</caption>
           <thead>
             <tr>
                 <th>Nombre del parámetro</th>

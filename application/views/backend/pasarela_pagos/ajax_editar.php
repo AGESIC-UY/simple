@@ -4,7 +4,7 @@
 </div>
 <form id="formEditarCatalogo" class="ajaxForm" method="POST" action="<?=site_url('backend/ws_catalogos/editar_form/'.$catalogo->id)?>">
 <div class="modal-body">
-        <div class="validacion"></div>
+        <div class="validacion validacion-error"></div>
         <label>Nombre</label>
         <input class="input-xlarge" type="text" name="nombre" value="<?=$catalogo->nombre?>" />
         <label>WSDL</label>

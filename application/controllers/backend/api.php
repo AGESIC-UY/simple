@@ -1,130 +1,131 @@
 <?php
 
 class API extends MY_BackendController {
-    
+
     public function _auth(){
         UsuarioBackendSesion::force_login();
-        
+
         if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='desarrollo'){
-            echo 'No tiene permisos para acceder a esta seccion.';
-            exit;
+            //echo 'No tiene permisos para acceder a esta seccion.';
+            //exit;
+            redirect('backend');
         }
     }
-    
+
     /*
      * Documentacion de la API
      */
-    
+
     public function index(){
         $this->_auth();
-        
+
         $data['title']='API';
         $data['content']='backend/api/index';
         $this->load->view('backend/template',$data);
     }
-    
+
     public function token(){
         $this->_auth();
-        
+
         $data['cuenta']=UsuarioBackendSesion::usuario()->Cuenta;
-        
+
         $data['title']='Configurar Código de Acceso';
         $data['content']='backend/api/token';
         $this->load->view('backend/template',$data);
     }
-    
+
     public function token_form(){
         $this->_auth();
-        
+
         $cuenta=UsuarioBackendSesion::usuario()->Cuenta;
-        
+
         $this->form_validation->set_rules('api_token','Token','max_length[32]');
-        
+
         $respuesta=new stdClass();
         if($this->form_validation->run()==true){
             $cuenta->api_token=$this->input->post('api_token');
             $cuenta->save();
-            
+
             $respuesta->validacion=true;
             $respuesta->redirect=site_url('backend/api');
-            
+
         }else{
             $respuesta->validacion=false;
             $respuesta->errores=validation_errors();
         }
-        
+
         echo json_encode($respuesta);
     }
-    
+
     public function tramites_recurso(){
         $this->_auth();
-        
+
         $data['title']='Tramites';
         $data['content']='backend/api/tramites_recurso';
         $this->load->view('backend/template',$data);
     }
-    
+
     public function tramites_obtener(){
         $this->_auth();
-        
+
         $data['title']='Tramites: obtener';
         $data['content']='backend/api/tramites_obtener';
         $this->load->view('backend/template',$data);
     }
-    
+
     public function tramites_listar(){
         $this->_auth();
-        
+
         $data['title']='Tramites: listar';
         $data['content']='backend/api/tramites_listar';
         $this->load->view('backend/template',$data);
     }
-    
+
     public function tramites_listarporproceso(){
         $this->_auth();
-        
+
         $data['title']='Tramites: listar por proceso';
         $data['content']='backend/api/tramites_listarporproceso';
         $this->load->view('backend/template',$data);
     }
-    
+
     public function procesos_recurso(){
         $this->_auth();
-        
+
         $data['title']='Procesos';
         $data['content']='backend/api/procesos_recurso';
         $this->load->view('backend/template',$data);
     }
-    
+
     public function procesos_obtener(){
         $this->_auth();
-        
+
         $data['title']='Procesos: obtener';
         $data['content']='backend/api/procesos_obtener';
         $this->load->view('backend/template',$data);
     }
-    
+
     public function procesos_listar(){
         $this->_auth();
-        
+
         $data['title']='Procesos: listar';
         $data['content']='backend/api/procesos_listar';
         $this->load->view('backend/template',$data);
     }
-    
-    
+
+
     /*
      * Llamadas de la API
      */
 
     public function tramites($tramite_id = null) {
         $api_token=$this->input->get('token');
-        
+
         $cuenta = Cuenta::cuentaSegunDominio();
-        
+
         if(!$cuenta->api_token)
             show_404 ();
-        
+
         if($cuenta->api_token!=$api_token)
             show_error ('No tiene permisos para acceder a este recurso.', 401);
 
@@ -138,7 +139,7 @@ class API extends MY_BackendController {
             if ($tramite->Proceso->Cuenta != $cuenta)
                 show_error('No tiene permisos para acceder a este recurso.', 401);
 
-            
+
             $respuesta->tramite = $tramite->toPublicArray();
         } else {
             $offset = $this->input->get('pageToken') ? 1 * base64_decode(urldecode($this->input->get('pageToken'))) : null;
@@ -175,12 +176,12 @@ class API extends MY_BackendController {
 
     public function procesos($proceso_id = null, $recurso = null) {
         $api_token=$this->input->get('token');
-        
+
         $cuenta = Cuenta::cuentaSegunDominio();
-        
+
         if(!$cuenta->api_token)
             show_404 ();
-        
+
         if($cuenta->api_token!=$api_token)
             show_error ('No tiene permisos para acceder a este recurso.', 401);
 

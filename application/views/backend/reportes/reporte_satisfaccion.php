@@ -20,7 +20,7 @@
                     case '12': $mes = 'Diciembre'; break;
                 }
 
-                $resultados[$mes] = (array_key_exists($mes, $resultados) ? (int)$resultados[$mes] : 0) + (int)$r->reporte->calificacion_general;
+                $resultados[$mes] = (array_key_exists($mes, $resultados) ? (int)$resultados[$mes] : 0) + (isset($r->reporte->calificacion_general) ? (int)$r->reporte->calificacion_general : 0);
             }
         }
 
@@ -40,8 +40,8 @@
         datasets: [
             {
                 label: "Valores generales",
-                fillColor: "#d9edf7",
-                pointColor: "#3a87ad",
+                fillColor: "#e2e9ef",
+                pointColor: "#3F8CD2",
                 data: <?php echo json_encode($values); ?>
             }
         ]
@@ -53,10 +53,10 @@
 </script>
 
 <ul class="breadcrumb">
-    <li>
-        <a href="<?=site_url('backend/reportes')?>">Gestión</a> <span class="divider">/</span>
-    </li>
-    <li class="active">Reporte de satisfacción</li>
+  <li>
+    <a href="<?=site_url('backend/reportes')?>">Gestión</a> <span class="divider">/</span>
+  </li>
+  <li class="active">Reporte de satisfacción</li>
 </ul>
 <h2>Reporte de satisfacción</h2>
 
@@ -66,22 +66,22 @@
 
 <table class="table margen-sup">
   <caption class="hide-text">Reportes de satisfacción</caption>
-    <thead>
-        <tr>
-            <th>Fecha de realización</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach($reportes as $r): ?>
-        <tr>
-            <td><?=date('d/m/Y', strtotime($r->fecha))?></td>
-            <td class="actions">
-                <a href="<?=site_url('backend/reportes/reporte_satisfaccion/'.$r->id)?>" class="btn btn-primary"><span class="icon-eye-open icon-white"></span> Detalle</a>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </tbody>
+  <thead>
+    <tr>
+      <th>Fecha de realización</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php foreach($reportes as $r): ?>
+    <tr>
+      <td><?=date('d/m/Y', strtotime($r->fecha))?></td>
+      <td class="actions">
+          <a href="<?=site_url('backend/reportes/reporte_satisfaccion/'.$r->id)?>" class="btn btn-primary"><span class="icon-eye-open icon-white"></span> Detalle<span class="hidden-accessible"> <?=date('d/m/Y', strtotime($r->fecha))?> <?=$r->id?></span></a>
+      </td>
+    </tr>
+    <?php endforeach; ?>
+  </tbody>
 </table>
 
 <?= $reportes_total[0] ?>

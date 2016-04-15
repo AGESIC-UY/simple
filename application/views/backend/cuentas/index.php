@@ -14,7 +14,7 @@
 <form class="ajaxForm" method="post" action="<?= site_url('backend/cuentas/cuenta_form/' . (isset($usuario)?$usuario->id:'')) ?>">
     <fieldset>
         <legend>Cambiar contraseña</legend>
-        <div class="validacion"></div>
+        <div class="validacion validacion-error"></div>
         <div class="form-horizontal">
           <div class="control-group">
             <label for="password" class="control-label">Contraseña</label>
@@ -34,14 +34,14 @@
         <li class="action-buttons-primary">
             <ul>
                 <li>
-                  <button class="btn btn-primary" type="submit">Guardar</button>
+                  <button class="btn btn-primary btn-lg" type="submit">Guardar</button>
                 </li>
             </ul>
         </li>
         <li class="action-buttons-second">
             <ul>
                 <li class="float-left">
-                  <a class="btn btn-link" href="#" onclick="javascript:history.back()">Cancelar</a>
+                  <a class="btn btn-link btn-lg" href="#" onclick="javascript:history.back()">Cancelar</a>
                 </li>
             </ul>
         </li>

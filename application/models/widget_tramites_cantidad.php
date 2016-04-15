@@ -11,7 +11,6 @@ class WidgetTramitesCantidad extends Widget {
 
         $datos = array();
 
-
         foreach($this->config->procesos as $proceso_id){
             $p=Doctrine::getTable('Proceso')->find($proceso_id);
             if($p){
@@ -27,7 +26,6 @@ class WidgetTramitesCantidad extends Widget {
                 $datos[$p->nombre]['pendientes'] = $conteo;
             }
         }
-
 
         foreach($this->config->procesos as $proceso_id){
             $p=Doctrine::getTable('Proceso')->find($proceso_id);
@@ -102,8 +100,12 @@ class WidgetTramitesCantidad extends Widget {
         $procesos_array=$this->config?$this->config->procesos:array();
 
         $display = '<span class="control-label">Procesos a desplegar</span>';
-        foreach ($procesos as $p)
-          $display.='<label for="proceso_'.$p->id.'" class="checkbox"><input type="checkbox" id="proceso_'.$p->id.'" name="config[procesos][]" value="' . $p->id . '" ' . (in_array($p->id, $procesos_array) ? 'checked' : '') . ' /> ' . $p->nombre . '</label>';
+        foreach ($procesos as $p) {
+          if($p->nombre != 'BLOQUE') {
+            $display.='<label for="proceso_'.$p->id.'" class="checkbox"><input type="checkbox" id="proceso_'.$p->id.'" name="config[procesos][]" value="' . $p->id . '" ' . (in_array($p->id, $procesos_array) ? 'checked' : '') . ' /> ' . $p->nombre . '</label>';
+          }
+        }
+
         return $display;
     }
 

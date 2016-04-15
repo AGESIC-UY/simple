@@ -4,7 +4,7 @@ class CampoCheckbox extends Campo {
 
     protected function display($modo, $dato) {
         $display  = '<div class="control-group">';
-        $display .= '<span class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*' : ' (Opcional)') . '</span>';
+        $display .= '<span class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ' (Opcional):') . '</span>';
         $display .= '<div class="controls" data-fieldset="'.$this->fieldset.'">';
         foreach ($this->datos as $d) {
             $display.='<label class="checkbox" for="'.$d->valor.'">';

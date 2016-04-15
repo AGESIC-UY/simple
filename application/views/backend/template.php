@@ -35,16 +35,29 @@
                           </li>
                         </ul>
                       </div>
-                      <div class="pull-right userMenu" id="userMenu">
-                        <span class="btn-small">Bienvenido,</span>
-                        <div class="btn-group">
-                          <a class="btn btn-small btn-link dropdown-toggle" data-toggle="dropdown" href="#"><span><?= UsuarioBackendSesion::usuario()->email ?></span> <span class="caret"></span></a>
-                          <ul class="dropdown-menu pull-right">
-                            <li><a href="<?= site_url('backend/cuentas') ?>"><span class="icon-user"></span> Mi Cuenta</a></li>
-                            <li><a href="<?= site_url('backend/autenticacion/logout') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
-                          </ul>
+                      <?php if (UsuarioBackendSesion::registrado_saml()): ?>
+                        <div class="pull-right userMenu" id="userMenu">
+                          <span class="btn-small">Bienvenido,</span>
+                          <div class="btn-group">
+                            <a class="btn btn-small btn-link dropdown-toggle" data-toggle="dropdown" href="#"><span><?= UsuarioBackendSesion::usuario()->email ?></span> <span class="caret"></span></a>
+                            <ul class="dropdown-menu pull-right">
+                              <li><a href="<?= site_url('backend/cuentas') ?>"><span class="icon-user"></span> Mi Cuenta</a></li>
+                              <li><a href="<?= site_url('autenticacion/logout_saml') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                            </ul>
+                          </div>
                         </div>
-                      </div>
+                      <?php else: ?>
+                        <div class="pull-right userMenu" id="userMenu">
+                          <span class="btn-small">Bienvenido,</span>
+                          <div class="btn-group">
+                            <a class="btn btn-small btn-link dropdown-toggle" data-toggle="dropdown" href="#"><span><?= UsuarioBackendSesion::usuario()->email ?></span> <span class="caret"></span></a>
+                            <ul class="dropdown-menu pull-right">
+                              <li><a href="<?= site_url('backend/cuentas') ?>"><span class="icon-user"></span> Mi Cuenta</a></li>
+                              <li><a href="<?= site_url('backend/autenticacion/logout') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      <?php endif; ?>
                     </div>
                 </div>
               </div>

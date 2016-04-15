@@ -14,7 +14,7 @@
                     <div class="well">
                         <form method="POST" action="<?=site_url('validador/documento')?>" autocomplete="off">
                             <legend>Valide su documento</legend>
-                            <div class="validacion"><?=  validation_errors()?></div>
+                            <div class="validacion validacion-error"><?=  validation_errors()?></div>
                             <label>Folio</label>
                             <input class="span3" type="text" name="id" value="<?=set_value('id')?>" />
                             <label>Código de verificación</label>

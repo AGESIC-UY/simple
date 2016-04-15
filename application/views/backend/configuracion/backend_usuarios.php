@@ -17,6 +17,7 @@
         </div>
 
         <table class="table">
+          <caption class="hide-text">Usuarios</caption>
           <thead>
             <tr>
                 <th>E-Mail</th>
@@ -34,8 +35,8 @@
                 <td><?=$u->apellidos?></td>
                 <td><?=$u->rol?></td>
                 <td class="actions">
-                    <a class="btn btn-primary" href="<?=site_url('backend/configuracion/backend_usuario_editar/'.$u->id)?>"><span class="icon-edit icon-white"></span> Editar</a>
-                    <a class="btn btn-danger" href="<?=site_url('backend/configuracion/backend_usuario_eliminar/'.$u->id)?>" onclick="return confirm('¿Está seguro que desea eliminar?')"><span class="icon-trash icon-white"></span> Eliminar</a>
+                    <a class="btn btn-primary" href="<?=site_url('backend/configuracion/backend_usuario_editar/'.$u->id)?>"><span class="icon-edit icon-white"></span> Editar<span class="hidden-accessible"> <?=$u->email?></span></a>
+                    <a class="btn btn-danger" href="<?=site_url('backend/configuracion/backend_usuario_eliminar/'.$u->id)?>" onclick="return confirm('¿Está seguro que desea eliminar?')"><span class="icon-trash icon-white"></span> Eliminar<span class="hidden-accessible"> <?=$u->email?></span></a>
                 </td>
             </tr>
             <?php endforeach; ?>

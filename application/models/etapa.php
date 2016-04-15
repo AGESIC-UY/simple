@@ -124,8 +124,6 @@ class Etapa extends Doctrine_Record {
                             $usuario_asignado_id = $u;
                         }
 
-
-
                         //Para mas adelante poder calcular como hacer las uniones
                         if($tp->conexion=='union')
                             $etapa->etapa_ancestro_split_id=null;
@@ -242,10 +240,10 @@ class Etapa extends Doctrine_Record {
                 ->where('e.tarea_id = ? AND e.instante = ? AND e.paso_id IS NULL',array($this->Tarea->id,'antes'))
                 ->execute();
         foreach ($eventos as $e) {
-                $r = new Regla($e->regla);
-                if ($r->evaluar($this->id)) {
-                  $e->Accion->ejecutar($this);
-                }
+          $r = new Regla($e->regla);
+          if ($r->evaluar($this->id)) {
+            $e->Accion->ejecutar($this);
+          }
         }
     }
 
@@ -368,12 +366,15 @@ class Etapa extends Doctrine_Record {
         $now = new DateTime();
         $now->setTime(0,0,0);
 
-        $interval = $now->diff(new DateTime($this->vencimiento_at));
+        $exp = new DateTime($this->vencimiento_at);
+        $exp->setTime(0,0,0);
+
+        $interval = $now->diff($exp);
 
         if($interval->invert)
             return 'vencida';
         else
-            return 'vence en '. (1+$interval->days) . ' días';
+            return 'vence en '. ($interval->d) . ' días';
     }
 
 
@@ -410,7 +411,6 @@ class Etapa extends Doctrine_Record {
                 $r = new Regla($e->regla);
                 if ($r->evaluar($this->id))
                     $e->Accion->ejecutar($this, $secuencia);
-
         }
     }
 

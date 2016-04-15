@@ -9,10 +9,11 @@ class Documentos extends MY_BackendController {
         parent::__construct();
 
         UsuarioBackendSesion::force_login();
-        
+
         if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
-            echo 'No tiene permisos para acceder a esta seccion.';
-            exit;
+            //echo 'No tiene permisos para acceder a esta seccion.';
+            //exit;
+            redirect('backend');
         }
     }
 
@@ -34,7 +35,7 @@ class Documentos extends MY_BackendController {
 
     public function crear($proceso_id) {
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
-        
+
         if ($proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
             echo 'No tiene permisos para crear este documento';
             exit;
@@ -64,7 +65,7 @@ class Documentos extends MY_BackendController {
 
         $this->load->view('backend/template', $data);
     }
-    
+
     public function editar_form($documento_id=NULL){
         $documento=NULL;
         if($documento_id){
@@ -73,16 +74,16 @@ class Documentos extends MY_BackendController {
             $documento=new Documento();
             $documento->proceso_id=$this->input->post('proceso_id');
         }
-        
+
         if($documento->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
                 echo 'Usuario no tiene permisos para editar este documento.';
                 exit;
             }
-        
+
         $this->form_validation->set_rules('nombre','Nombre','required');
         $this->form_validation->set_rules('tipo','Tipo','required');
         $this->form_validation->set_rules('contenido','Contenido','required');
-        
+
         if($this->input->post('tipo')=='certificado'){
             $this->form_validation->set_rules('titulo','Título','required');
             $this->form_validation->set_rules('subtitulo','Subtítulo','required');
@@ -97,13 +98,13 @@ class Documentos extends MY_BackendController {
         }
 
         $respuesta=new stdClass();
-        if($this->form_validation->run()==TRUE){         
+        if($this->form_validation->run()==TRUE){
             $documento->nombre=$this->input->post('nombre');
             $documento->tipo=$this->input->post('tipo');
             $documento->contenido=$this->input->post('contenido',false);
             $documento->tamano=$this->input->post('tamano');
             $documento->hsm_configuracion_id=$this->input->post('hsm_configuracion_id');
-            
+
             if($documento->tipo=='certificado'){
                 $documento->titulo=$this->input->post('titulo');
                 $documento->subtitulo=$this->input->post('subtitulo');
@@ -118,44 +119,44 @@ class Documentos extends MY_BackendController {
                 $documento->validez=$this->input->post('validez');
                 $documento->validez_habiles=$this->input->post('validez_habiles');
             }
-            
+
             $documento->save();
-            
+
             $respuesta->validacion=TRUE;
             $respuesta->redirect=site_url('backend/documentos/listar/'.$documento->Proceso->id);
         }else{
             $respuesta->validacion=FALSE;
             $respuesta->errores=validation_errors();
         }
-        
+
         echo json_encode($respuesta);
     }
-    
+
     public function previsualizar($documento_id){
         $documento=Doctrine::getTable('Documento')->find($documento_id);
-        
+
         if($documento->Proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id){
             echo 'Usuario no tiene permisos';
             exit;
         }
-        
+
         $documento->previsualizar();
     }
 
 
     public function eliminar($documento_id){
         $documento=Doctrine::getTable('Documento')->find($documento_id);
-        
+
         if($documento->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
             echo 'Usuario no tiene permisos para eliminar este documento.';
             exit;
         }
-        
+
         $proceso=$documento->Proceso;
         $documento->delete();
-        
+
         redirect('backend/documentos/listar/'.$proceso->id);
-        
+
     }
 
 }

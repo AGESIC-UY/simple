@@ -1,26 +1,26 @@
 <?php
 require_once('campo.php');
 class CampoTitle extends Campo{
-    
+
     public $requiere_nombre=false;
     public $requiere_datos=false;
     public $estatico=true;
 
     function setTableDefinition() {
         parent::setTableDefinition();
-        
+
         $this->hasColumn('readonly','bool',1,array('default'=>1));
     }
-    
+
     function setUp() {
         parent::setUp();
         $this->setTableName("campo");
     }
-    
+
     public function setReadonly($readonly){
         $this->_set('readonly', 1);
     }
-    
+
     protected function display($modo, $dato,$etapa_id) {
         if($etapa_id){
             $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
@@ -29,13 +29,13 @@ class CampoTitle extends Campo{
         }else{
             $etiqueta=$this->etiqueta;
         }
-        
-        $display='<h3>'.$etiqueta.'</h3>';
-        
+
+        $display='<h3 data-fieldset="'.$this->fieldset.'">'.$etiqueta.'</h3>';
+
         return $display;
     }
-    
-    
-    
-    
+
+
+
+
 }

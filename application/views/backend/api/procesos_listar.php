@@ -33,6 +33,7 @@
       <p>Las propiedades que incorpora esta respuesta son:</p>
 
       <table class="table table-bordered">
+        <caption class="hide-text">Propiedades de la respuesta</caption>
         <thead>
           <tr>
               <th>Nombre del Parámetro</th>

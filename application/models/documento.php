@@ -61,7 +61,7 @@ class Documento extends Doctrine_Record {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
 
         $filename_uniqid = uniqid();
-        
+
         //Generamos el file
         $file = new File();
         $file->tramite_id = $etapa->tramite_id;
@@ -76,7 +76,7 @@ class Documento extends Doctrine_Record {
         $file->filename = $filename_uniqid . '.pdf';
         $file->save();
 
-        //Renderizamos     
+        // Renderizamos
         $this->render($file->id, $file->llave_copia, $etapa->id, $file->filename, false);
         $filename_copia = $filename_uniqid . '.copia.pdf';
         $this->render($file->id, $file->llave_copia, $etapa->id,$filename_copia, true);
@@ -103,8 +103,6 @@ class Documento extends Doctrine_Record {
     }
 
     private function render($identifier, $key, $etapa_id=null ,$filename = false, $copia = false) {
-
-
         $uploadDirectory = 'uploads/documentos/';
 
         $CI = &get_instance();
@@ -112,7 +110,7 @@ class Documento extends Doctrine_Record {
         if ($this->tipo == 'certificado') {
             $CI->load->library('certificadopdf');
             $obj = new $CI->certificadopdf($this->tamano);
-            
+
             $contenido=$this->contenido;
             $titulo=$this->titulo;
             $subtitulo=$this->subtitulo;
@@ -121,17 +119,17 @@ class Documento extends Doctrine_Record {
             $firmador_servicio = $this->firmador_servicio;
             if($etapa_id){
                 $regla = new Regla($contenido);
-                $contenido = $regla->getExpresionParaOutput($etapa_id);  
+                $contenido = $regla->getExpresionParaOutput($etapa_id);
                 $regla = new Regla($titulo);
                 $titulo = $regla->getExpresionParaOutput($etapa_id);
                 $regla = new Regla($subtitulo);
                 $subtitulo = $regla->getExpresionParaOutput($etapa_id);
                 $regla = new Regla($firmador_nombre);
-                $firmador_nombre = $regla->getExpresionParaOutput($etapa_id); 
+                $firmador_nombre = $regla->getExpresionParaOutput($etapa_id);
                 $regla = new Regla($firmador_cargo);
-                $firmador_cargo = $regla->getExpresionParaOutput($etapa_id); 
+                $firmador_cargo = $regla->getExpresionParaOutput($etapa_id);
                 $regla = new Regla($firmador_servicio);
-                $firmador_servicio = $regla->getExpresionParaOutput($etapa_id); 
+                $firmador_servicio = $regla->getExpresionParaOutput($etapa_id);
             }
 
             $obj->content = $contenido;
@@ -157,13 +155,13 @@ class Documento extends Doctrine_Record {
         }else {
             $CI->load->library('blancopdf');
             $obj = new $CI->blancopdf($this->tamano);
-            
+
             $contenido=$this->contenido;
             if($etapa_id){
                 $regla = new Regla($contenido);
-                $contenido = $regla->getExpresionParaOutput($etapa_id);  
+                $contenido = $regla->getExpresionParaOutput($etapa_id);
             }
-            
+
             $obj->content = $contenido;
         }
 
@@ -192,7 +190,7 @@ class Documento extends Doctrine_Record {
         } else {
             $obj->Output($filename);
         }
-        
+
         return;
     }
 
@@ -200,7 +198,7 @@ class Documento extends Doctrine_Record {
     function firmar_documento_servidor($filename, $campo_id) {
         $uploadDirectory = DIRECTORIO_SUBIDA_DOCUMENTOS;
         $soap_endpoint_location = WS_FIRMA_DOCUMENTOS;
-        
+
         $campo_documento = Doctrine::getTable('Campo')->find($campo_id);
 
         if($campo_documento) {

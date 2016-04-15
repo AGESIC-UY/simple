@@ -66,7 +66,7 @@ class CampoDocumento extends Campo {
 
         $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
 
-        if (!$dato) {   //Generamos el documento, ya que no se ha generado
+        if (!$dato) {   // Generamos el documento, ya que no se ha generado
             $file=$this->Documento->generar($etapa->id, $this->id);
 
             $dato = new DatoSeguimiento();
@@ -74,8 +74,9 @@ class CampoDocumento extends Campo {
             $dato->valor = $file->filename;
             $dato->etapa_id = $etapa->id;
             $dato->save();
-        }else{
-            $file=Doctrine::getTable('File')->findOneByTipoAndFilename('documento',$dato->valor);
+        }
+        else {
+            $file=Doctrine::getTable('File')->findOneByTipoAndFilename('documento', $dato->valor);
             if($etapa->pendiente && isset($this->extra->regenerar) && $this->extra->regenerar){
                 $file->delete();
                 $file=$this->Documento->generar($etapa->id, $this->id);
@@ -134,50 +135,52 @@ class CampoDocumento extends Campo {
             $html.='<option value="'.$d->id.'" '.($this->documento_id==$d->id?'selected':'').'>'.$d->nombre.'</option>';
         $html.='</select>';
 
-        $html.='<label class="radio" for="primera_'.$d->id.'"><input id="primera_'.$d->id.'" type="radio" name="extra[regenerar]" value="0" '.(!$regenerar?'checked':'').' /> El documento se genera solo la primera vez que se visualiza este campo.</label>';
-        $html.='<label class="radio" for="cada_'.$d->id.'"><input id="cada_'.$d->id.'" type="radio" name="extra[regenerar]" value="1" '.($regenerar?'checked':'').' /> El documento se regenera cada vez que se visualiza este campo.</label>';
-        $html.='<br /><label class="checkbox" for="firmar"><input type="checkbox" name="extra[firmar]" '.($firmar?'checked':'').' id="firmar" /> Deseo firmar con token en este paso.</label>';
-        $html.='<label class="checkbox" for="firmar_servidor"><input type="checkbox" name="extra[firmar_servidor]" '.($firmar_servidor?'checked':'').' id="firmar_servidor" /> Deseo firmar el documento en servidor.</label>';
-        $html.='<br /><div class="well form-horizontal" '.(!$firmar_servidor ? 'style="display:none;"' : '').' class="input" id="firmar_servidor_keystores">';
-        $html.='<div class="control-group">';
-        $html.='<label class="control-label" for="keystores">Keystores para la firma:</label>';
-        $html.='<div class="controls"><input type="text" id="keystores" name="extra[firmar_servidor_keystores]" placeholder="key1, key2, key3" value="'.($firmar_servidor_keystores?$firmar_servidor_keystores:'').'" /></div>';
-        $html.='</div>';
-        $html.=' <div class="control-group">';
-        $html.='<label class="control-label" for="firmar_servidor_momento">Momento de firma:</label>';
-        $html.='<div class="controls"><select name="extra[firmar_servidor_momento]" id="firmar_servidor_momento"><option value="antes" id="firmar_servidor_momento_antes" '. ($firmar_servidor_momento == 'antes' ? 'selected' : '') .'>Al generar documento</option><option value="despues" id="firmar_servidor_momento_despues" '.($firmar?'':'style="display:none;"').' '. ($firmar_servidor_momento == 'despues' ? 'selected' : '') .'>Despues de firma de usuario</option></select></div>';
-        $html.='</div></div>';
-        $html.= '<script>// -- Manejo de checkbox para firmas de documentos en servidor
-                $(document).ready(function() {
-                    $("#firmar_servidor").change(function() {
-                        if(this.checked) {
-                            $("#firmar_servidor_keystores").show();
-                            $("#firmar_servidor_momento").show();
-                        }
-                        else {
-                            $("#firmar_servidor_keystores").hide();
-                            $("#firmar_servidor_momento").hide();
-                        }
-                    });
+        if(isset($d)) {
+          $html.='<label class="radio" for="primera_'.$d->id.'"><input id="primera_'.$d->id.'" type="radio" name="extra[regenerar]" value="0" '.(!$regenerar?'checked':'').' /> El documento se genera solo la primera vez que se visualiza este campo.</label>';
+          $html.='<label class="radio" for="cada_'.$d->id.'"><input id="cada_'.$d->id.'" type="radio" name="extra[regenerar]" value="1" '.($regenerar?'checked':'').' /> El documento se regenera cada vez que se visualiza este campo.</label>';
+          $html.='<br /><label class="checkbox" for="firmar"><input type="checkbox" name="extra[firmar]" '.($firmar?'checked':'').' id="firmar" /> Deseo firmar con token en este paso.</label>';
+          $html.='<label class="checkbox" for="firmar_servidor"><input type="checkbox" name="extra[firmar_servidor]" '.($firmar_servidor?'checked':'').' id="firmar_servidor" /> Deseo firmar el documento en servidor.</label>';
+          $html.='<br /><div class="well form-horizontal" '.(!$firmar_servidor ? 'style="display:none;"' : '').' class="input" id="firmar_servidor_keystores">';
+          $html.='<div class="control-group">';
+          $html.='<label class="control-label" for="keystores">Keystores para la firma:</label>';
+          $html.='<div class="controls"><input type="text" id="keystores" name="extra[firmar_servidor_keystores]" placeholder="key1, key2, key3" value="'.($firmar_servidor_keystores?$firmar_servidor_keystores:'').'" /></div>';
+          $html.='</div>';
+          $html.=' <div class="control-group">';
+          $html.='<label class="control-label" for="firmar_servidor_momento">Momento de firma:</label>';
+          $html.='<div class="controls"><select name="extra[firmar_servidor_momento]" id="firmar_servidor_momento"><option value="antes" id="firmar_servidor_momento_antes" '. ($firmar_servidor_momento == 'antes' ? 'selected' : '') .'>Al generar documento</option><option value="despues" id="firmar_servidor_momento_despues" '.($firmar?'':'style="display:none;"').' '. ($firmar_servidor_momento == 'despues' ? 'selected' : '') .'>Despues de firma de usuario</option></select></div>';
+          $html.='</div></div>';
+          $html.= '<script>// -- Manejo de checkbox para firmas de documentos en servidor
+                  $(document).ready(function() {
+                      $("#firmar_servidor").change(function() {
+                          if(this.checked) {
+                              $("#firmar_servidor_keystores").show();
+                              $("#firmar_servidor_momento").show();
+                          }
+                          else {
+                              $("#firmar_servidor_keystores").hide();
+                              $("#firmar_servidor_momento").hide();
+                          }
+                      });
 
-                    $("#firmar").change(function() {
-                        if(!this.checked) {
-                            $("#firmar_servidor_momento_despues").hide();
-                        }
-                        else {
-                            $("#firmar_servidor_momento_despues").show();
-                        }
-                    });
+                      $("#firmar").change(function() {
+                          if(!this.checked) {
+                              $("#firmar_servidor_momento_despues").hide();
+                          }
+                          else {
+                              $("#firmar_servidor_momento_despues").show();
+                          }
+                      });
 
-                });</script>';
+                  });</script>';
 
-        return $html;
+          return $html;
+        }
     }
 
     public function backendExtraValidate() {
         parent::backendExtraValidate();
 
         $CI= &get_instance();
-        $CI->form_validation->set_rules('documento_id','Documento','required');
+        $CI->form_validation->set_rules('documento_id','Documento_id','required');
     }
 }

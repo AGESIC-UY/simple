@@ -13,7 +13,8 @@
         <link href="assets/js/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">
         <link href="assets/css/common.css" rel="stylesheet">
         <link href="assets/css/estilos_extendidos.css" rel="stylesheet">
-        <link href="assets/css/estilos-login.css" rel="stylesheet">
+        <link href="assets/css/estilos-formulario-tipo.css" rel="stylesheet">
+        <!-- link href="assets/css/estilos-login.css" rel="stylesheet" -->
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -28,47 +29,81 @@
       <ul id="skip">
         <li><a href="#tab1">Ir al contenido</a></li>
       </ul>
-      <form method="post" class="ajaxForm login" id="formLogin" action="<?= site_url('backend/autenticacion/login_form') ?>">
-          <fieldset>
-            <legend>Seleccionar el tipo de acceso</legend>
-
-            <div class="selector-header">
-              <h1>Ingrese a SIMPLE - backend</h1>
-      			</div>
-      			<div class="selector-wrap">
-      				<div class="selector seleccionado usuario"></div>
-      			</div>
-
-            <div id="tab1" tabindex="-1">
-              <?php $this->load->view('messages') ?>
-              <div class="validacion"></div>
-              <input type="hidden" name="redirect" value="<?= $redirect ?>" />
-
-              <h2>Ingrese su código de usuario y contraseña</h2>
-              <div class="row">
-                <label for="email">Usuario:</label>
-      					<span class="input-col">
-                  <input id="email" name="email" type="text" >
-      					</span>
-      				</div>
-
-              <div class="row">
-                <label for="password">Contraseña:</label>
-      					<span class="input-col">
-                  <input id="password" name="password" type="password">
-                  <a href="<?=site_url('backend/autenticacion/olvido')?>" class="enlace-form left">Olvidé mi contraseña</a>
-      					</span>
-      				</div>
-
-              <div class="row">
-      					<div>
-                  <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
-      					</div>
-      				</div>
+      <div class="contenedorGeneral">
+        <header class="header-publico header-login">
+          <div class="container-fluid">
+              <div class="row-fluid">
+                  <div class="span7">
+                      <div id="logo">
+                          <span class="nombre-app"><?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->nombre_largo : '' ?>  - Backend</span>
+                      </div>
+                  </div>
+                  <div class="span5">
+                    <div class="logosSecundarios">
+                      <ul class="listaHorizontal">
+                        <li>
+                          <a href="https://www.presidencia.gub.uy/" title="Ir al sitio de Presidencia">
+                            <img src="<?= base_url() ?>assets/img/logoPresidencia.png" alt="Presidencia">
+                          </a>
+                        </li>
+                        <li>
+                          <a href="http://uruguaydigital.gub.uy/" title="Ir al sitio de Uruguay Digital">
+                            <img src="<?= base_url() ?>assets/img/logo-uruguayDigital.png" alt="Uruguay Digital">
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+              </div>
             </div>
-          </fieldset>
-      </form>
+        </header>
+        <div id="main" tabindex="-1">
+          <div class="container-fluid">
+            <h1>Ingrese a SIMPLE - Backend</h1>
+            <form method="post" class="ajaxForm" id="formLogin" action="<?= site_url('backend/autenticacion/login_form') ?>">
+              <fieldset>
+                <legend>Ingreso de usuario</legend>
 
+                <div id="tab1" tabindex="-1">
+                  <?php $this->load->view('messages') ?>
+                  <div class="validacion validacion-error"></div>
+                  <?php
+                    if(isset($error_login)) {
+                      echo $error_login;
+                    }
+                  ?>
+                  <input type="hidden" name="redirect" value="<?= $redirect ?>" />
+
+                  <div class="form-horizontal">
+                      <div class="control-group">
+                        <label class="control-label" for="email">Usuario:</label>
+                        <div class="controls">
+                          <input id="email" name="email" type="text" >
+                        </div>
+                      </div>
+
+                      <div class="control-group">
+                        <label class="control-label" for="password">Contraseña:</label>
+                        <div class="controls">
+                          <input id="password" name="password" type="password">
+                        </div>
+                      </div>
+
+                      <div class="control-group">
+                        <div class="controls">
+                          <button type="submit" class="btn-lg btn-primario">Ingresar</button>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+      <footer>
+          <?php $this->load->view('backend/foot') ?>
+      </footer>
 
 
 

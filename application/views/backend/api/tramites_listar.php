@@ -20,11 +20,12 @@
         <h3>Parámetros</h3>
 
         <table class="table table-bordered">
+          <caption class="hide-text">Parámetros</caption>
           <thead>
             <tr>
-                <th>Nombre del Parámetro</th>
-                <th>Valor</th>
-                <th>Descripción</th>
+                <th id="nombre">Nombre del Parámetro</th>
+                <th id="valor">Valor</th>
+                <th id="descripcion">Descripción</th>
             </tr>
             <tr>
                 <th colspan="3" style="text-align: center">Parametros Opcionales</th>
@@ -32,14 +33,14 @@
           </thead>
           <tbody>
             <tr>
-                <td>maxResults</td>
-                <td>int</td>
-                <td>El número máximo de resultados que debería contener la respuesta. Valores aceptables son del 1 al 20. Por defecto: 10.</td>
+                <td headers="nombre">maxResults</td>
+                <td headers="valor">int</td>
+                <td headers="descripcion">El número máximo de resultados que debería contener la respuesta. Valores aceptables son del 1 al 20. Por defecto: 10.</td>
             </tr>
             <tr>
-                <td>pageToken</td>
-                <td>string</td>
-                <td>El token de continuación. Usado para la paginación entre varios sets de resultados. Para obtener la próxima página de resultados se debe setear este parámetro con el valor de "nextPageToken" entregado en la respuesta previa.</td>
+                <td headers="nombre">pageToken</td>
+                <td headers="valor">string</td>
+                <td headers="descripcion">El token de continuación. Usado para la paginación entre varios sets de resultados. Para obtener la próxima página de resultados se debe setear este parámetro con el valor de "nextPageToken" entregado en la respuesta previa.</td>
             </tr>
           </tbody>
         </table>
@@ -61,6 +62,7 @@
         <p>Las propiedades que incorpora esta respuesta son:</p>
 
         <table class="table table-bordered">
+          <caption class="hide-text">Propiedades de la respuesta</caption>
           <thead>
             <tr>
                 <th>Nombre del Parámetro</th>

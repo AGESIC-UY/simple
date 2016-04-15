@@ -32,7 +32,7 @@
 </div>
 <form id="formEditarConexion" class="ajaxForm" method="POST" action="<?= site_url('backend/procesos/editar_conexiones_form/' . $conexiones[0]->TareaOrigen->id) ?>">
 <div class="modal-body">
-        <div class="validacion"></div>
+        <div class="validacion validacion-error"></div>
 
         <label>Tipo</label>
         <input type="text" value="<?= $conexiones[0]->tipo ?>" disabled />

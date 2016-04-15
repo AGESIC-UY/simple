@@ -5,7 +5,7 @@ Class MY_Form_validation extends CI_Form_validation {
     public function __construct($rules = array()) {
         parent::__construct($rules);
 
-        $this->set_error_delimiters('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>', '</div>');
+        $this->set_error_delimiters('<div class="alert alert-error">', '</div>');
     }
 
     function rut($rut_con_dv) {
@@ -61,7 +61,7 @@ Class MY_Form_validation extends CI_Form_validation {
 
         return FALSE;
     }
-    
+
     //Convierte una fecha en humano al formato mysql.
     function date_prep($string){
         return strftime('%Y-%m-%d',strtotime($string));

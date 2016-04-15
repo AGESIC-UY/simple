@@ -53,37 +53,39 @@ $(document).ready(function() {
 
       // -- Servicios disponibles
   	if(this.value == 'webservice') {
-          $('#formAgregarAccion_services').show().removeClass('hidden');
+        $('#formAgregarAccion_services').show().removeClass('hidden');
 
-          $('#formAgregarAccion_button').hide();
+        $('#formAgregarAccion_button').hide();
+        $('#formAgregarAccion_operations').hide();
+        $('#formAgregarAccion_pasarela_pagos').hide();
+        $('#formAgregarAccion_button_operations').hide();
+        $('#formAgregarAccion_button_pasarela_pagos').hide();
+        $('#formAgregarAccion_button_services').show().removeClass('hidden');
+
+        $('#services_action_selector').live('change', function() {
+          $('#operations_action_selector').val('');
+
           $('#formAgregarAccion_operations').hide();
-          $('#formAgregarAccion_pasarela_pagos').hide();
-          $('#formAgregarAccion_button_operations').hide();
-          $('#formAgregarAccion_button_pasarela_pagos').hide();
           $('#formAgregarAccion_button_services').show().removeClass('hidden');
+          $('#formAgregarAccion_button_operations').hide();
 
-          $('#services_action_selector').live('change', function(){
-              $('#formAgregarAccion_operations').hide();
-              $('#formAgregarAccion_button_services').show().removeClass('hidden');
-              $('#formAgregarAccion_button_operations').hide();
+          $('.servicios_operaciones').addClass('hidden');
+          $('#servicios_operacion_' + this.value).removeClass('hidden');
 
-              $('.servicios_operaciones').addClass('hidden');
+          if(this.value != 'webservice') {
               $('#servicios_operacion_' + this.value).removeClass('hidden');
 
-              if(this.value != 'webservice') {
-                  $('#servicios_operacion_' + this.value).removeClass('hidden');
+              $('#formAgregarAccion_operations').show().removeClass('hidden');
+              $('#formAgregarAccion_button_services').hide();
+              $('#formAgregarAccion_button_operations').show().removeClass('hidden');
 
-                  $('#formAgregarAccion_operations').show().removeClass('hidden');
-                  $('#formAgregarAccion_button_services').hide();
-                  $('#formAgregarAccion_button_operations').show().removeClass('hidden');
-
-                  $('#operations_action_selector').live('change', function() {
-                      var operacion_id = $('#operations_action_selector option:selected').attr('data-operacion-id');
-                      var form_accion = $('#formAgregarAccion_operations').attr('action');
-                      $('#formAgregarAccion_operations').attr({'action': form_accion + '/' + operacion_id});
-                  });
-              }
-          });
+              $('#operations_action_selector').live('change', function() {
+                  var operacion_id = $('#operations_action_selector option:selected').attr('data-operacion-id');
+                  var form_accion = $('#formAgregarAccion_operations').attr('action');
+                  $('#formAgregarAccion_operations').attr({'action': form_accion + '/' + operacion_id});
+              });
+          }
+        });
       }
   });
 
@@ -95,7 +97,7 @@ $(document).ready(function() {
           var lista_de_fieldsets = '<select id="lista_de_fieldsets" name="fieldset">';
               lista_de_fieldsets += '<option value="">-- Seleccionar fieldset --</option>';
           $(document.lista_de_fieldsets).each(function() {
-              var fieldset = $(this).attr('name');
+              var fieldset = $(this).attr('name').replace('BLOQUE_', '');
               var selected = '';
 
               if($('#formEditarCampo input[name="fieldset"]').length) {
@@ -119,7 +121,7 @@ $(document).ready(function() {
           var lista_de_fieldsets = '<select id="lista_de_fieldsets" name="fieldset">';
               lista_de_fieldsets += '<option value="">-- Seleccionar fieldset --</option>';
           $(document.lista_de_fieldsets).each(function() {
-              var fieldset = $(this).attr('name');
+              var fieldset = $(this).attr('name').replace('BLOQUE_', '');
               var selected = '';
 
               if(($('#formEditarCampo input[name="fieldset"]').val().length >= 1) && ($('#formEditarCampo input[name="fieldset"]').val() == fieldset)) {
@@ -143,6 +145,7 @@ $(document).ready(function() {
       }, 200);
   });
 
+  // -- Maneja respuestas de operacion Catalogo de Servicios
   $('#agregar_respuestas').on('click', function() {
       // -- Genera un nuevo ID de respuesta
       var id = $('#operacion_id').val() + '-';

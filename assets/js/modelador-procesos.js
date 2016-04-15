@@ -60,10 +60,7 @@ $(document).ready(function(){
                     return;
                 }
 
-
                 drawConnection(c);
-
-
 
                 modo=null;
                 elements.length=0;
@@ -120,8 +117,6 @@ $(document).ready(function(){
     $( "#draw .box" ).liveDraggable({
         stop: updateModel
     });
-
-
 });
 
 function updateModel(){
@@ -154,8 +149,6 @@ function updateModel(){
 
     $.post(site_url+"backend/procesos/ajax_editar_modelo/"+procesoId,"modelo="+json);
 }
-
-
 
 function dblClickConnectionEvent(connection){
     window.getSelection().removeAllRanges() //Previene bug de firefox que selecciona el texto de toda la pantalla.

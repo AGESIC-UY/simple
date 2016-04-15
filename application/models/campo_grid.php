@@ -16,7 +16,7 @@ class CampoGrid extends Campo{
         $columns = $this->extra->columns;
 
         $display  = '<div class="control-group">';
-        $display.='<span class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (!in_array('required', $this->validacion) ? ' (Opcional)' : '*') . '</span>';
+        $display.='<span class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (!in_array('required', $this->validacion) ? ' (Opcional):' : '*:') . '</span>';
         $display.='<div class="controls" data-fieldset="'.$this->fieldset.'">';
         $display.='<div class="grid" data-id="'.$this->id.'" style="width: 100%;"></div>';
         $display.='<input class="input-xxlarge" type="hidden" name="' . $this->nombre . '" value=\'' . ($dato?json_encode($dato->valor):$valor_default) . '\' />';
@@ -30,11 +30,9 @@ class CampoGrid extends Campo{
                 $(document).ready(function(){
                     var mode = "'.$modo.'";
                     var columns = '.json_encode($columns).';
-
+                    document.col = columns;
                     var headers = columns.map(function(c){return c.header;});
-
                     var data;
-
                     try{
                         data = JSON.parse($("[name=\''.$this->nombre.'\']").val());
                         data = data.slice(1);
@@ -83,7 +81,7 @@ class CampoGrid extends Campo{
                             var html="<tr>";
                             html+="<td><label class=\'hidden-accessible\' for=\'etiqueta"+pos+"\'>etiqueta"+pos+"</label><input id=\'etiqueta"+pos+"\' type=\'text\' name=\'extra[columns]["+pos+"][header]\' /></td>";
                             html+="<td><label class=\'hidden-accessible\' for=\'tipo"+pos+"\'>tipo"+pos+"</label><select id=\'tipo"+pos+"\' name=\'extra[columns]["+pos+"][type]\' ><option>text</option><option>numeric</option></select></td>";
-                            html+="<td class=\'actions\'><button type=\'button\' class=\'btn btn-danger\'><span class=\'icon-trash icon-white\'></span></button></td>";
+                            html+="<td class=\'actions\'><button type=\'button\' class=\'btn btn-danger eliminar\'><span class=\'icon-trash icon-white\'></span></button></td>";
                             html+="</tr>";
 
                             $("#formEditarCampo .columnas table tbody").append(html);
@@ -114,7 +112,7 @@ class CampoGrid extends Campo{
                 <tr>
                     <td><label class="hidden-accessible" for="etiqueta'.$i.'">etiqueta'.$i.'</label><input id="etiqueta'.$i.'" type="text" name="extra[columns]['.$i.'][header]" value="'.$c->header.'" /></td>
                     <td><label class="hidden-accessible" for="tipo'.$i.'">tipo'.$i.'</label><select id="tipo'.$i.'" name="extra[columns]['.$i.'][type]"><option '.($c->type=='text'?'selected':'').'>text</option><option '.($c->type=='numeric'?'selected':'').'>numeric</option></select></td>
-                    <td class="actions"><button type="button" class="btn btn-danger"><span class="icon-trash icon-white"></span></button></td>
+                    <td class="actions"><button type="button" class="btn btn-danger eliminar"><span class="icon-trash icon-white"></span></button></td>
                 </tr>
                 ';
                 $i++;

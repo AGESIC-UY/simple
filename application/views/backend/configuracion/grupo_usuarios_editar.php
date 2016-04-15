@@ -17,7 +17,7 @@
         <form class="ajaxForm" method="post" action="<?= site_url('backend/configuracion/grupo_usuarios_editar_form/' . (isset($grupo_usuarios)?$grupo_usuarios->id:'')) ?>">
             <fieldset>
                 <legend>Editar grupo de usuario</legend>
-                <div class="validacion"></div>
+                <div class="validacion validacion-error"></div>
                 <div class="form-horizontal">
                 <?php if(isset($grupo_usuarios)):?>
                     <div class="control-group">
@@ -68,14 +68,14 @@
                 <li class="action-buttons-primary">
                     <ul>
                         <li>
-                          <button class="btn btn-primary" type="submit">Guardar</button>
+                          <button class="btn btn-primary btn-lg" type="submit">Guardar</button>
                         </li>
                     </ul>
                 </li>
                 <li class="action-buttons-second">
                     <ul>
                         <li class="float-left">
-                          <a class="btn btn-link" href="<?=site_url('backend/configuracion/grupos_usuarios')?>">Cancelar</a>
+                          <a class="btn btn-link btn-lg" href="<?=site_url('backend/configuracion/grupos_usuarios')?>">Cancelar</a>
                         </li>
                     </ul>
                 </li>

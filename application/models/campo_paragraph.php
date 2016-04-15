@@ -1,18 +1,18 @@
 <?php
 require_once('campo.php');
 class CampoParagraph extends Campo{
-    
+
     public $requiere_nombre=false;
     public $requiere_datos=false;
     public $estatico=true;
     public $etiqueta_tamano='xxlarge';
-    
+
     function setTableDefinition() {
         parent::setTableDefinition();
-        
+
         $this->hasColumn('readonly','bool',1,array('default'=>1));
     }
-    
+
     function setUp() {
         parent::setUp();
         $this->setTableName("campo");
@@ -26,15 +26,15 @@ class CampoParagraph extends Campo{
         }else{
             $etiqueta=$this->etiqueta;
         }
-        
-        $display='<p>'.$etiqueta.'</p>';
-        
+
+        $display='<p data-fieldset="'.$this->fieldset.'">'.$etiqueta.'</p>';
+
         return $display;
     }
-    
+
     public function setReadonly($readonly){
         $this->_set('readonly', 1);
     }
-    
+
 
 }

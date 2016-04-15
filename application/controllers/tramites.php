@@ -49,8 +49,7 @@ class Tramites extends MY_Controller {
         $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
 
           if(!$proceso->canUsuarioIniciarlo(UsuarioSesion::usuario()->id)){
-            echo 'Usuario no puede iniciar este proceso';
-            exit;
+            redirect(site_url());
         }
 
         //Vemos si es que usuario ya tiene un tramite de proceso_id ya iniciado, y que se encuentre en su primera etapa.
@@ -62,13 +61,12 @@ class Tramites extends MY_Controller {
                 ->having('COUNT(hermanas.id) = 1')
                 ->fetchOne();
 
-        if(!$tramite){
+        if(!$tramite || !$tramite->getEtapasActuales()->get(0)->id) {
             $tramite=new Tramite();
             $tramite->iniciar($proceso->id);
         }
 
         $qs=$this->input->server('QUERY_STRING');
-
         redirect('etapas/ejecutar/'.$tramite->getEtapasActuales()->get(0)->id.($qs?'?'.$qs:''));
     }
 
@@ -81,8 +79,7 @@ class Tramites extends MY_Controller {
         }
 
         if(UsuarioSesion::usuario()->id!=$tramite->Etapas[0]->usuario_id){
-            echo 'Usuario no tiene permisos para eliminar este tramite';
-            exit;
+            redirect(site_url());
         }
 
         $tramite->delete();

@@ -28,13 +28,13 @@ function muestraErrores () {
 
   // -- Si hay solo un error se eliminan los mensajes de error estandar, de lo contrario se muestran.
   if(document.errors.length > 1) {
+    $('.validacion').prepend('<span class="dialog-title">Hay <strong>' + document.errors.length + ' errores</strong> en el formulario</span>');
     $('.validacion').show();
   }
   else if (document.errors.length == 1) {
     $('.validacion').hide();
   }
 }
-
 
 $(document).ready(function(){
     $("[data-toggle=popover]").popover();
@@ -173,8 +173,6 @@ $(document).ready(function(){
 
                 $(el).find(":input").prop("disabled",true);
             }
-
-
         });
 
         $(form).find(":input[readonly]").prop("disabled",true);
@@ -184,26 +182,53 @@ $(document).ready(function(){
         prepareDynaForm($(event.target).closest(".dynaForm"))
     });
 
-    // Guardar paso sin avanzar
+    // -- Guarda paso sin avanzar
     $('#save_step').click(function(){
         $('#no_advance').val(1);
         $('form').submit();
     });
 
+    // -- Organiza los campos dentro de un fieldset.
     if(($('form').size() > 0) && ($('#areaFormulario').size() < 1)) {
+      setTimeout(function() {
         $('fieldset').each(function() {
             var nombre = $(this).attr('name');
-            var elementos = $('*[data-fieldset="'+ nombre +'"]');
-            $('*[data-fieldset="'+ nombre +'"]').remove();
-            $('fieldset[name="'+ nombre +'"]').append(elementos);
+            if(typeof(nombre) !== 'undefined') {
+              var nombre_bloque = nombre;
+              nombre = nombre.replace('BLOQUE_', '');
+
+              var elementos = [];
+              $('*[data-fieldset="'+ nombre +'"]').each(function() {
+                if($(this).parent().parent().attr('data-dependiente-campo')) {
+                  elementos.push($(this).parent().parent());
+                }
+                else {
+                  elementos.push($(this));
+                }
+              });
+
+              $(elementos).detach().appendTo('fieldset[name="'+ nombre_bloque +'"]');
+            }
         });
+      }, 100);
     }
     else if(($('form').size() > 0) && ($('#areaFormulario'))) {
         $('fieldset').each(function() {
             var nombre = $(this).attr('name');
-            var elementos = $('*[data-fieldset="'+ nombre +'"]').parent().parent().parent().parent().parent();
-            $('*[data-fieldset="'+ nombre +'"]').parent().parent().parent().parent().parent().remove();
-            $('fieldset[name="'+ nombre +'"]').append(elementos);
+            if(typeof(nombre) !== 'undefined') {
+              var nombre_bloque = nombre;
+              nombre = nombre.replace('BLOQUE_', '');
+              var elementos = $('*[data-fieldset="'+ nombre +'"]').parent().parent().parent().parent().parent();
+              $('*[data-fieldset="'+ nombre +'"]').parent().parent().parent().parent().parent().remove();
+              $('fieldset[name="'+ nombre_bloque +'"]').append(elementos);
+
+              if(denegar_remover_campos_bloques) {
+                var patron = new RegExp("BLOQUE_");
+                if(patron.test(nombre_bloque)) {
+                  $('fieldset[name="'+ nombre_bloque +'"]').find('.botones-edit .btn.btn-danger').remove();
+                }
+              }
+            }
         });
     }
 });

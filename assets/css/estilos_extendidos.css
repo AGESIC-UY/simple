@@ -7,6 +7,7 @@ body {
   font-size: 13px;
   line-height: 1.2;
   color: #141414;
+  background: #ffffff;
   padding: 0;
 }
 body *{
@@ -35,6 +36,9 @@ header.header-publico{
   border-bottom: 3px solid #7E8080;
   margin-bottom: 0;
 }
+header.header-login{
+  margin-bottom: 40px;
+}
 header .container, header .container-fluid {
     border-bottom: none;
     padding-bottom: 5px;
@@ -45,14 +49,18 @@ header .container-fluid #logo {/*el logo del backend*/
     padding: 0;
     max-height: 80px;
 }
-header h1{
+header h1, header .nombre-app{
   color: #141414;
   border-left: 2px solid #141414;
   padding-left: 10px;
   font-weight: normal;
+  font-size: 18px;
+  line-height: 1.2;
 }
-header #logo img{
-    max-height: 80px;
+header.header-login .nombre-app {
+    border-left: 0;
+    padding-left: 0;
+    margin-top: 18px;
 }
 header #logo img{
     max-height: 80px;
@@ -200,6 +208,9 @@ input.input-xlarge, .input-xlarge {
 input.input-xxlarge, .input-xxlarge {
   width: 100%;
 }
+input.datepicker{
+  width: 150px;
+}
 input[type="text"].pasoRegla {
   width: 100%;
 }
@@ -240,7 +251,15 @@ input[type="color"]:focus {
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
 }
 input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly]{
-  border-color: #eeeeee;
+  /*border-color: #eeeeee;*/
+  border: none;
+  padding-left: 0;
+  width: 100%;
+  padding-right: 0;
+  cursor: default;
+}
+input[readonly]:focus, select[readonly]:focus, textarea[readonly]:focus{
+  box-shadow: none;
 }
 .container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
     width: 100%;
@@ -307,11 +326,15 @@ ul.breadcrumb li {
 .breadcrumb > li {
     display: inline-block;
 }
+.breadcrumb > li > .divider {
+    color: #767676;
+}
 .breadcrumb > .active {
     color: #666;
 }
 .validacion:not(.cuenta-editar) {display: none;height: auto;margin-top: 10px;}
-#formEditarCampo input.validacion {display:block !important;}
+#formEditarCampo input.validacion, #formEditarCampo label.validacion, #formEditarCampo label[for=validacion], #formLogin .validacion {display:block !important;}
+ #formLogin .validacion:empty {display:none !important;}
 .validacion .alert {display: block;margin-bottom: 10px;}
 .error_element_wrap .popover-content {color: #b94a48;}
 input.error, select.error, textarea.error {border: solid 1px #DE9C9C;}
@@ -400,7 +423,6 @@ a {
   height: 29px;
   box-sizing: border-box;
 }
-
 fieldset {
     margin-bottom: 20px;
     padding: 20px 45px 30px 45px;
@@ -433,6 +455,7 @@ footer {
 footer .area2 {
     background: #6B6B6B;
     padding: 20px 0;
+    color: #ffffff;
 }
 .control-label {
     display: block;
@@ -444,6 +467,21 @@ footer .area2 {
 .form-horizontal .control-label {
     width: 266px;
     color: #141414;
+    padding-top: 7px;
+}
+.control-group.error .control-label, .control-group.error .help-block, .control-group.error .help-inline,
+.help-block, .dynaForm .help-block, .help-inline{
+  color: #141414;
+}
+.control-group.error .help-block,
+.form-horizontal input + .help-block,
+.form-horizontal select + .help-block,
+.form-horizontal textarea + .help-block,
+.form-horizontal .uneditable-input + .help-block,
+.form-horizontal .input-prepend + .help-block,
+.form-horizontal .input-append + .help-block{
+  font-size: 0.9em;
+  margin-top: 5px;
 }
 .form-horizontal-fino .control-label{
   width: 100px;
@@ -457,8 +495,11 @@ footer .area2 {
 .form-horizontal .controls{
   margin-left: 286px;
 }
-.form-horizontal .controls > *{
+.form-horizontal .controls > input[type="submit"]{
   vertical-align: top;
+}
+.form-horizontal .controls .help-inline{
+  vertical-align: middle;
 }
 .form-horizontal-fino .controls{
   margin-left: 120px;
@@ -489,7 +530,8 @@ footer .area2 {
   margin: 0;
 }
 .form-action-buttons ul {
-	margin-top: 25px;
+	/*margin-top: 25px;*/
+  margin-top: 5px;
 }
 .form-action-buttons button, .form-action-buttons a, .form-action-buttons input {
 	margin-bottom: 10px;
@@ -510,7 +552,6 @@ a .icon-chevron-right {
 .form-action-buttons li.action-buttons-second {
 	float: left;
 }
-
 .btn{
   color: #141414;
   box-shadow: none;
@@ -537,8 +578,8 @@ a .icon-chevron-right {
   color: #FFF;
 }
 .btn-primary {
-    border-color: #3F8CD2;
-    background: #3F8CD2;
+    border-color: #337ab7;
+    background: #337ab7;
     box-shadow: 0 2px 0 #1A2F5A;
 }
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-group.open .btn-primary.dropdown-toggle{
@@ -547,8 +588,8 @@ a .icon-chevron-right {
   color: #FFF;
 }
 .btn-danger {
-    border-color:#da4f49;
-    background: #da4f49;
+    border-color:#B9433E;
+    background: #B9433E;
     color: #FFF;
 }
 .btn-danger:hover, .btn-danger:focus, .btn-danger:active{
@@ -564,6 +605,7 @@ a .icon-chevron-right {
     -moz-box-shadow: none;
     box-shadow: none;
     border-color: transparent;
+    text-decoration: underline;
 }
 .btn-link:hover, .btn-link:focus, .btn-link:active {
     color: #174f82;
@@ -573,6 +615,13 @@ a .icon-chevron-right {
 .link-ancho-total{
   display: block;
   width: 100%;
+}
+.btn-lg {
+    padding: 9px 16px;
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    line-height: 1.1em;
 }
 .titulo-form{
   margin-bottom: 25px;
@@ -630,7 +679,7 @@ a .icon-chevron-right {
     cursor: move;
 }
 #areaFormulario .arrastrable .arrastrable:hover {
-    background: green;
+    background: #ccc;
 }
 #areaFormulario .arrastrable fieldset{
   margin: 0;
@@ -646,8 +695,11 @@ a .icon-chevron-right {
   background: #ffeded;
   border: 1px solid #e3c4c4;
   margin-top: 10px;
-  padding: 5px 0;
+  padding: 10px 45px 10px 0;
   border-radius: 4px;
+  background-image: url(../img/icn-circle-error.png);
+  background-position: right center;
+    background-repeat: no-repeat;
 }
 .mensaje_error_campo {
   color: #BF2026;
@@ -700,6 +752,67 @@ a .icon-chevron-right {
 .campo_javascript_codigo {
   font-family: monospace;
 }
+.validacion[class*="validacion-"]{
+  width: 100%;
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  margin: 0 auto;
+  margin-bottom: 25px;
+  border-radius: 2px;
+  padding: 20px 20px 20px 115px;
+  background-repeat: no-repeat;
+  background-position: 35px center;
+}
+.validacion-error{
+  border-color: #e3c4c4;
+  background: #ffeded;
+  background-image: url(../img/icn-circle-error-lg.png);
+}
+.validacion-success{
+  border-color: #c1e0b4;
+  background: #ecf6e8;
+  background-image: url(../img/icn-circle-success-lg.png);
+}
+[class*="validacion-"] .alert{
+  background: none;
+  border: none;
+  padding-left: 0;
+  margin: 0;
+  color: inherit;
+  padding-bottom: 0;
+}
+.dialog-title {
+    display: block;
+    font-weight: normal;
+    font-size: 1.25em;
+    margin-bottom: 5px;
+    line-height: 1.1;
+}
+/*tabs*/
+.nav-tabs {
+    border-bottom: 1px solid #999;
+}
+.nav-tabs > li > a {
+    background: #F5F5F5;
+    margin-right: 10px;
+    line-height: 1.42857143;
+    border: 1px solid #CCC;
+    border-radius: 2px;
+    border-bottom-color: #999;
+    color: #333;
+    padding: 10px 15px;
+}
+.nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
+    text-decoration: none;
+    border-color: #999;
+    color: #000;
+}
+.nav-tabs > .active > a, .nav-tabs > .active > a:hover, .nav-tabs > .active > a:focus {
+  color: #000;
+  border: 1px solid #999;
+  border-bottom-color: transparent;
+}
 /*tablas*/
 .table tr:nth-child(odd){
   background: #F4F7FA;
@@ -719,6 +832,9 @@ a .icon-chevron-right {
 .table tr td.actions {
     width: 1px;
     white-space: nowrap;
+}
+.tipo-td{
+  color: #141414;
 }
 .dropdown-menu{
   margin: 0;
@@ -770,7 +886,62 @@ a .icon-chevron-right {
 /*#dashboard .widget:nth-child(3n+1) {
     margin-left: 0;
 }*/
-
+.datepicker td.active:hover,
+.datepicker td.active:hover:hover,
+.datepicker td.active.disabled:hover,
+.datepicker td.active.disabled:hover:hover,
+.datepicker td.active:active,
+.datepicker td.active:hover:active,
+.datepicker td.active.disabled:active,
+.datepicker td.active.disabled:hover:active,
+.datepicker td.active.active,
+.datepicker td.active:hover.active,
+.datepicker td.active.disabled.active,
+.datepicker td.active.disabled:hover.active,
+.datepicker td.active.disabled,
+.datepicker td.active:hover.disabled,
+.datepicker td.active.disabled.disabled,
+.datepicker td.active.disabled:hover.disabled,
+.datepicker td.active[disabled],
+.datepicker td.active:hover[disabled],
+.datepicker td.active.disabled[disabled],
+.datepicker td.active.disabled:hover[disabled],
+.datepicker td span.active:hover,
+.datepicker td span.active:hover:hover,
+.datepicker td span.active.disabled:hover,
+.datepicker td span.active.disabled:hover:hover,
+.datepicker td span.active:active,
+.datepicker td span.active:hover:active,
+.datepicker td span.active.disabled:active,
+.datepicker td span.active.disabled:hover:active,
+.datepicker td span.active.active,
+.datepicker td span.active:hover.active,
+.datepicker td span.active.disabled.active,
+.datepicker td span.active.disabled:hover.active,
+.datepicker td span.active.disabled,
+.datepicker td span.active:hover.disabled,
+.datepicker td span.active.disabled.disabled,
+.datepicker td span.active.disabled:hover.disabled,
+.datepicker td span.active[disabled],
+.datepicker td span.active:hover[disabled],
+.datepicker td span.active.disabled[disabled],
+.datepicker td span.active.disabled:hover[disabled]{
+  background: #337ab7;
+}
+.datepicker td.day:hover,
+.datepicker td span:hover,
+.datepicker thead tr:first-child th:hover {
+    background: #e2e9ef;
+}
+.datepicker td.old,
+.datepicker td.new,
+.datepicker td span.old,
+.datepicker td.disabled,
+.datepicker td.disabled:hover,
+.datepicker td span.disabled,
+.datepicker td span.disabled:hover {
+    color: #767676;
+}
 
 .box-agenda {
   margin-top: 8px;
@@ -812,6 +983,10 @@ a .icon-chevron-right {
 }
 .logosSecundarios{
     margin-bottom: 15px;
+}
+header.header-login .logosSecundarios{
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 .logosSecundarios::after {
     content: "";
@@ -870,6 +1045,9 @@ a .icon-chevron-right {
   width: 22px;
   height: 22px;
   margin-left: -11px;
+}
+#drawWrapper #draw .box.actual {
+    background: #BE1E2D;
 }
 #drawWrapper #draw .box .conector.secuencial{
   background: none;
@@ -934,3 +1112,6 @@ a .icon-chevron-right {
 dl.lista_codigos_servicios {margin: 6px 0 30px 50px;}
 dl.lista_codigos_servicios dt, dl.lista_codigos_servicios dd {float: left;}
 dl.lista_codigos_servicios dd {cursor: text;}
+#formAgregarAccion .control-group.error, #formAgregarAccion_services .control-group.error {border:0 !important;background: none !important;}
+#formAgregarAccion .control-group.error select, #formAgregarAccion_services select {border-color: #bebebe !important;color: rgb(85, 85, 85) !important;}
+#formAgregarAccion .control-group.error .mensaje_error_campo, #formAgregarAccion_services .mensaje_error_campo {display: none !important;}

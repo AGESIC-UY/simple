@@ -174,7 +174,7 @@ h2 {
     width: 500px;
     padding: 15px;
     text-align: center;
-    background: #3F8CD2;
+    background: #337ab7;
 }
 
 .selector {
@@ -200,7 +200,7 @@ h2 {
 }
 
 .selector.seleccionado {
-    background-color: #3F8CD2;
+    background-color: #337ab7;
     position: relative;
 }
 
@@ -214,7 +214,7 @@ h2 {
     height: 0;
     border-style: solid;
     border-width: 15px 25px 0 25px;
-    border-color: #3F8CD2 transparent transparent transparent;
+    border-color: #337ab7 transparent transparent transparent;
 }
 
 .hide {
@@ -228,7 +228,7 @@ h2 {
 
 /* Footer */
 #footer {
-    border-top: 4px solid #3F8CD2;
+    border-top: 4px solid #337ab7;
     font-size: 15px;
     padding-top: 20px;
     padding-bottom: 20px;

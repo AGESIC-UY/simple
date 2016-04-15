@@ -4,7 +4,7 @@
 </div>
 <div class="modal-body multiple-form">
     <form id="formAgregarAccion" class="ajaxForm form-horizontal" method="POST" action="<?= site_url('backend/acciones/seleccionar_form/'.$proceso_id) ?>">
-        <div class="validacion"></div>
+        <div class="validacion validacion-error"></div>
         <div class="control-group">
           <label class="control-label" for="main_action_selector">Tipo de acción</label>
           <div class="controls">

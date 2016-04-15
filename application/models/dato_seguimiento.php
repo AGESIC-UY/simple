@@ -19,7 +19,6 @@ class DatoSeguimiento extends Doctrine_Record {
     }
 
     public function setValor($valor){
-
         if(is_string($valor)){
             //Si es que no es un JSON lo que recibimos, lo codificamos nosotros.
             $val = json_decode($valor);
@@ -30,13 +29,11 @@ class DatoSeguimiento extends Doctrine_Record {
         }
 
         $this->_set('valor', $valor);
-
     }
 
     public function getValor(){
         return json_decode($this->_get('valor'));
     }
-
 
     public function toPublicArray(){
         $publicArray=array(

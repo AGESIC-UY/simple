@@ -21,7 +21,7 @@
 
                 <div id="tab1">
                   <?php $this->load->view('messages') ?>
-                  <div class="validacion"></div>
+                  <div class="validacion validacion-error"></div>
 
                   <h2>Ingrese su código de usuario y contraseña</h2>
                   <div class="row">
@@ -36,8 +36,10 @@
           					<span class="input-col">
                       <input name="password" id="password" type="password" class="input-xlarge">
                       <input type="hidden" name="redirect" value="<?=$redirect?>" />
+                      <!--
                       <div><a href="<?=site_url('autenticacion/olvido')?>">¿Olvidaste tu contraseña?</a></div>
                       <div><a href="<?= site_url('autenticacion/registrar') ?>">¿No estas registrado?</a></div>
+                      -->
           					</span>
           				</div>
 

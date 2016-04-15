@@ -9,7 +9,7 @@
                 .replace(/'/g, "&#039;");
         }
 
-        $("#selectGruposUsuarios").select2({tags: true});
+        $("#selectGruposUsuarios").select2();
 
         $("[rel=tooltip]").tooltip();
 
@@ -19,7 +19,7 @@
             weekStart: 1,
             autoclose: true,
             language: "es"
-        })
+        });
 
         $('#formEditarTarea .nav-tabs a').click(function (e) {
             e.preventDefault();
@@ -81,7 +81,6 @@
             }
         });
 
-
         //Permite borrar eventos
         $(".tab-eventos").on("click",".delete",function(){
             $(this).closest("tr").remove();
@@ -132,7 +131,7 @@
 </div>
 <form id="formEditarTarea" class="ajaxForm" method="POST" action="<?= site_url('backend/procesos/editar_tarea_form/' . $tarea->id) ?>">
 <div class="modal-body">
-        <div class="validacion"></div>
+        <div class="validacion validacion-error"></div>
 
         <div class="tabbable">
             <ul class="nav nav-tabs">
@@ -165,6 +164,22 @@
                                             $("#activacionEntreFechas").hide();
                                     }).change();
 
+                                    $('#fechaInicial').datepicker({
+                                        format: 'dd-mm-yyyy',
+                                        startDate: '0d',
+                                        autoclose: true
+                                    }).on('changeDate', function (selected) {
+                                        var minDate = new Date(selected.date.valueOf());
+                                        $('#fechaFinal').datepicker({setEndDate: minDate, format: 'dd-mm-yyyy'});
+                                    });
+
+                                    $("#fechaFinal").datepicker({
+                                        format: 'dd-mm-yyyy',
+                                        autoclose: true
+                                    }).on('changeDate', function (selected) {
+                                        var minDate = new Date(selected.date.valueOf());
+                                        $('#fechaInicial').datepicker({setEndDate: minDate, format: 'dd-mm-yyyy'});
+                                    });
                                 });
                             </script>
                             <label class="radio" for="Tactiva"><input id="Tactiva" name="activacion" value="si" type="radio" <?= $tarea->activacion == 'si' ? 'checked' : '' ?>>Tarea activada</label>
@@ -173,13 +188,13 @@
                               <div class="control-group">
                                 <label class="control-label" for="fechaInicial">Fecha inicial</label>
                                 <div class="controls">
-                                  <input class="datepicker" id="fechaInicial" rel="tooltip" title="Deje el campo en blanco para no considerar una fecha inicial" type="text" name="activacion_inicio" value="<?= $tarea->activacion_inicio ? date('d-m-Y', $tarea->activacion_inicio) : '' ?>" placeholder="DD-MM-AAAA" />
+                                  <input class="datepicker_" id="fechaInicial" rel="tooltip" title="Deje el campo en blanco para no considerar una fecha inicial" type="text" name="activacion_inicio" value="<?= $tarea->activacion_inicio ? date('d-m-Y', $tarea->activacion_inicio) : '' ?>" placeholder="DD-MM-AAAA" />
                                 </div>
                               </div>
                               <div class="control-group">
                                 <label class="control-label" for="fechaFinal">Fecha final</label>
                                 <div class="controls">
-                                  <input class="datepicker" id="fechaFinal" rel="tooltip" title="Deje el campo en blanco para no considerar una fecha final" type="text" name="activacion_fin" value="<?= $tarea->activacion_fin ? date('d-m-Y', $tarea->activacion_fin) : '' ?>" placeholder="DD-MM-AAAA" />
+                                  <input class="datepicker_" id="fechaFinal" rel="tooltip" title="Deje el campo en blanco para no considerar una fecha final" type="text" name="activacion_fin" value="<?= $tarea->activacion_fin ? date('d-m-Y', $tarea->activacion_fin) : '' ?>" placeholder="DD-MM-AAAA" />
                                 </div>
                               </div>
                             </div>
@@ -231,7 +246,7 @@
                     </script>
                     <label class='radio' for="cualquierPersona"><input id="cualquierPersona" type="radio" name="acceso_modo" value="publico" <?= $tarea->acceso_modo == 'publico' ? 'checked' : '' ?> /> Cualquier persona puede acceder.</label>
                     <label class='radio' for="soloRegistrados"><input id="soloRegistrados" type="radio" name="acceso_modo" value="registrados" <?= $tarea->acceso_modo == 'registrados' ? 'checked' : '' ?> /> Sólo los usuarios registrados.</label>
-                    <label class='radio' for="soloClaveunica"><input id="soloClaveunica" type="radio" name="acceso_modo" value="claveunica" <?= $tarea->acceso_modo == 'claveunica' ? 'checked' : '' ?> /> Sólo los usuarios registrados con ClaveUnica.</label>
+                    <!--<label class='radio' for="soloClaveunica"><input id="soloClaveunica" type="radio" name="acceso_modo" value="claveunica" <?= $tarea->acceso_modo == 'claveunica' ? 'checked' : '' ?> /> Sólo los usuarios registrados con ClaveUnica.</label>-->
                     <label class='radio' for="soloGrupo"><input id="soloGrupo" type="radio" name="acceso_modo" value="grupos_usuarios" <?= $tarea->acceso_modo == 'grupos_usuarios' ? 'checked' : '' ?> /> Sólo los siguientes grupos de usuarios pueden acceder.</label>
                     <div id="optionalGruposUsuarios" style="height: 300px;" class="<?= $tarea->acceso_modo == 'grupos_usuarios' ? '' : 'hide' ?>">
                       <label class="hidden-accessible" for="selectGruposUsuarios">Grupos de usuarios</label>

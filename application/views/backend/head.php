@@ -18,4 +18,11 @@
 <!--[if lt IE 9]>
 	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
+<script type="text/javascript">
+    var site_url = "<?= site_url() ?>";
+    var base_url = "<?= base_url() ?>";
+    var denegar_remover_campos_bloques = "<?= DENEGAR_REMOVER_CAMPOS_BLOQUES ?>";
+</script>
+
 <script src="<?= base_url() ?>assets/js/jquery/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>assets/js/file-uploader/fileuploader.js"></script>

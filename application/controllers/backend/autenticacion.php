@@ -6,29 +6,32 @@ class Autenticacion extends MY_BackendController {
     }
 
     public function login(){
+      if((!UsuarioBackendSesion::usuario()) && (LOGIN_ADMIN_COESYS)) {
+        redirect(site_url('autenticacion/login_saml'));
+      }
+      else {
         $data['redirect']=$this->session->flashdata('redirect');
-
         $this->load->view('backend/autenticacion/login', $data);
+      }
     }
 
     public function login_form() {
-
-        $this->form_validation->set_rules('email', 'E-Mail', 'required');
-        $this->form_validation->set_rules('password', 'Contraseña', 'required|callback_check_password');
+        $this->form_validation->set_rules('email', 'Email', 'required');
+        $this->form_validation->set_rules('password', 'Password', 'required|callback_check_password');
 
         $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
-            UsuarioBackendSesion::login($this->input->post('email'),$this->input->post('password'));
-            $respuesta->validacion=TRUE;
-            $respuesta->redirect=$this->input->post('redirect')?$this->input->post('redirect'):site_url('backend');
-
-        }else{
+            if(UsuarioBackendSesion::login($this->input->post('email'),$this->input->post('password'))) {
+              $respuesta->validacion=TRUE;
+              $respuesta->redirect=$this->input->post('redirect')?$this->input->post('redirect'):site_url('backend');
+            }
+        }
+        else {
             $respuesta->validacion=FALSE;
             $respuesta->errores=validation_errors();
         }
 
         echo json_encode($respuesta);
-
     }
 
     public function olvido() {
@@ -147,7 +150,6 @@ class Autenticacion extends MY_BackendController {
         redirect($this->input->server('HTTP_REFERER'));
     }
 
-
     function check_password($password){
         $autorizacion=UsuarioBackendSesion::validar_acceso($this->input->post('email'),$this->input->post('password'));
 
@@ -156,7 +158,6 @@ class Autenticacion extends MY_BackendController {
 
         $this->form_validation->set_message('check_password','E-Mail y/o contraseña incorrecta.');
         return FALSE;
-
     }
 
     function check_usuario_existe($usuario) {
@@ -169,11 +170,7 @@ class Autenticacion extends MY_BackendController {
                 return TRUE;
         }
 
-
         $this->form_validation->set_message('check_usuario_existe', 'Usuario no existe.');
         return FALSE;
     }
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

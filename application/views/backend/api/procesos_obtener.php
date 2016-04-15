@@ -20,6 +20,7 @@
         <h3>Parámetros</h3>
 
         <table class="table table-bordered">
+          <caption class="hide-text">Parámetros</caption>
           <thead>
             <tr>
                 <th>Nombre del Parámetro</th>

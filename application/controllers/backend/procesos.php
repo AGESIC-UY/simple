@@ -11,8 +11,9 @@ class Procesos extends MY_BackendController {
         UsuarioBackendSesion::force_login();
 
         if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
-            echo 'No tiene permisos para acceder a esta seccion.';
-            exit;
+            //echo 'No tiene permisos para acceder a esta seccion.';
+            //exit;
+            redirect('backend');
         }
     }
 
@@ -80,8 +81,8 @@ class Procesos extends MY_BackendController {
             exit;
         }
 
-        $proceso->width = str_replace('%', '', $proceso->width);
-        $proceso->height = str_replace('%', '', $proceso->height);
+        $proceso->width = str_replace('%', '', str_replace('px', '', $proceso->width));
+        $proceso->height = str_replace('%', '', str_replace('px', '', $proceso->height));
 
         $data['proceso']=$proceso;
 
@@ -331,16 +332,22 @@ class Procesos extends MY_BackendController {
         echo $json;
     }
 
-    public function importar(){
-        $file_path=$_FILES['archivo']['tmp_name'];
+    public function importar() {
+      $mensajes = '';
+      $file_path = $_FILES['archivo']['tmp_name'];
 
-        if($file_path){
-            $input=file_get_contents($_FILES['archivo']['tmp_name']);
+      $permitido =  array('simple');
+      $nombre_archivo = $_FILES['archivo']['name'];
+      $ext = pathinfo($nombre_archivo, PATHINFO_EXTENSION);
+      if(!in_array($ext, $permitido) ) {
+        $mensajes = '<div class="alert alert-error"><i class="icon-exclamation-sign"></i> La extención del archivo de importación no es la correcta.</div>';
+      }
+      else {
+        if($file_path) {
+            $input = file_get_contents($_FILES['archivo']['tmp_name']);
             // -- Verifica si el documento a importar contiene acciones que requieren servicios
             preg_match_all("/(?<=\"soap_operacion\":\").*?(?=\")/", $input, $webservices_encontrados);
             preg_match_all("/pasarela_pago/", $input, $pasarelas_encontradas);
-
-            $mensajes = '';
 
             if(count($webservices_encontrados[0])) {
               $mensajes .= '<div class="alert alert-info"><i class="icon-exclamation-sign"></i> La importación realizada requiere de servicios del <strong>Catálogo de Servicios</strong> que podrían no estar disponibles en esta instalación. <br /><br />&nbsp;&nbsp;&nbsp;&nbsp;A continuación se listan los servicios requeridos: <br /><br />';
@@ -356,24 +363,30 @@ class Procesos extends MY_BackendController {
               $mensajes .= '<div class="alert alert-info"><i class="icon-exclamation-sign"></i> La importación realizada requiere de servicios de <strong>Pasarela de Pagos</strong> que podrían no estar dispoibles en esta instalación. <br /><br />&nbsp;&nbsp;&nbsp;&nbsp;Por favor, verifique en el catálogo que cuenta con dichos servicios para su correcto funcionamiento.</div>';
             }
 
-            if($mensajes != '') {
-              $data['mensajes'] = $mensajes;
+            $proceso = Proceso::importComplete($input);
+            if($proceso == '-1') {
+              $mensajes = '<div class="alert alert-error"><i class="icon-exclamation-sign"></i> Hubo un error al procesar la importación, es posible que el archivo se encuentre dañado.</div>';
             }
-
-            $proceso=Proceso::importComplete($input);
-            $proceso->save();
+            else {
+              $proceso->save();
+            }
         }
+      }
 
-        $data['procesos'] = Doctrine_Query::create()
-                ->from('Proceso p, p.Cuenta c')
-                ->where('c.id = ?', UsuarioBackendSesion::usuario()->cuenta_id)
-                ->where('p.nombre != ?', 'BLOQUE')
-                ->orderBy('p.nombre asc')
-                ->execute();
+      if($mensajes != '') {
+        $data['mensajes'] = $mensajes;
+      }
 
-        $data['title'] = 'Listado de Procesos';
-        $data['content'] = 'backend/procesos/index';
-        $this->load->view('backend/template', $data);
+      $data['procesos'] = Doctrine_Query::create()
+              ->from('Proceso p, p.Cuenta c')
+              ->where('c.id = ?', UsuarioBackendSesion::usuario()->cuenta_id)
+              ->where('p.nombre != ?', 'BLOQUE')
+              ->orderBy('p.nombre asc')
+              ->execute();
+
+      $data['title'] = 'Listado de Procesos';
+      $data['content'] = 'backend/procesos/index';
+      $this->load->view('backend/template', $data);
     }
 }
 

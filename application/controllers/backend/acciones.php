@@ -11,8 +11,9 @@ class Acciones extends MY_BackendController {
         UsuarioBackendSesion::force_login();
 
         if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
-            echo 'No tiene permisos para acceder a esta seccion.';
-            exit;
+            //echo 'No tiene permisos para acceder a esta seccion.';
+            //exit;
+            redirect('backend');
         }
     }
 
@@ -166,7 +167,7 @@ class Acciones extends MY_BackendController {
         $accion->validateForm();
         if(!$accion_id){
             $this->form_validation->set_rules('proceso_id','Proceso','required');
-            $this->form_validation->set_rules('tipo','Tipo de Campo','required');
+            $this->form_validation->set_rules('tipo','Tipo','required');
         }
 
         $respuesta=new stdClass();
@@ -206,6 +207,3 @@ class Acciones extends MY_BackendController {
 
 
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

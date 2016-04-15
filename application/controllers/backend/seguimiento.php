@@ -11,8 +11,9 @@ class Seguimiento extends MY_BackendController {
         UsuarioBackendSesion::force_login();
 
         if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='operacion' && UsuarioBackendSesion::usuario()->rol!='seguimiento'){
-            echo 'No tiene permisos para acceder a esta seccion.';
-            exit;
+            //echo 'No tiene permisos para acceder a esta seccion.';
+            //exit;
+            redirect('backend');
         }
     }
 

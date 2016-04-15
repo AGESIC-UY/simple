@@ -16,7 +16,7 @@
   <h3>Trazabilidad</h3>
 </div>
 <form class="ajaxForm" action="<?=site_url('backend/trazabilidad/editar_form/'.$proceso->id)?>" method="POST">
-  <div class="validacion"></div>
+  <div class="validacion validacion-error"></div>
   <input type="hidden" value="<?= $proceso->ProcesoTrazabilidad->proceso_id ?>" name="proceso_id" />
   <div class="form-horizontal">
     <div class="control-group">

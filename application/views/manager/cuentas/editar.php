@@ -11,7 +11,7 @@
   <fieldset>
     <legend><?= $title ?></legend>
     <div class="form-horizontal">
-      <div class="validacion"></div>
+      <div class="validacion validacion-error"></div>
       <div class="control-group">
         <label class="control-label" for="nombre">Nombre</label>
         <div class="controls">
@@ -55,14 +55,14 @@
       <li class="action-buttons-primary">
           <ul>
               <li>
-                <input class="btn btn-primary" type="submit" value="Guardar" />
+                <input class="btn btn-primary btn-lg" type="submit" value="Guardar" />
               </li>
           </ul>
       </li>
       <li class="action-buttons-second">
           <ul>
               <li class="float-left">
-                <a class="btn btn-link" href="<?= site_url('manager/cuentas') ?>">Cancelar</a>
+                <a class="btn btn-link btn-lg" href="<?= site_url('manager/cuentas') ?>">Cancelar</a>
               </li>
           </ul>
       </li>

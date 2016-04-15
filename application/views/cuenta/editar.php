@@ -46,14 +46,14 @@
         <li class="action-buttons-primary">
             <ul>
                 <li>
-                  <button class="btn btn-primary" type="submit">Guardar</button>
+                  <button class="btn btn-primary btn-lg" type="submit">Guardar</button>
                 </li>
             </ul>
         </li>
         <li class="action-buttons-second">
             <ul>
                 <li class="float-left">
-                  <button class="btn btn-link" type="button" onclick="javascript:history.back()">Cancelar</button>
+                  <button class="btn btn-link btn-lg" type="button" onclick="javascript:history.back()">Cancelar</button>
                 </li>
             </ul>
         </li>

@@ -6,7 +6,7 @@
 </ul>
 <h2><?= $catalogo->nombre ?></h2>
 <form class="ajaxForm" action="<?=site_url('backend/ws_catalogos/editar_form/'.$catalogo->id)?>" method="post">
-  <div class="validacion"></div>
+  <div class="validacion validacion-error"></div>
   <fieldset>
       <legend>Datos generales</legend>
       <div class="form-horizontal">
@@ -47,14 +47,14 @@
       <li class="action-buttons-primary">
           <ul>
               <li>
-                <input class="btn btn-primary" type="submit" value="Guardar" />
+                <input class="btn btn-primary btn-lg" type="submit" value="Guardar" />
               </li>
           </ul>
       </li>
       <li class="action-buttons-second">
           <ul>
               <li class="float-left">
-                <a class="btn btn-link" href="<?=site_url('backend/ws_catalogos')?>">Cancelar</a>
+                <a class="btn btn-link btn-lg" href="<?=site_url('backend/ws_catalogos')?>">Cancelar</a>
               </li>
           </ul>
       </li>

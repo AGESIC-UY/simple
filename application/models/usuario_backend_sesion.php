@@ -4,7 +4,7 @@ class UsuarioBackendSesion {
     private static $user;
 
     private function __construct() {
-        
+
     }
 
     public static function usuario() {
@@ -26,15 +26,15 @@ class UsuarioBackendSesion {
 
         return self::$user;
     }
-    
+
     public static function force_login(){
         $CI = & get_instance();
-        
+
         if(!self::usuario()){
             $CI->session->set_flashdata('redirect',current_url());
             redirect('/backend/autenticacion/login');
         }
-            
+
     }
 
     public static function login($email, $password) {
@@ -87,6 +87,40 @@ class UsuarioBackendSesion {
         trigger_error('Clone is not allowed.', E_USER_ERROR);
     }
 
+    public static function login_saml($usuario) {
+        $CI = & get_instance();
+        $u = self::validar_acceso_saml($usuario);
+
+        if ($u) {
+          //Logueamos al usuario
+          $CI->session->set_userdata('usuario_id', $u->id);
+          self::$user = $u;
+
+          return TRUE;
+        }
+
+        return FALSE;
+    }
+
+    public static function validar_acceso_saml($usuario) {
+        $usuario = Doctrine::getTable('UsuarioBackend')->findByUsuarioAndOpenId($usuario, 0);
+
+        if (count($usuario) == 0) {
+          return false;
+        }
+        else {
+          return $usuario[0];
+        }
+    }
+
+    public function registrado_saml() {
+      if(isset($_COOKIE['simple_bpm_saml_session_ref_k'])) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
 }
 
 ?>

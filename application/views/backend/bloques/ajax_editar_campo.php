@@ -97,14 +97,18 @@
 <form id="formEditarCampo" class="ajaxForm" method="POST" action="<?= site_url('backend/bloques/editar_campo_form/' . ($edit ? $campo->id : '')) ?>">
   <div class="modal-body">
         <input type="hidden" name="bloque_id" value="<?= $bloque->id ?>" />
-        <div class="validacion"></div>
+        <div class="validacion validacion-error"></div>
         <?php if (!$edit): ?>
             <input type="hidden" name="formulario_id" value="<?= $formulario->id ?>" />
             <input type="hidden" name="tipo" value="<?= $campo->tipo ?>" />
         <?php endif; ?>
         <label for="etiqueta">Etiqueta</label>
         <?php if($campo->etiqueta_tamano=='xxlarge'):?>
-        <textarea id="etiqueta" class="input-xxlarge" rows="5" name="etiqueta" ><?= htmlspecialchars($campo->etiqueta) ?></textarea>
+          <?php if($campo->tipo == 'javascript'):?>
+            <textarea id="etiqueta" class="input-xxlarge campo_javascript_codigo" rows="15" name="etiqueta"><?= htmlspecialchars($campo->etiqueta) ?></textarea>
+          <?php else: ?>
+            <textarea id="etiqueta" class="input-xxlarge" rows="5" name="etiqueta"><?= htmlspecialchars($campo->etiqueta) ?></textarea>
+          <?php endif; ?>
         <?php else: ?>
         <input id="etiqueta" type="text" name="etiqueta" value="<?= htmlspecialchars($campo->etiqueta) ?>" />
         <?php endif ?>

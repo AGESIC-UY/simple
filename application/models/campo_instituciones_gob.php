@@ -6,7 +6,7 @@ class CampoInstitucionesGob extends Campo{
 
     protected function display($modo, $dato) {
         $display = '<div class="control-group">';
-        $display.= '<label class="control-label" for="entidades_'.$this->id.'" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*' : ' (Opcional)') . '</label>';
+        $display.= '<label class="control-label" for="entidades_'.$this->id.'" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ' (Opcional):') . '</label>';
         $display.= '<div class="controls" data-fieldset="'.$this->fieldset.'">';
         $display.= '<select class="entidades" id="entidades_'.$this->id.'" data-id="'.$this->id.'" name="' . $this->nombre . '[entidad]" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display.= '<option>Seleccionar</option>';

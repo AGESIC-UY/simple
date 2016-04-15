@@ -135,6 +135,7 @@ class Proceso extends Doctrine_Record {
 
         $proceso->Acciones;
         $proceso->Documentos;
+        $proceso->ProcesoTrazabilidad;
 
         $object=$proceso->toArray();
 
@@ -149,6 +150,7 @@ class Proceso extends Doctrine_Record {
      * @return Proceso
      */
     public static function importComplete($input){
+      try {
         $json=json_decode($input);
 
         //Creamos el proceso
@@ -156,6 +158,9 @@ class Proceso extends Doctrine_Record {
         $proceso->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
 
         //Creamos los documentos
+        if(!isset($json->Documentos)) {
+          throw new Exception(false);
+        }
         foreach($json->Documentos as $f){
             $proceso->Documentos[$f->id]=new Documento();
             foreach($f as $keyf => $f_attr){
@@ -166,26 +171,33 @@ class Proceso extends Doctrine_Record {
         }
 
         //Creamos los formularios
+        if(!isset($json->Formularios)) {
+          throw new Exception(false);
+        }
         foreach($json->Formularios as $f){
-            $proceso->Formularios[$f->id]=new Formulario();
-            foreach($f as $keyf => $f_attr)
-                if($keyf == 'Campos'){
-                    foreach($f_attr as $c){
-                        $campo = new Campo();
-                        foreach($c as $keyc => $c_attr){
-                            if($keyc != 'id' && $keyc != 'formulario_id' && $keyc != 'Formulario' && $keyc != 'documento_id'){
-                                $campo->{$keyc} = $c_attr;
-                            }
-                        }
-                        if($c->documento_id) $campo->Documento = $proceso->Documentos[$c->documento_id];
-                        $proceso->Formularios[$f->id]->Campos[]=$campo;
+          $proceso->Formularios[$f->id]=new Formulario();
+          foreach($f as $keyf => $f_attr)
+            if($keyf == 'Campos'){
+              foreach($f_attr as $c){
+                $campo = new Campo();
+                foreach($c as $keyc => $c_attr){
+                    if($keyc != 'id' && $keyc != 'formulario_id' && $keyc != 'Formulario' && $keyc != 'documento_id'){
+                        $campo->{$keyc} = $c_attr;
                     }
-                }elseif($keyf != 'id' && $keyf != 'proceso_id' && $keyf != 'Proceso'){
-                    $proceso->Formularios[$f->id]->{$keyf}=$f_attr;
                 }
+                if($c->documento_id) $campo->Documento = $proceso->Documentos[$c->documento_id];
+                $proceso->Formularios[$f->id]->Campos[]=$campo;
+              }
+            }
+            elseif($keyf != 'id' && $keyf != 'proceso_id' && $keyf != 'Proceso'){
+                $proceso->Formularios[$f->id]->{$keyf}=$f_attr;
+            }
         }
 
         //Creamos las acciones
+        if(!isset($json->Acciones)) {
+          throw new Exception(false);
+        }
         foreach($json->Acciones as $f){
           $proceso->Acciones[$f->id]=new Accion();
           foreach($f as $keyf => $f_attr){
@@ -231,13 +243,15 @@ class Proceso extends Doctrine_Record {
                 }
             }elseif($keyp=='Formularios' || $keyp=='Acciones' || $keyp=='Documentos' || $keyp=='Conexiones'){
 
-            }elseif($keyp != 'id' && $keyp != 'cuenta_id'){
+            }elseif($keyp != 'id' && $keyp != 'cuenta_id' && $keyp != 'ProcesoTrazabilidad'){
                 $proceso->{$keyp} = $p_attr;
             }
         }
 
-
         //Hacemos las conexiones
+        if(!isset($json->Conexiones)) {
+          throw new Exception(false);
+        }
         foreach($json->Conexiones as $c){
             $conexion=new Conexion();
             $proceso->Tareas[$c->tarea_id_origen]->ConexionesOrigen[]=$conexion;
@@ -249,8 +263,20 @@ class Proceso extends Doctrine_Record {
             }
         }
 
-        //print_r($proceso->toArray());
+        // Agregamos los datos de trazabilidad
+        if(!isset($json->ProcesoTrazabilidad)) {
+          throw new Exception(false);
+        }
+        else {
+          $proceso->ProcesoTrazabilidad->organismo_id = $json->ProcesoTrazabilidad->organismo_id;
+          $proceso->ProcesoTrazabilidad->proceso_externo_id = $json->ProcesoTrazabilidad->proceso_externo_id;
+        }
+
         return $proceso;
+      }
+      catch(Exception $error) {
+        echo '-1';
+      }
     }
 
 
@@ -366,7 +392,6 @@ class Proceso extends Doctrine_Record {
         return false;
     }
 
-
     public function toPublicArray(){
         $publicArray=array(
             'id'=>(int)$this->id,
@@ -375,5 +400,4 @@ class Proceso extends Doctrine_Record {
 
         return $publicArray;
     }
-
 }

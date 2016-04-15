@@ -9,13 +9,14 @@ class Reportes extends MY_BackendController {
         parent::__construct();
 
         UsuarioBackendSesion::force_login();
-        
+
         if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='gestion'){
-            echo 'No tiene permisos para acceder a esta seccion.';
-            exit;
+            //echo 'No tiene permisos para acceder a esta seccion.';
+            //exit;
+            redirect('backend');
         }
     }
-    
+
     public function index(){
         $procesos = Doctrine_Query::create()
             ->from('Proceso p')
@@ -30,7 +31,6 @@ class Reportes extends MY_BackendController {
         $data['content'] = 'backend/reportes/index';
 
         $this->load->view('backend/template', $data);
-        
     }
 
     public function listar($proceso_id) {
@@ -112,7 +112,7 @@ class Reportes extends MY_BackendController {
         }
 
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
-        $this->form_validation->set_rules('campos', 'Campos', 'required');
+        $this->form_validation->set_rules('campos', 'Campos[]', 'required');
 
         $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {

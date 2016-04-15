@@ -18,12 +18,12 @@
         <form class="ajaxForm" method="post" action="<?= site_url('backend/configuracion/usuario_editar_form/' . (isset($usuario)?$usuario->id:'')) ?>">
             <fieldset>
                 <legend>Editar usuario</legend>
-                <div class="validacion"></div>
+                <div class="validacion validacion-error"></div>
                 <div class="form-horizontal">
                   <div class="control-group">
-                    <label for="nombre" class="control-label">Nombre de Usuario</label>
+                    <label for="nombre" class="control-label">Usuario</label>
                     <div class="controls">
-                      <input type="text" id="nombre" name="usuario" value="<?=isset($usuario)?$usuario->usuario:''?>" <?=  isset($usuario)?'disabled':''?>/>
+                      <input type="text" id="nombre" name="usuario" value="<?=isset($usuario)?$usuario->usuario:''?>" />
                     </div>
                   </div>
                   <div class="control-group">
@@ -84,14 +84,14 @@
                 <li class="action-buttons-primary">
                     <ul>
                         <li>
-                          <button class="btn btn-primary" type="submit">Guardar</button>
+                          <button class="btn btn-primary btn-lg" type="submit">Guardar</button>
                         </li>
                     </ul>
                 </li>
                 <li class="action-buttons-second">
                     <ul>
                         <li class="float-left">
-                          <a class="btn btn-link" href="<?=site_url('backend/configuracion/usuarios')?>">Cancelar</a>
+                          <a class="btn btn-link btn-lg" href="<?=site_url('backend/configuracion/usuarios')?>">Cancelar</a>
                         </li>
                     </ul>
                 </li>

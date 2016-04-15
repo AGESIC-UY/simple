@@ -4,7 +4,7 @@
 </div>
 <form id="formEditarCampo" class="ajaxForm form-horizontal" method="POST" action="<?=site_url('backend/bloques/editar_form/'.$bloque->id)?>">
   <div class="modal-body">
-        <div class="validacion"></div>
+        <div class="validacion validacion-error"></div>
         <div class="control-group">
           <label class="control-label" for="nombre">Nombre</label>
           <div class="controls">

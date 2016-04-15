@@ -41,5 +41,4 @@ class AccionVariable extends Accion {
         $dato->etapa_id = $etapa->id;
         $dato->save();
     }
-
 }

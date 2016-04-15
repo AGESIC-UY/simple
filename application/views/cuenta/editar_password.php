@@ -1,7 +1,7 @@
 <form method="POST" class="ajaxForm" action="<?=site_url('cuentas/editar_password_form')?>">
     <fieldset>
         <legend>Edita la información de tu cuenta</legend>
-        <div class="validacion"></div>
+        <div class="validacion validacion-error"></div>
         <label>Contraseña antigua</label>
         <input type="password" name="password_old" value="" />
         <label>Contraseña nueva</label>

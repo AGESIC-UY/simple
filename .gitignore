@@ -1,4 +1,5 @@
-config.php
+constants.php
+application/config/config.php
 database.php
 nbproject
 uploads
@@ -9,3 +10,4 @@ sphinx/index
 sphinx/run
 sphinx.conf
 searchd.log
+application/third_party/simplesaml/config

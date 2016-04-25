@@ -58,7 +58,7 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: php:5.6
+          name: php-mcrypt:5.6
           namespace: openshift
       type: Source
     triggers:

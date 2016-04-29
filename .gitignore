@@ -5,9 +5,10 @@ nbproject
 uploads
 email.php
 application/libraries/tcpdf/cache
+application/third_party/simplesaml/cert
+application/third_party/simplesaml/config
 application/third_party/simplesaml/log
 sphinx/index
 sphinx/run
 sphinx.conf
 searchd.log
-application/third_party/simplesaml/config

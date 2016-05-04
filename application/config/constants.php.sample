@@ -58,6 +58,10 @@ define('WS_AGESIC_TRAZABLIDAD_LINEA', '');
 define('WS_VERSION_MODELO', '1');
 define('WS_XPATH_COD_TRAZABILIDAD', "//*[local-name() = 'guid']/text()");
 define('WS_VARIABLE_COD_TRAZABILIDAD', 'codigo_trazabilidad');
+define('WS_PASARELA_PAGO', 'xxxx');
+define('POST_PASARELA_PAGO', 'xxxx');
+define('PASARELA_PAGO_TIMEOUT_CONEXION', 10);
+define('PASARELA_PAGO_TIMEOUT_RESPUESTA', 10);
 
 /*
 |--------------------------------------------------------------------------
@@ -82,4 +86,4 @@ define('MAX_REGISTROS_PAGINA', 5);
 define('REDIS_HOST', '127.0.0.1');
 define('REDIS_PORT', '6379');
 define('DENEGAR_REMOVER_CAMPOS_BLOQUES', TRUE);
-define('LOGIN_ADMIN_COESYS', FALSE);
+define('LOGIN_ADMIN_COESYS', TRUE);

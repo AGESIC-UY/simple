@@ -8,6 +8,7 @@ application/libraries/tcpdf/cache
 application/log
 application/third_party/simplesaml/cert
 application/third_party/simplesaml/config
+application/third_party/simplesaml/metadata
 application/third_party/simplesaml/log
 sphinx/index
 sphinx/run

@@ -103,6 +103,12 @@
           <input type="text" id="montos_desglose" name="pasarela_metodo_antel_montos_desglose" class="input-xlarge" value="<?=($pasarela->metodo == 'antel' ? $pasarela_metodo->montos_desglose : '')?>" />
         </div>
       </div>
+      <div class="control-group">
+        <label for="clave_organismo" class="control-label">Clave organismo</label>
+        <div class="controls">
+          <input type="text" id="clave_organismo" name="pasarela_metodo_antel_clave_organismo" class="input-xlarge" value="<?=($pasarela->metodo == 'antel' ? $pasarela_metodo->clave_organismo : '')?>" />
+        </div>
+      </div>
     </div>
   </fieldset>
   <ul class="form-action-buttons">

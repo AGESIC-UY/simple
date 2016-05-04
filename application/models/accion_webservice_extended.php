@@ -167,7 +167,6 @@ class AccionWebserviceExtended extends Accion {
                     if($respuesta->tipo == 'lista') {
                         $operacion_respuesta = Doctrine_Query::create()->from('WsOperacionRespuesta')->where('respuesta_id = ?', $respuesta->id)->limit(1)->execute();
 
-                        // -- FIXME Al tomar el xslt dinamicamente se rompe, hay problemas de caracteres con el xslt guardado...
                         $xslt = $operacion_respuesta[0]->xslt;
 
                         // -- Comienza a procesar el XSLT
@@ -217,7 +216,6 @@ class AccionWebserviceExtended extends Accion {
                             $dato->delete();
 
                         $dato = new DatoSeguimiento();
-
                         $dato->nombre = $clave;
                         $dato->valor = (string)$jsonString;
                         $dato->etapa_id = $etapa->id;

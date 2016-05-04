@@ -77,10 +77,11 @@
       <div class="control-group">
         <label class="control-label" for="pasarela_pagos_action_selector">Pasarela de pago</label>
         <div class="controls">
-          <select name="tipo" id="pasarela_pagos_action_selector">
+          <input type="hidden" name="tipo" value="pasarela_pago" />
+          <select name="operacion" id="pasarela_pagos_action_selector">
               <option value="" disabled selected>-- Seleccione la pasarela --</option>
               <?php foreach($pasarela_pagos as $p) { ?>
-                  <option value="pasarela_pago" data-pasarela-id="<?=$p->id?>"><?=$p->nombre?></option>
+                  <option value="<?=$p->id?>"><?=$p->nombre?></option>
               <?php } ?>
           </select>
         </div>

@@ -1,4 +1,34 @@
 $(document).ready(function() {
+  // -- Muestra el tour
+  var template = "<div class='popover tour'>";
+  template += "<div class='arrow'></div>";
+  template += "<h3 class='popover-title'></h3>";
+  template += "<div class='popover-content'></div>";
+  template += "<div class='popover-navigation'><div class='btn-group'>";
+  template += "    <button class='btn btn-default' data-role='prev'>« Ant</button>";
+  template += "    <span data-role='separator'> </span>";
+  template += "    <button class='btn btn-default' data-role='next'>Sig »</button>";
+  template += "</div>";
+  template += "<button class='btn btn-default' data-role='end'>Finalizar</button></div>";
+  template += "</div>";
+
+  var tour = new Tour({
+    steps: [
+      {
+        element: "a[href='#modalImportar']",
+        title: "Importar un proceso",
+        content: "Para importar un proceso anteriormente exportado haga clic aquí."
+      }
+    ],
+    template: template
+  });
+
+  // Initialize the tour
+  //tour.init();
+
+  // Start the tour
+  //tour.start();
+
   // -- Muestra campo Error si se esta visualizando desde el modelador de formularios
   $('#areaFormulario .campo_error').show().removeClass('hidden');
 
@@ -43,7 +73,7 @@ $(document).ready(function() {
           $('#formAgregarAccion_button_services').hide();
           $('#formAgregarAccion_button_pasarela_pagos').show().removeClass('hidden');
 
-          $('#pasarela_pagos_action_selector').live('change', function(){
+          $('#pasarela_pagos_action_selector').live('change', function() {
               $('#formAgregarAccion_button').hide();
               $('#formAgregarAccion_button_operations').hide();
               $('#formAgregarAccion_button_services').hide();
@@ -275,7 +305,7 @@ $(document).ready(function() {
   });
 
   // -- Datepicker para vencimiento de método de pago de pasarela
-  if($('#pasarela_metodo').length) {
+  if($('#pasarela_pago_vencimiento_muestra').length) {
       $('#pasarela_pago_vencimiento_button').datepicker({
           format: 'yyyymmdd',
           startDate: '1d'

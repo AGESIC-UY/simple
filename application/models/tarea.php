@@ -83,7 +83,6 @@ class Tarea extends Doctrine_Record {
         return false;
     }
 
-
     //Obtiene el listado de usuarios que tienen acceso a esta tarea y que esten disponibles (no en vacaciones).
     //$etapa_id indica la etapa hasta la cual se debe calcular la variable para obtener el grupo de usuario.
     public function getUsuarios($etapa_id) {
@@ -149,8 +148,6 @@ class Tarea extends Doctrine_Record {
 
         return $query->execute();
     }
-
-
 
     //Obtiene el ultimo usuario que fue a asignado a esta tarea dentro del tramite tramite_id
     public function getUltimoUsuarioAsignado($proceso_id) {
@@ -349,5 +346,4 @@ class Tarea extends Doctrine_Record {
 
         return $publicArray;
     }
-
 }

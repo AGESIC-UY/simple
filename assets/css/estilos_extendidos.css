@@ -1115,3 +1115,5 @@ dl.lista_codigos_servicios dd {cursor: text;}
 #formAgregarAccion .control-group.error, #formAgregarAccion_services .control-group.error {border:0 !important;background: none !important;}
 #formAgregarAccion .control-group.error select, #formAgregarAccion_services select {border-color: #bebebe !important;color: rgb(85, 85, 85) !important;}
 #formAgregarAccion .control-group.error .mensaje_error_campo, #formAgregarAccion_services .mensaje_error_campo {display: none !important;}
+.htCore td select {border: 0 !important;}
+.htCore td a {text-decoration: underline !important;}

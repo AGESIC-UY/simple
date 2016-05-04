@@ -7,7 +7,14 @@ class Portada extends MY_BackendController {
 
     public function __construct() {
         parent::__construct();
-        UsuarioBackendSesion::force_login();
+
+        if(UsuarioSesion::registrado_saml()) {
+          redirect(site_url());
+        }
+        else {
+          setcookie('simple_bpm_query', base64_encode('backend'), 0, '/', HOST_SISTEMA_DOMINIO);
+          UsuarioBackendSesion::force_login();
+        }
     }
 
     public function index() {

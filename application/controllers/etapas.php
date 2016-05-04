@@ -16,17 +16,17 @@ class Etapas extends MY_Controller {
           redirect(site_url());
       }
 
-        $orderby = $this->input->get('orderby') ? str_replace("'", '', str_replace('"', '', $this->input->get('updated_at'))) : 'updated_at'; // -- Previniendo SQL Injection
-        $direction = $this->input->get('direction') == 'desc' ? 'desc' : 'asc'; // -- Previniendo SQL Injection
+      $orderby = $this->input->get('orderby') ? str_replace("'", '', str_replace('"', '', $this->input->get('updated_at'))) : 'updated_at'; // -- Previniendo SQL Injection
+      $direction = $this->input->get('direction') == 'desc' ? 'desc' : 'asc'; // -- Previniendo SQL Injection
 
-        $data['etapas'] = Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio(),$orderby,$direction);
+      $data['etapas'] = Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio(),$orderby,$direction);
 
-        $data['orderby']=$orderby;
-        $data['direction']=$direction;
-        $data['sidebar'] = 'inbox';
-        $data['content'] = 'etapas/inbox';
-        $data['title'] = 'Bandeja de Entrada';
-        $this->load->view('template', $data);
+      $data['orderby']=$orderby;
+      $data['direction']=$direction;
+      $data['sidebar'] = 'inbox';
+      $data['content'] = 'etapas/inbox';
+      $data['title'] = 'Bandeja de Entrada';
+      $this->load->view('template', $data);
     }
 
     public function sinasignar() {
@@ -388,5 +388,4 @@ class Etapas extends MY_Controller {
         $data['content'] = 'etapas/ver';
         $this->load->view('template', $data);
     }
-
 }

@@ -84,7 +84,7 @@ class Etapa extends Doctrine_Record {
     //Este parametro solamente es valido si la asignacion de la prox tarea es manual.
     public function avanzar($usuarios_a_asignar = null) {
         Doctrine_Manager::connection()->beginTransaction();
-        //Cerramos esta etapa
+        // Cerramos esta etapa
         $this->cerrar();
 
         $tp = $this->getTareasProximas();

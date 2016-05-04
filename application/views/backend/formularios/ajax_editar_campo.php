@@ -157,6 +157,16 @@
             </select>
             <?php echo form_error('valor_default'); ?>
             <?php endif ?>
+            <?php if($campo->tipo == 'pagos'):?>
+            <label for="selector_pagos">Método de pago</label>
+            <select name="valor_default" id="selector_pagos">
+                <option value="" <?= $campo->valor_default == '' ? 'selected' : '' ?>>-- Seleccionar método de pago --</option>
+                <?php foreach($pagos as $pago) { ?>
+                    <option value="<?= $pago->id ?>" <?= $campo->valor_default == $pago->id ? 'selected' : '' ?>><?= $pago->nombre ?></option>
+                <?php } ?>
+            </select>
+            <?php echo form_error('valor_default'); ?>
+            <?php endif ?>
             <div class="campoDependientes">
                 <label for="dependiente_campo">Visible solo si</label>
                 <select class="input-medium" id="dependiente_campo" name="dependiente_campo">

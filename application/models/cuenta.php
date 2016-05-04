@@ -23,7 +23,7 @@ class Cuenta extends Doctrine_Record {
             'local' => 'id',
             'foreign' => 'cuenta_id'
         ));
-        
+
         $this->hasMany('GrupoUsuarios as GruposUsuarios', array(
             'local' => 'id',
             'foreign' => 'cuenta_id'
@@ -39,7 +39,7 @@ class Cuenta extends Doctrine_Record {
             'foreign' => 'cuenta_id',
             'orderBy' => 'posicion'
         ));
-        
+
         $this->hasMany('HsmConfiguracion as HsmConfiguraciones', array(
             'local' => 'id',
             'foreign' => 'cuenta_id'
@@ -70,19 +70,19 @@ class Cuenta extends Doctrine_Record {
             if($main_domain){
                 $main_domain=addcslashes($main_domain,'.');
                 preg_match('/(.+)\.'.$main_domain.'/', $host, $matches);
-                if (isset ($matches[1])){
+                if (isset ($matches[1])) {
                     $cuentaSegunDominio = Doctrine::getTable('Cuenta')->findOneByNombre($matches[1]);
                 }
             }else{
                 $cuentaSegunDominio=Doctrine_Query::create()->from('Cuenta c')->limit(1)->fetchOne();
             }
-            
-                
+
+
         }
 
         return $cuentaSegunDominio;
     }
-    
+
     public function getLogoADesplegar(){
         if($this->logo)
             return base_url('uploads/logos/'.$this->logo);

@@ -14,5 +14,6 @@ class PasarelaPagoAntel extends Doctrine_Record {
         $this->hasColumn('vencimiento');
         $this->hasColumn('codigos_desglose');
         $this->hasColumn('montos_desglose');
+        $this->hasColumn('clave_organismo');
     }
 }

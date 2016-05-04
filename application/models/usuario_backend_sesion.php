@@ -4,7 +4,6 @@ class UsuarioBackendSesion {
     private static $user;
 
     private function __construct() {
-
     }
 
     public static function usuario() {
@@ -66,7 +65,6 @@ class UsuarioBackendSesion {
             if ($u->password == $u_input->password) {
                 unset($u_input);
 
-
                 return TRUE;
             }
 
@@ -93,23 +91,28 @@ class UsuarioBackendSesion {
 
         if ($u) {
           //Logueamos al usuario
-          $CI->session->set_userdata('usuario_id', $u->id);
+          $CI->session->set_userdata('usuario_backend_id', $u->id);
           self::$user = $u;
 
-          return TRUE;
+          $um = Doctrine::getTable('UsuarioManager')->findOneByUsuario($u->email);
+          if($um) {
+            $CI->session->set_userdata('usuario_manager_id', $u->id);
+          }
+
+          return true;
         }
 
-        return FALSE;
+        return false;
     }
 
     public static function validar_acceso_saml($usuario) {
-        $usuario = Doctrine::getTable('UsuarioBackend')->findByUsuarioAndOpenId($usuario, 0);
+        $usuario = Doctrine::getTable('UsuarioBackend')->findOneByUsuario($usuario);
 
-        if (count($usuario) == 0) {
+        if (!$usuario) {
           return false;
         }
         else {
-          return $usuario[0];
+          return $usuario;
         }
     }
 

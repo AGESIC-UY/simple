@@ -130,11 +130,19 @@ class Formularios extends MY_BackendController {
             exit;
         }
 
+        $pagos = array();
+        foreach($campo->Formulario->Proceso->Acciones as $accion) {
+          if($accion->tipo == 'pasarela_pago') {
+            array_push($pagos, $accion);
+          }
+        }
+
         $bloques = Doctrine_Query::create()->from('Bloque')->execute();
 
         $data['edit']=TRUE;
         $data['campo']=$campo;
         $data['formulario']=$campo->Formulario;
+        $data['pagos'] = $pagos;
         $data['bloques'] = $bloques;
 
         $this->load->view('backend/formularios/ajax_editar_campo',$data);
@@ -264,12 +272,21 @@ class Formularios extends MY_BackendController {
         $campo=Campo::factory($tipo);
         $campo->formulario_id=$formulario_id;
 
+        $pagos = array();
+        foreach($formulario->Proceso->Acciones as $accion) {
+          if($accion->tipo == 'pasarela_pago') {
+            array_push($pagos, $accion);
+          }
+        }
+
         $bloques = Doctrine_Query::create()->from('Bloque')->execute();
 
         $data['edit']=false;
         $data['formulario']=$formulario;
         $data['campo']=$campo;
+        $data['pagos'] = $pagos;
         $data['bloques'] = $bloques;
+
         $this->load->view('backend/formularios/ajax_editar_campo',$data);
     }
 

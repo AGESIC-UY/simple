@@ -27,30 +27,27 @@ class Migration_15 extends Doctrine_Migration_Base {
     // -- Modifica tabla UsuarioBackend
     // --
     $this->addColumn('usuario_backend', 'usuario', 'varchar', 128, array('notnull' => 0));
+
+    // --
+    // -- Modifica tabla PasarelaPagoAntel
+    // --
+    $this->addColumn('pasarela_pago_antel', 'clave_organismo', 'varchar', 60, array('notnull' => 0));
   }
 
   public function down() {
-    // --
-    // -- Elimina columna fieldset de tabla Campo
-    // --
+
     $this->removeColumn('campo', 'fieldset');
+
     $this->removeColumn('campo', 'nombre');
 
-    // --
-    // -- Elimina columna bloque_id de tabla Formulario
-    // --
     $this->removeColumn('formulario', 'bloque_id');
 
-    // --
-    // -- Elimina columna nombre de tabla Paso
-    // --
     $this->removeColumn('paso', 'nombre');
 
-    // --
-    // -- Elimina columna trazabilidad de tabla Tarea
-    // --
     $this->removeColumn('tarea', 'trazabilidad');
 
     $this->removeColumn('usuario_backend', 'usuario');
+
+    $this->removeColumn('pasarela_pago_antel', 'clave_organismo');
   }
 }

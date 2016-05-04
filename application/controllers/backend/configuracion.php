@@ -256,6 +256,7 @@ class Configuracion extends MY_BackendController {
             $usuario->nombre = $this->input->post('nombre');
             $usuario->apellidos = $this->input->post('apellidos');
             $usuario->rol = $this->input->post('rol');
+            $usuario->usuario = $this->input->post('usuario');
             $usuario->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
             $usuario->save();
 
@@ -319,7 +320,6 @@ class Configuracion extends MY_BackendController {
 
         $this->form_validation->set_message('check_existe_usuario','%s ya existe');
         return FALSE;
-
     }
 
     function check_existe_email($email,$usuario_id){

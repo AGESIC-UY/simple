@@ -22,6 +22,7 @@
 <script src="<?= base_url() ?>assets/js/jquery.doubletap/jquery.doubletap.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/json-js/json2.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/jquery.base64/jquery.base64.min.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>assets/js/bootstrap-tour/bootstrap-tour.min.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/common.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/backend.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/backend_extendido.js" type="text/javascript"></script>

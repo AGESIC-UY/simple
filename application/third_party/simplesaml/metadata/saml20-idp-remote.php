@@ -8,8 +8,8 @@
  */
 
 // -- METADADA DEL IDP
-$metadata['https://test-eid.portal.gub.uy/idp'] = array (
-  'entityid' => 'https://test-eid.portal.gub.uy/idp',
+$metadata['idp'] = array (
+  'entityid' => 'xxxx',
   'metadata-set' => 'saml20-idp-remote',
   'redirect.sign' => true,
   'SingleSignOnService' =>

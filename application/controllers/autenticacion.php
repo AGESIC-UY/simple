@@ -20,6 +20,8 @@ class Autenticacion extends MY_Controller {
     }
 
     public function logout_saml() {
+      UsuarioBackendSesion::logout();
+      UsuarioManagerSesion::logout();
       UsuarioSesion::logout();
 
       $auth = new SimpleSAML_Auth_Simple(SIMPLE_SAML_AUTHSOURCE);
@@ -57,7 +59,21 @@ class Autenticacion extends MY_Controller {
                 }
                 setcookie('simple_bpm_saml_session_ref_k', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
 
-                redirect(site_url().'/backend');
+                if(isset($_COOKIE['simple_bpm_query'])) {
+                  switch(base64_decode($_COOKIE['simple_bpm_query'])) {
+                    case 'backend':
+                      redirect(site_url().'/backend');
+                      break;
+                    case 'manager':
+                      redirect(site_url().'/manager');
+                      break;
+                    default:
+                      redirect(site_url());
+                  }
+                }
+                else {
+                  redirect(site_url().'/backend');
+                }
               }
               else {
                 if (!UsuarioSesion::login_saml($uid)) {
@@ -82,10 +98,24 @@ class Autenticacion extends MY_Controller {
             // }
         }
         catch(Exception $error) {
-            redirect(site_url());
+          redirect(site_url());
         }
 
-      redirect(site_url());
+        if(isset($_COOKIE['simple_bpm_query'])) {
+          switch(base64_decode($_COOKIE['simple_bpm_query'])) {
+            case 'backend':
+              redirect(site_url().'/backend');
+              break;
+            case 'manager':
+              redirect(site_url().'/manager');
+              break;
+            default:
+              redirect(site_url());
+          }
+        }
+        else {
+          redirect(site_url());
+        }
     }
 
     public function login_openid() {
@@ -125,6 +155,8 @@ class Autenticacion extends MY_Controller {
     }
 
     public function login() {
+      setcookie('simple_bpm_query', base64_encode('frontend'), 0, '/', HOST_SISTEMA_DOMINIO);
+
       if(UsuarioSesion::registrado_saml()) {
         redirect(site_url());
       }

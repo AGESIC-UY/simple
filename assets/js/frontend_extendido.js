@@ -1,4 +1,9 @@
 $(document).ready(function() {
+  // -- Prepara el formulario de pasarela de pagos
+  if($('#form_pasarela_pago').length) {
+    $(".form-action-buttons").find(".btn-primary").remove();
+    $('#form_pasarela_pago').wrap("<form method='post' action='"+ $('#form_pasarela_pago').attr('data-action') +"'></form>");
+  }
 
   // -- Previene que el dropdown de login se cierre al hacer click en elementos contenidos
   $('.dropdown-menu input, .dropdown-menu label, .dropdown-menu button').click(function(e) {

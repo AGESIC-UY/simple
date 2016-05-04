@@ -25,6 +25,8 @@ class Tramites extends MY_Controller {
     }
 
     public function disponibles() {
+      setcookie('simple_bpm_query', base64_encode('frontend'), 0, '/', HOST_SISTEMA_DOMINIO);
+
       // -- Verifica si debe redireccionar
       if(isset($_COOKIE['redirect'])) {
         $redirect = $_COOKIE['redirect'];

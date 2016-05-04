@@ -52,6 +52,7 @@
             <button class="btn btn-inverse hidden" onclick="return agregarCampo(<?= $formulario->id ?>,'comunas')">Comunas</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'moneda')">Moneda</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'agenda')">Agenda</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'pagos')">Pagos</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'javascript')">Javascript</button>
         </div>
     </div>

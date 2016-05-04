@@ -134,7 +134,6 @@ class Procesos extends MY_BackendController {
         $tarea->posx=$this->input->post('posx');
         $tarea->posy=$this->input->post('posy');
         $tarea->save();
-
     }
 
     public function ajax_editar_tarea($proceso_id,$tarea_identificador){

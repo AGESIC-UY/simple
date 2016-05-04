@@ -14,6 +14,7 @@
 <link href="<?= base_url() ?>assets/css/dashboard.css" rel="stylesheet">
 <link href="<?= base_url() ?>assets/css/font-awesome-3.2.1.min.css" rel="stylesheet" />
 <link href="<?= base_url() ?>assets/css/estilos_extendidos.css" rel="stylesheet" />
+<link href="<?= base_url() ?>assets/css/bootstrap-tour/bootstrap-tour.min.css" rel="stylesheet" />
 <link rel="shortcut icon" href="<?= base_url() ?>assets/img/favicon.png" />
 <!--[if lt IE 9]>
 	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>

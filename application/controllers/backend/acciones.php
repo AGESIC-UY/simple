@@ -63,7 +63,7 @@ class Acciones extends MY_BackendController {
         $this->load->view('backend/acciones/ajax_seleccionar',$data);
     }
 
-    public function seleccionar_form($proceso_id, $operacion=null){
+    public function seleccionar_form($proceso_id, $operacion=null) {
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
 
         if ($proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
@@ -76,6 +76,9 @@ class Acciones extends MY_BackendController {
         $respuesta=new stdClass();
         if($this->form_validation->run()==TRUE){
             $tipo=$this->input->post('tipo');
+            if((!$operacion) && ($this->input->post('operacion') != '')) {
+              $operacion = $this->input->post('operacion');
+            }
             $respuesta->validacion=TRUE;
             $respuesta->redirect=site_url('backend/acciones/crear/'.$proceso_id.'/'.$tipo.'/'.$operacion);
         }else{
@@ -86,7 +89,7 @@ class Acciones extends MY_BackendController {
         echo json_encode($respuesta);
     }
 
-    public function crear($proceso_id,$tipo,$operacion=null){
+    public function crear($proceso_id,$tipo,$operacion=null) {
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
 
         if ($proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
@@ -202,8 +205,5 @@ class Acciones extends MY_BackendController {
         $accion->delete();
 
         redirect('backend/acciones/listar/'.$proceso->id);
-
     }
-
-
 }

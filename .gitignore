@@ -5,6 +5,7 @@ nbproject
 uploads
 email.php
 application/libraries/tcpdf/cache
+application/log
 application/third_party/simplesaml/cert
 application/third_party/simplesaml/config
 application/third_party/simplesaml/log

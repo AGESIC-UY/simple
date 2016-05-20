@@ -24,3 +24,6 @@
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<h2>Seguimiento de Pagos</h2>
+<a href="<?=site_url('backend/seguimiento/pagos/')?>" class="btn btn-primary"><span class="icon-eye-open icon-white"></span> Ver seguimiento</a>

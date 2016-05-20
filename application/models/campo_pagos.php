@@ -39,17 +39,22 @@ class CampoPagos extends Campo {
         }
       }
 
+      $fecha_vencimiento = date("YmdHi", strtotime($pasarela->vencimiento));
+
+      $id_sol =  Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId('id_sol_pasarela_pagos', $etapa_id);
+      $token =  Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId('token_pasarela_pagos', $etapa_id);
+
       $display = '<div class="well text-center">';
       $display .= '<div data-action="'. POST_PASARELA_PAGO .'" id="form_pasarela_pago">';
 
-      $display .= '<input name="IdSol" value="@@id_sol_pasarela_pagos" type="hidden" />';
-      $display .= '<input name="Token" value="@@token_pasarela_pagos" type="hidden" />';
+      $display .= '<input name="IdSol" value="'. (isset($id_sol->valor) ? $id_sol->valor : '') .'" type="hidden" />';
+      $display .= '<input name="Token" value="'. (isset($token->valor) ? $token->valor : '') .'" type="hidden" />';
 
       $display .= '<input name="IdTramite" value="'. $pasarela->id_tramite .'" type="hidden" />';
       $display .= '<input name="ImporteTasa1" value="'. $pasarela->tasa_1 .'" type="hidden" />';
       $display .= '<input name="ImporteTasa2" value="'. $pasarela->tasa_2 .'" type="hidden" />';
       $display .= '<input name="ImporteTasa3" value="'. $pasarela->tasa_3 .'" type="hidden" />';
-      $display .= '<input name="FechaVto" value="'. $pasarela->vencimiento .'" type="hidden" />';
+      $display .= '<input name="FechaVto" value="'. $fecha_vencimiento .'" type="hidden" />';
       $display .= '<input name="UsuarioPeu" value="anonimo" type="hidden" />';
       $display .= '<input name="CodsDesglose" value="'. $pasarela->codigos_desglose .'" type="hidden" />';
       $display .= '<input name="MontosDesglose" value="'. $pasarela->montos_desglose .'" type="hidden" />';

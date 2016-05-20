@@ -30,52 +30,84 @@ class Autenticacion extends MY_Controller {
 
     // -- TODO Se debe verificar la firma del SAMLResponse para comprobar que el mensaje es válido.
     public function login_saml_respuesta() {
-        try {
-            // -- Verificamos que el origen de la respuesta es confiable. FIXME El origin llega como NULL.
-            // if(isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], unserialize(ORIGENES_CONFIABLES))) {
-            $post = file_get_contents("php://input");
-            $data = array();
-            parse_str($post, $data);
-            $saml_response = base64_decode($data['SAMLResponse']);
-            $xml = new SimpleXMLElement($saml_response);
+      try {
+        // -- Verificamos que el origen de la respuesta es confiable. FIXME El origin llega como NULL.
+        // if(isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], unserialize(ORIGENES_CONFIABLES))) {
+        $post = file_get_contents("php://input");
+        $data = array();
+        parse_str($post, $data);
+        $saml_response = base64_decode($data['SAMLResponse']);
+        $xml = new SimpleXMLElement($saml_response);
 
-            if($xml->xpath("//*[local-name() = 'AttributeStatement']/*[local-name() = 'Attribute'][@Name='PrimerNombre']/*[local-name() = 'AttributeValue']")) {
-              $primer_nombre = $xml->xpath("//*[local-name() = 'AttributeStatement']/*[local-name() = 'Attribute'][@Name='PrimerNombre']/*[local-name() = 'AttributeValue']/text()");
-              $primer_apellido = $xml->xpath("//*[local-name() = 'AttributeStatement']/*[local-name() = 'Attribute'][@Name='PrimerApellido']/*[local-name() = 'AttributeValue']/text()");
-              $segundo_apellido = $xml->xpath("//*[local-name() = 'AttributeStatement']/*[local-name() = 'Attribute'][@Name='SegundoApellido']/*[local-name() = 'AttributeValue']/text()");
-              $uid = $xml->xpath("//*[local-name() = 'AttributeStatement']/*[local-name() = 'Attribute'][@Name='uid']/*[local-name() = 'AttributeValue']/text()");
-              $random_password = random_string('alnum', 32);
-              $session_index = $xml->xpath("//*[local-name() = 'AuthnStatement']/@SessionIndex");
-              $name_id = $xml->xpath("//*[local-name() = 'NameID']/@NameQualifier");
+        if($xml->xpath("//*[local-name() = 'AttributeStatement']/*[local-name() = 'Attribute'][@Name='PrimerNombre']/*[local-name() = 'AttributeValue']")) {
+          $primer_nombre = $xml->xpath("//*[local-name() = 'AttributeStatement']/*[local-name() = 'Attribute'][@Name='PrimerNombre']/*[local-name() = 'AttributeValue']/text()");
+          $primer_apellido = $xml->xpath("//*[local-name() = 'AttributeStatement']/*[local-name() = 'Attribute'][@Name='PrimerApellido']/*[local-name() = 'AttributeValue']/text()");
+          $segundo_apellido = $xml->xpath("//*[local-name() = 'AttributeStatement']/*[local-name() = 'Attribute'][@Name='SegundoApellido']/*[local-name() = 'AttributeValue']/text()");
+          $uid = $xml->xpath("//*[local-name() = 'AttributeStatement']/*[local-name() = 'Attribute'][@Name='uid']/*[local-name() = 'AttributeValue']/text()");
+          $random_password = random_string('alnum', 32);
+          $session_index = $xml->xpath("//*[local-name() = 'AuthnStatement']/@SessionIndex");
+          $name_id = $xml->xpath("//*[local-name() = 'NameID']/@NameQualifier");
 
-              $uid = $uid[0];
-              $primer_nombre = $primer_nombre[0];
-              $primer_apellido = $primer_apellido[0];
-              $segundo_apellido = $segundo_apellido[0];
+          $uid = $uid[0];
+          $primer_nombre = $primer_nombre[0];
+          $primer_apellido = $primer_apellido[0];
+          $segundo_apellido = $segundo_apellido[0];
 
-              if (UsuarioBackendSesion::login_saml($uid)) {
-                if(isset($_COOKIE['simple_bpm_saml_session_ref_k'])) {
-                  setcookie('simple_bpm_saml_session_ref_k', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
-                }
-                setcookie('simple_bpm_saml_session_ref_k', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+          if(isset($_COOKIE['simple_bpm_query'])) {
+            switch(base64_decode($_COOKIE['simple_bpm_query'])) {
+              case 'backend':
+                if (UsuarioBackendSesion::login_saml($uid)) {
+                  if(isset($_COOKIE['simple_bpm_saml_session_ref_k'])) {
+                    setcookie('simple_bpm_saml_session_ref_k', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
+                  }
 
-                if(isset($_COOKIE['simple_bpm_query'])) {
-                  switch(base64_decode($_COOKIE['simple_bpm_query'])) {
-                    case 'backend':
-                      redirect(site_url().'/backend');
-                      break;
-                    case 'manager':
-                      redirect(site_url().'/manager');
-                      break;
-                    default:
-                      redirect(site_url());
+                  setcookie('simple_bpm_saml_session_ref_k', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+
+                  if(isset($_COOKIE['simple_bpm_location'])) {
+                    redirect(base64_decode($_COOKIE['simple_bpm_location']));
+                  }
+                  else {
+                    redirect(site_url() . '/backend');
                   }
                 }
                 else {
-                  redirect(site_url().'/backend');
+                  if(isset($_COOKIE['simple_bpm_location'])) {
+                    $url = base64_decode($_COOKIE['simple_bpm_location']);
+                    $cuenta = explode('/backend', $url);
+                    redirect($cuenta[0]);
+                  }
+                  else {
+                    redirect(site_url());
+                  }
                 }
-              }
-              else {
+                break;
+              case 'manager':
+                if (UsuarioManagerSesion::login_saml($uid)) {
+                  if(isset($_COOKIE['simple_bpm_saml_session_ref_k'])) {
+                    setcookie('simple_bpm_saml_session_ref_k', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
+                  }
+
+                  setcookie('simple_bpm_saml_session_ref_k', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+
+                  if(isset($_COOKIE['simple_bpm_location'])) {
+                    redirect(base64_decode($_COOKIE['simple_bpm_location']));
+                  }
+                  else {
+                    redirect(site_url() . '/manager');
+                  }
+                }
+                else {
+                  if(isset($_COOKIE['simple_bpm_location'])) {
+                    $url = base64_decode($_COOKIE['simple_bpm_location']);
+                    $cuenta = explode('/manager', $url);
+                    redirect($cuenta[0]);
+                  }
+                  else {
+                    redirect(site_url());
+                  }
+                }
+                break;
+              default:
                 if (!UsuarioSesion::login_saml($uid)) {
                   $usuario = new Usuario();
                   $usuario->usuario = $uid;
@@ -87,35 +119,76 @@ class Autenticacion extends MY_Controller {
                   $usuario->save();
 
                   UsuarioSesion::login_saml($uid);
-                }
 
-                if(isset($_COOKIE['simple_bpm_saml_session_ref'])) {
-                  setcookie('simple_bpm_saml_session_ref', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
+                  if(isset($_COOKIE['simple_bpm_saml_session_ref'])) {
+                    setcookie('simple_bpm_saml_session_ref', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
+                  }
+
+                  setcookie('simple_bpm_saml_session_ref', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+
+                  if(isset($_COOKIE['simple_bpm_location'])) {
+                    redirect(base64_decode($_COOKIE['simple_bpm_location']));
+                  }
+                  else {
+                    redirect(site_url());
+                  }
                 }
-                setcookie('simple_bpm_saml_session_ref', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+                else {
+                  if(isset($_COOKIE['simple_bpm_saml_session_ref'])) {
+                    setcookie('simple_bpm_saml_session_ref', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
+                  }
+
+                  setcookie('simple_bpm_saml_session_ref', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+
+                  if(isset($_COOKIE['simple_bpm_location'])) {
+                    redirect(base64_decode($_COOKIE['simple_bpm_location']));
+                  }
+                  else {
+                    redirect(site_url());
+                  }
+                }
+            }
+          }
+          else {
+            if (!UsuarioSesion::login_saml($uid)) {
+              $usuario = new Usuario();
+              $usuario->usuario = $uid;
+              $usuario->setPasswordWithSalt($random_password);
+              $usuario->nombres = $primer_nombre;
+              $usuario->apellido_paterno = $primer_apellido;
+              $usuario->apellido_materno = $segundo_apellido;
+              $usuario->email = null;
+              $usuario->save();
+
+              UsuarioSesion::login_saml($uid);
+
+              if(isset($_COOKIE['simple_bpm_saml_session_ref'])) {
+                setcookie('simple_bpm_saml_session_ref', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
+              }
+
+              setcookie('simple_bpm_saml_session_ref', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+
+              if(isset($_COOKIE['simple_bpm_location'])) {
+                echo $_COOKIE['simple_bpm_location']; exit;
+                redirect(base64_decode($_COOKIE['simple_bpm_location']));
+              }
+              else {
+                redirect(site_url());
               }
             }
-            // }
-        }
-        catch(Exception $error) {
-          redirect(site_url());
-        }
-
-        if(isset($_COOKIE['simple_bpm_query'])) {
-          switch(base64_decode($_COOKIE['simple_bpm_query'])) {
-            case 'backend':
-              redirect(site_url().'/backend');
-              break;
-            case 'manager':
-              redirect(site_url().'/manager');
-              break;
-            default:
+            else {
               redirect(site_url());
+            }
           }
         }
         else {
           redirect(site_url());
         }
+        // }
+      }
+      catch(Exception $error) {
+        redirect(site_url());
+      }
     }
 
     public function login_openid() {
@@ -155,10 +228,13 @@ class Autenticacion extends MY_Controller {
     }
 
     public function login() {
-      setcookie('simple_bpm_query', base64_encode('frontend'), 0, '/', HOST_SISTEMA_DOMINIO);
-
       if(UsuarioSesion::registrado_saml()) {
-        redirect(site_url());
+        if(isset($_COOKIE['simple_bpm_location'])) {
+          redirect(base64_decode($_COOKIE['simple_bpm_location']));
+        }
+        else {
+          redirect(site_url());
+        }
       }
 
       if(LOGIN_ADMIN_COESYS) {
@@ -341,6 +417,3 @@ class Autenticacion extends MY_Controller {
         return FALSE;
     }
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

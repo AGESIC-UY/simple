@@ -166,4 +166,20 @@ class UsuarioSesion {
         setcookie('simple_bpm_saml', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
       }
     }
+
+    function registrar_acceso() {
+      if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
+          isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+        $protocolo = 'https://';
+      }
+      else {
+        $protocolo = 'http://';
+      }
+
+      $uri = $protocolo.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+      $uri_array = explode('/autenticacion', $uri);
+
+      setcookie('simple_bpm_query', base64_encode('frontend'), 0, '/', HOST_SISTEMA_DOMINIO);
+      setcookie('simple_bpm_location', base64_encode($uri_array[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+    }
 }

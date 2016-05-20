@@ -1,4 +1,26 @@
 $(document).ready(function() {
+
+  if($('#servicio_tipo_pdi:checked').length) {
+    $('#form_soap').hide();
+    $('#form_pdi').show();
+  }
+  else {
+    $('#form_soap').show();
+    $('#form_pdi').hide();
+  }
+
+  $('#servicio_tipo_pdi').click(function() {
+    $('#form_soap').hide();
+    $('#form_pdi').show();
+  });
+
+  $('#servicio_tipo_soap').click(function() {
+    $('#form_pdi').hide();
+    $('#form_soap').show().removeClass('hidden');
+  });
+
+  setTimeout(function() {$(".controls").find(".ht_master.handsontable").not(':first').hide();}, 200);
+
   // -- Muestra el tour
   var template = "<div class='popover tour'>";
   template += "<div class='arrow'></div>";

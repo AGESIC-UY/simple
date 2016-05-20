@@ -94,10 +94,11 @@ class UsuarioBackendSesion {
           $CI->session->set_userdata('usuario_backend_id', $u->id);
           self::$user = $u;
 
+          /*
           $um = Doctrine::getTable('UsuarioManager')->findOneByUsuario($u->email);
           if($um) {
             $CI->session->set_userdata('usuario_manager_id', $u->id);
-          }
+          }*/
 
           return true;
         }
@@ -124,6 +125,20 @@ class UsuarioBackendSesion {
         return false;
       }
     }
-}
 
-?>
+    function registrar_acceso() {
+      if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
+          isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+        $protocolo = 'https://';
+      }
+      else {
+        $protocolo = 'http://';
+      }
+
+      $uri = $protocolo.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+      $uri_array = explode('/autenticacion', $uri);
+
+      setcookie('simple_bpm_query', base64_encode('backend'), 0, '/', HOST_SISTEMA_DOMINIO);
+      setcookie('simple_bpm_location', base64_encode($uri_array[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+    }
+}

@@ -6,9 +6,9 @@ class CampoMoneda extends Campo{
 
     protected function display($modo, $dato) {
         $display = '<div class="control-group">';
-        $display.= '<label class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ' (Opcional):') . '</label>';
+        $display.= '<label class="control-label" for="'.$this->id.'" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ' (Opcional):') . '</label>';
         $display.='<div class="controls" data-fieldset="'.$this->fieldset.'">';
-        $display.='<select name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
+        $display.='<select id="'.$this->id.'" name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display.='<option value="">Seleccione moneda</option>';
         //$display.='<optgroup label="Comunes">';
         $display.='<option value="UYU">Pesos</option><option value="USD">Dolar Estadounidense</option><option value="UR">UR</option><option value="UI">UI</option>';

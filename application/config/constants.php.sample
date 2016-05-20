@@ -46,23 +46,25 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 define('DIRECTORIO_SUBIDA_DOCUMENTOS', 'uploads/documentos/');
 define('WS_TIMEOUT_CONEXION', 10);
 define('WS_TIMEOUT_RESPUESTA', 10);
-define('WS_FIRMA_DOCUMENTOS', ''); // -- Tomcat Webapp Firma
-define('WS_AGESIC_FIRMA',''); // -- Tomcat Webapp Firma
-define('WS_AGESIC_FIRMA_OK', 'http://localhost:80/simple_bpm/trunk/etapas/confirmar_firma'); // -- Apache Simple
-define('WS_AGESIC_FIRMA_CODEBASE', 'http://localhost:80/agesic_firma'); // -- Apache Simple
+define('WS_FIRMA_DOCUMENTOS', 'xxxx'); // -- Tomcat Webapp Firma
+define('WS_AGESIC_FIRMA','xxxx'); // -- Tomcat Webapp Firma
+define('WS_AGESIC_FIRMA_OK', 'xxxx'); // -- Apache Simple
+define('WS_AGESIC_FIRMA_CODEBASE', 'xxxx'); // -- Apache Simple
 define('WS_AGESIC_FIRMA_XPATH', "//*[local-name() = 'respuesta']/text()");
 define('WS_AGESIC_DOCUMENTO_XPATH', "//*[local-name() = 'doc']/text()");
 define('WS_AGESIC_DOCUMENTO_SERVIDOR_XPATH', "//*[local-name() = 'doc']/text()");
-define('WS_AGESIC_TRAZABLIDAD_CABEZAL', '');
-define('WS_AGESIC_TRAZABLIDAD_LINEA', '');
+define('WS_AGESIC_TRAZABLIDAD_CABEZAL', 'xxxx');
+define('WS_AGESIC_TRAZABLIDAD_LINEA', 'xxxx');
 define('WS_VERSION_MODELO', '1');
 define('WS_XPATH_COD_TRAZABILIDAD', "//*[local-name() = 'guid']/text()");
 define('WS_VARIABLE_COD_TRAZABILIDAD', 'codigo_trazabilidad');
 define('WS_PASARELA_PAGO', 'xxxx');
 define('POST_PASARELA_PAGO', 'xxxx');
-define('PASARELA_PAGO_TIMEOUT_CONEXION', 10);
-define('PASARELA_PAGO_TIMEOUT_RESPUESTA', 10);
+define('PASARELA_PAGO_TIMEOUT_CONEXION', 30);
+define('PASARELA_PAGO_TIMEOUT_RESPUESTA', 30);
 
+define('JAR_FIRMA', 'xxxx'); // -- Ruta absoluta a vendors/xmlsigner.jar
+define('UBICACION_CERTIFICADOS_PDI', 'xxxx'); // -- uploads/pdi/
 /*
 |--------------------------------------------------------------------------
 | Autenticación SAML
@@ -81,9 +83,11 @@ define('ORIGENES_CONFIABLES', serialize(array(0, 'http://localhost', 'http://127
 |
 */
 define('HOST_SISTEMA', (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '');
-define('HOST_SISTEMA_DOMINIO', '');
+define('DOMINIO', 'xxxx');
+define('HOST_SISTEMA_DOMINIO', '.'.DOMINIO);
 define('MAX_REGISTROS_PAGINA', 5);
 define('REDIS_HOST', '127.0.0.1');
 define('REDIS_PORT', '6379');
 define('DENEGAR_REMOVER_CAMPOS_BLOQUES', TRUE);
 define('LOGIN_ADMIN_COESYS', TRUE);
+define('CUENTA_DEFAULT_RAIZ', TRUE); // -- Permite acceder a la cuenta principal con el dominio raiz (necesario si CDA redirige a raiz).

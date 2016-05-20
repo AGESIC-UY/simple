@@ -33,6 +33,8 @@ class Procesos extends MY_BackendController {
     public function crear(){
         $proceso=new Proceso();
         $proceso->nombre='Proceso';
+        $proceso->width = '100%';
+        $proceso->height = '100%';
         $proceso->cuenta_id=UsuarioBackendSesion::usuario()->cuenta_id;
         $proceso->save();
 
@@ -388,6 +390,3 @@ class Procesos extends MY_BackendController {
       $this->load->view('backend/template', $data);
     }
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

@@ -251,7 +251,25 @@ class Seguimiento extends MY_BackendController {
         echo json_encode($respuesta);
     }
 
-}
+    public function pagos() {
+        $data['registros'] = Doctrine_Query::create()
+            ->from('Pago p')
+            ->execute();
 
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
+        $data['title'] = 'Seguimiento de pagos';
+        $data['content'] = 'backend/seguimiento/pagos';
+        $this->load->view('backend/template', $data);
+    }
+
+    public function ver_pago($id_pago) {
+        $registro = Doctrine_Query::create()
+            ->from('Pago p')
+            ->where('p.id = ?', $id_pago)
+            ->execute();
+
+        $data['registro'] = $registro[0];
+        $data['title'] = 'Seguimiento de pagos';
+        $data['content'] = 'backend/seguimiento/ver_pago';
+        $this->load->view('backend/template', $data);
+    }
+}

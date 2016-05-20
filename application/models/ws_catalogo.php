@@ -10,6 +10,10 @@ class WsCatalogo extends Doctrine_Record {
         $this->hasColumn('activo');
         $this->hasColumn('conexion_timeout');
         $this->hasColumn('respuesta_timeout');
+        $this->hasColumn('url_fisica');
+        $this->hasColumn('url_logica');
+        $this->hasColumn('rol');
+        $this->hasColumn('tipo');
     }
 
     function setUp() {
@@ -19,5 +23,5 @@ class WsCatalogo extends Doctrine_Record {
             'local' => 'id',
             'foreign' => 'catalogo_id'
         ));
-    } 
+    }
 }

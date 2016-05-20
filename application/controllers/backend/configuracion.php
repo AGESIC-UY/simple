@@ -364,8 +364,64 @@ class Configuracion extends MY_BackendController {
 
     }
 
+    public function pdi(){
+      $pdi = Doctrine_Query::create()
+          ->from('Pdi c')
+          ->where('c.cuenta_id = ?', UsuarioBackendSesion::usuario()->cuenta_id)
+          ->execute();
 
+        $data['pdi'] = $pdi[0];
+        $data['title'] = 'Configuración de PDI';
+        $data['content'] = 'backend/configuracion/pdi';
+        $this->load->view('backend/template', $data);
+    }
+
+    public function pdi_form() {
+        $this->form_validation->set_rules('sts', 'STS', 'required');
+        $this->form_validation->set_rules('policy', 'Policy', 'required');
+        $this->form_validation->set_rules('certificado_organismo', 'Certificado_organismo', 'required');
+        $this->form_validation->set_rules('clave_organismo', 'Clave_organismo', 'required');
+        $this->form_validation->set_rules('certificado_ssl', 'Certificado_ssl', 'required');
+        $this->form_validation->set_rules('clave_ssl', 'Clave_SSL', 'required');
+
+        $respuesta=new stdClass();
+        if ($this->form_validation->run() == TRUE) {
+            $cuenta = Doctrine_Query::create()
+                ->from('Pdi c')
+                ->where('c.cuenta_id = ?', UsuarioBackendSesion::usuario()->cuenta_id)
+                ->execute();
+
+            if(count($cuenta) > 0) {
+              $cuenta = $cuenta[0];
+
+              $cuenta->cuenta_id=UsuarioBackendSesion::usuario()->cuenta_id;
+              $cuenta->policy=$this->input->post('policy');
+              $cuenta->sts=$this->input->post('sts');
+              $cuenta->certificado_organismo=$this->input->post('certificado_organismo');
+              $cuenta->clave_organismo=$this->input->post('clave_organismo');
+              $cuenta->certificado_ssl=$this->input->post('certificado_ssl');
+              $cuenta->clave_ssl=$this->input->post('clave_ssl');
+              $cuenta->save();
+            }
+            else {
+              $cuenta = new Pdi();
+              $cuenta->cuenta_id=UsuarioBackendSesion::usuario()->cuenta_id;
+              $cuenta->policy=$this->input->post('policy');
+              $cuenta->sts=$this->input->post('sts');
+              $cuenta->certificado_organismo=$this->input->post('certificado_organismo');
+              $cuenta->clave_organismo=$this->input->post('clave_organismo');
+              $cuenta->certificado_ssl=$this->input->post('certificado_ssl');
+              $cuenta->clave_ssl=$this->input->post('clave_ssl');
+              $cuenta->save();
+            }
+
+            $respuesta->validacion = TRUE;
+            $respuesta->redirect = site_url('backend/configuracion/pdi');
+        }else {
+            $respuesta->validacion = FALSE;
+            $respuesta->errores = validation_errors();
+        }
+
+        echo json_encode($respuesta);
+    }
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

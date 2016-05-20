@@ -12,7 +12,6 @@ class Portada extends MY_BackendController {
           redirect(site_url());
         }
         else {
-          setcookie('simple_bpm_query', base64_encode('backend'), 0, '/', HOST_SISTEMA_DOMINIO);
           UsuarioBackendSesion::force_login();
         }
     }
@@ -29,9 +28,4 @@ class Portada extends MY_BackendController {
         else if($usuario->rol=='configuracion')
             redirect('backend/configuracion');
     }
-
-
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

@@ -6,6 +6,8 @@ class Autenticacion extends CI_Controller {
     }
 
     public function login() {
+      UsuarioManagerSesion::registrar_acceso();
+
       if((!UsuarioManagerSesion::usuario()) && (LOGIN_ADMIN_COESYS)) {
         redirect(site_url('autenticacion/login_saml'));
       }
@@ -25,21 +27,19 @@ class Autenticacion extends CI_Controller {
             $respuesta->validacion=TRUE;
             $respuesta->redirect=$this->input->post('redirect')?$this->input->post('redirect'):site_url('manager');
 
-        }else{
+        }
+        else {
             $respuesta->validacion=FALSE;
             $respuesta->errores=validation_errors();
         }
 
         echo json_encode($respuesta);
-
     }
-
 
     function logout() {
         UsuarioManagerSesion::logout();
         redirect($this->input->server('HTTP_REFERER'));
     }
-
 
     function check_password($password){
         $autorizacion=UsuarioManagerSesion::validar_acceso($this->input->post('usuario'),$this->input->post('password'));
@@ -52,6 +52,3 @@ class Autenticacion extends CI_Controller {
 
     }
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

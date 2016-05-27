@@ -44,6 +44,11 @@ class Cuenta extends Doctrine_Record {
             'local' => 'id',
             'foreign' => 'cuenta_id'
         ));
+
+        $this->hasOne('Pdi', array(
+            'local' => 'id',
+            'foreign' => 'cuenta_id'
+        ));
     }
 
     public function updatePosicionesWidgetsFromJSON($json) {
@@ -65,19 +70,23 @@ class Cuenta extends Doctrine_Record {
         if ($firstTime) {
             $firstTime=false;
             $CI = &get_instance();
-            $host=$CI->input->server('HTTP_HOST');
+            $host = $CI->input->server('HTTP_HOST');
             $main_domain=$CI->config->item('main_domain');
-            if($main_domain){
-                $main_domain=addcslashes($main_domain,'.');
-                preg_match('/(.+)\.'.$main_domain.'/', $host, $matches);
-                if (isset ($matches[1])) {
-                    $cuentaSegunDominio = Doctrine::getTable('Cuenta')->findOneByNombre($matches[1]);
+            if($main_domain) {
+              $main_domain = addcslashes($main_domain,'.');
+              preg_match('/(.+)\.'.$main_domain.'/', $host, $matches);
+              if (isset ($matches[1])) {
+                  $cuentaSegunDominio = Doctrine::getTable('Cuenta')->findOneByNombre($matches[1]);
+              }
+              else {
+                if(CUENTA_DEFAULT_RAIZ) {
+                  $cuentaSegunDominio=Doctrine_Query::create()->from('Cuenta c')->limit(1)->fetchOne();
                 }
-            }else{
-                $cuentaSegunDominio=Doctrine_Query::create()->from('Cuenta c')->limit(1)->fetchOne();
+              }
             }
-
-
+            else {
+              $cuentaSegunDominio=Doctrine_Query::create()->from('Cuenta c')->limit(1)->fetchOne();
+            }
         }
 
         return $cuentaSegunDominio;
@@ -99,5 +108,4 @@ class Cuenta extends Doctrine_Record {
 
         return true;
     }
-
 }

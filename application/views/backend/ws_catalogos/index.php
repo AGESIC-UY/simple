@@ -12,8 +12,7 @@
     <thead>
         <tr>
             <th>Nombre</th>
-            <th>WSDL</th>
-            <th>Endpoint location</th>
+            <th>Tipo</th>
             <th>Activo?</th>
             <th>Acciones</th>
         </tr>
@@ -22,8 +21,7 @@
         <?php foreach($catalogos as $c): ?>
         <tr>
             <td><?=$c->nombre?></td>
-            <td><?=$c->wsdl?></td>
-            <td><?=$c->endpoint_location?></td>
+            <td><?=$c->tipo?></td>
             <td><?= ($c->activo == true) ? 'Si' : 'No' ?></td>
             <td class="actions">
                 <a class="btn btn-primary" href="<?=site_url('backend/ws_catalogos/'.$c->id.'/operaciones')?>"><span class="icon-white icon-zoom-in"></span> Ver Operaciones<span class="hide-text"> <?= $c->nombre ?><?= $c->id ?></span></a>

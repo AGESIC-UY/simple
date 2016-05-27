@@ -18,7 +18,7 @@ jQuery 1.7.2
 
 ### Requisitos Técnicos
 - Apache 2.x con modulo mod_rewrite instalado y activado.
-- PHP >= 5.3.x
+- PHP >= 5.5.x
 - MySQL >= 5.5.x
 
 ### Configuración de la plataforma

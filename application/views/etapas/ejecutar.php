@@ -2,7 +2,7 @@
 <?php if($etapa->Tarea->vencimiento):?>
 <div class="alert alert-warning">Atención. Esta etapa <?=$etapa->getFechaVencimientoAsString()?>.</div>
 <?php endif ?>
-<ul class="step-boxes">
+<ul class="step-boxes <?= (count($etapa->getPasosEjecutables()) == 1 ? 'hidden' : '') ?>">
     <?php
         $current_position = ++$step_position;
         for($i = 1; $i <= count($etapa->getPasosEjecutables()); $i++) {

@@ -43,10 +43,19 @@ class Acciones extends MY_BackendController {
             ->orderBy('c.nombre')
             ->execute();
 
-        $data['operaciones'] = Doctrine_Query::create()
-            ->from('WsOperacion o')
-            ->orderBy('o.nombre')
-            ->execute();
+        $data['operaciones'] = array();
+        foreach($data['servicios'] as $servicio) {
+          $data['operaciones'][$servicio->id] = array();
+
+          $ops = Doctrine_Query::create()
+              ->from('WsOperacion o')
+              ->where('o.catalogo_id = ?', $servicio->id)
+              ->execute();
+
+          foreach($ops as $op) {
+            array_push($data['operaciones'][$servicio->id], $op);
+          }
+        }
 
         $data['pasarela_pagos'] = Doctrine_Query::create()
             ->from('PasarelaPago p')

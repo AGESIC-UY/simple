@@ -26,5 +26,5 @@
     </tbody>
 </table>
 
-<p class="strong">Reporte de satisfacción</p>
+<h2>Reporte de Satisfacción</h2>
 <a href="<?=site_url('backend/reportes/reporte_satisfaccion/')?>" class="btn btn-primary"><span class="icon-signal icon-white"></span> Ver resultados</a>

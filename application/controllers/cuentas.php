@@ -101,7 +101,6 @@ class Cuentas extends MY_Controller {
 
         $this->form_validation->set_message('check_password','Usuario y/o contraseña incorrecta.');
         return FALSE;
-
     }
 
     function check_email($email) {
@@ -113,5 +112,4 @@ class Cuentas extends MY_Controller {
         $this->form_validation->set_message('check_email', 'Correo electrónico ya esta en uso por otro usuario.');
         return FALSE;
     }
-
 }

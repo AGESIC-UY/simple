@@ -8,11 +8,12 @@ class CampoError extends Campo{
     public $requiere_datos=false;
 
     protected function display($modo, $dato,$etapa_id) {
-        if($etapa_id){
+        if($etapa_id) {
             $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
             $regla=new Regla($this->valor_default);
             $valor_default=$regla->getExpresionParaOutput($etapa->id);
-        }else{
+        }
+        else {
             $valor_default=$this->valor_default;
         }
 

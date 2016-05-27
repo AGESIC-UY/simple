@@ -51,12 +51,12 @@ class CampoGrid extends Campo{
                       return td;
                     },
                     error: function() {
-                      td.innerHTML = "Error al obtener combo.";
+                      td.innerHTML = "Error al generar combo.";
                       return td;
                     }
                   });
                 } catch(error) {
-                  td.innerHTML = "Error al obtener combo.";
+                  td.innerHTML = "Error al generar combo.";
                   return td;
                 }
               }
@@ -101,8 +101,8 @@ class CampoGrid extends Campo{
                   rowHeaders: false,
                   colHeaders: headers,
                   columns: columns,
-                  contextMenu: false,
-                  stretchH: "all",
+                  contextMenu: true,
+                  stretchH: false,
                   autoWrapRow: true,
                   afterChange: function (change, source) {
                     var rows = this.getData().slice();

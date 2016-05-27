@@ -44,6 +44,11 @@ class Usuario extends Doctrine_Record {
             'local'=>'id',
             'foreign'=>'usuario_id'
         ));
+
+        $this->hasMany('Pago',array(
+            'local'=>'id',
+            'foreign'=>'usuario_id'
+        ));
     }
 
     function setPassword($password) {

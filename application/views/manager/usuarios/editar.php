@@ -13,6 +13,12 @@
     <div class="form-horizontal">
       <div class="validacion validacion-error"></div>
       <div class="control-group">
+        <label for="usuario" class="control-label">Usuario</label>
+        <div class="controls">
+          <input id="usuario" type="text" name="usuario" value="<?=isset($usuario)?$usuario->usuario:''?>" />
+        </div>
+      </div>
+      <div class="control-group">
         <label class="control-label" for="email">Correo Electrónico</label>
         <div class="controls">
           <input id="email" type="text" name="email" value="<?=$usuario->email?>" />

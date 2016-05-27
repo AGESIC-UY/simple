@@ -36,6 +36,17 @@ class Uploader extends MY_BackendController {
         echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
     }
 
+    function pdi_certificados() {
+        $allowedExtensions = array('p12', 'pem');
+        // max file size in bytes
+        $sizeLimit = 20 * 1024 * 1024;
+
+        $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
+        $result = $uploader->handleUpload('uploads/pdi/');
+
+        echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+    }
+
     function firma_get($filename){
       readfile('uploads/firmas/'.$filename);
     }

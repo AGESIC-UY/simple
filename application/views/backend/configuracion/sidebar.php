@@ -20,5 +20,10 @@
     <li class="<?=strpos($this->uri->segment(3),'backend_usuario')===0?'active':''?>">
         <a href="<?=site_url('backend/configuracion/backend_usuarios')?>">Usuarios Backend</a>
     </li>
-
+    <li class="nav-header">
+        Plataforma de interoperabilidad
+    </li>
+    <li class="<?=strpos($this->uri->segment(3),'pdi')===0?'active':''?>">
+        <a href="<?=site_url('backend/configuracion/pdi')?>">Configuración</a>
+    </li>
 </ul>

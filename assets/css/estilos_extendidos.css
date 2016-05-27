@@ -6,7 +6,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 13px;
   line-height: 1.2;
-  color: #141414;
+  color: #000000;
   background: #ffffff;
   padding: 0;
 }
@@ -45,12 +45,11 @@ header .container, header .container-fluid {
 }
 header .container-fluid #logo {/*el logo del backend*/
     border-right: 0;
-    /* margin: 26px 0; QUITADO (Pablo Di Leva 26/02/16) - Quedaba el cabezal del backend ampliado excesivamente, posible bug. */
     padding: 0;
     max-height: 80px;
 }
 header h1, header .nombre-app{
-  color: #141414;
+  color: #000000;
   border-left: 2px solid #141414;
   padding-left: 10px;
   font-weight: normal;
@@ -257,6 +256,8 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
   width: 100%;
   padding-right: 0;
   cursor: default;
+  font-weight: bold;
+  color: #000000;
 }
 input[readonly]:focus, select[readonly]:focus, textarea[readonly]:focus{
   box-shadow: none;
@@ -341,7 +342,7 @@ input.error, select.error, textarea.error {border: solid 1px #DE9C9C;}
 .wrapper-popover-content {padding: 9px 14px;}
 .wrapper-popover-content .popover-content {padding: 9px 14px 9px 7px;}
 .wrapper-popover-content i {color: #b94a48 !important;}
-.aviso_campos_obligatorios {font-size: 11px;text-align: right;}
+.aviso_campos_obligatorios {font-size: 11px;text-align: right;margin-bottom: 20px;}
 dd {margin-bottom: 10px;}
 .pagination {margin-top: 50px;text-align: center;}
 .h1-tabs {font-size:20px;}
@@ -466,12 +467,12 @@ footer .area2 {
 }
 .form-horizontal .control-label {
     width: 266px;
-    color: #141414;
+    color: #000000;
     padding-top: 7px;
 }
 .control-group.error .control-label, .control-group.error .help-block, .control-group.error .help-inline,
 .help-block, .dynaForm .help-block, .help-inline{
-  color: #141414;
+  color: #000000;
 }
 .control-group.error .help-block,
 .form-horizontal input + .help-block,
@@ -490,7 +491,7 @@ footer .area2 {
     width: 220px;
 }
 .dynaForm label {
-    color: #141414;
+    color: #000000;
 }
 .form-horizontal .controls{
   margin-left: 286px;
@@ -553,15 +554,15 @@ a .icon-chevron-right {
 	float: left;
 }
 .btn{
-  color: #141414;
   box-shadow: none;
-  border-color: #bebebe;
-  background: #F5F5F5;
   text-shadow: none;
+  color: #231F20;
+  background: #e4e4e4;
+  border: 1px solid #ccc;
 }
 .btn:hover, .btn:focus, .btn:active{
-  background: #e2e9ef;;
-  color: #141414;
+  background: #d7d6d6;;
+  color: #231F20;
 }
 .btn-primary, .btn-secundary, .btn-danger{
   text-shadow: none;
@@ -834,7 +835,7 @@ a .icon-chevron-right {
     white-space: nowrap;
 }
 .tipo-td{
-  color: #141414;
+  color: #000000;
 }
 .dropdown-menu{
   margin: 0;
@@ -1117,3 +1118,29 @@ dl.lista_codigos_servicios dd {cursor: text;}
 #formAgregarAccion .control-group.error .mensaje_error_campo, #formAgregarAccion_services .mensaje_error_campo {display: none !important;}
 .htCore td select {border: 0 !important;}
 .htCore td a {text-decoration: underline !important;}
+.estado.badge {text-transform: uppercase;}
+.handsontable .wtHider {
+    width: 100% !important;
+}
+.handsontable .wtSpreader {
+    width: 100%;
+}
+.handsontable table.htCore {
+    width: 100%;
+}
+.ht_master .wtHolder {
+    max-width: 100%;
+}
+.ht_clone_top.handsontable, .ht_clone_top .wtHolder{
+  max-width: 100%;
+}
+.handsontable thead th {
+    background-color: #f4f4f5;
+    padding: 10px;
+    color: #000000;
+    height: auto !important;
+}
+.handsontable td{
+  padding: 7px 10px;
+}
+.tipo_ws {display: inline-block;padding-left: 0 !important;padding-right: 20px;}

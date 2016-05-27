@@ -31,6 +31,7 @@ envsubst < /opt/app-root/etc/php.d/10-opcache.ini.template > $PHP_INI_SCAN_DIR/1
 
 for i in `find ${TEMPLATE_DIR} -iname "*.template"`; do
     FILE_NAME=`expr ${i} : "${TEMPLATE_DIR}/*\(.*\).template"` 
+    echo "Processing ${i} into ${FILE_NAME}" >>/tmp/subst.log
     envsubst "${VARIABLES}" < ${i} > ${FILE_NAME}
 done
 

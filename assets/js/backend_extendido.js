@@ -1,4 +1,44 @@
 $(document).ready(function() {
+  $('#verificar_existe_usuario').click(function() {
+    var usuario = $('input[name="usuario"]').val();
+
+    // -- Consulta si existe el usuario
+    $.ajax({
+      type: 'post',
+      url: 'usuario_existe',
+      data: {usuario: usuario},
+      success: function(data) {
+        $('.validacion').html('').hide();
+
+        if(data) {
+          var usuario = JSON.parse(data);
+
+          if(usuario.error) {
+            $('.validacion').html('<div class="alert alert-error">'+usuario.error+'</div>').show();
+          }
+          else {
+            $('input[name="password"]').parent().parent().remove();
+            $('input[name="password_confirm"]').parent().parent().remove();
+            $('input[name="nombres"]').val(usuario.nombres).attr({'readonly':'readonly'});
+            $('input[name="apellido_paterno"]').val(usuario.apellido_paterno).attr({'readonly':'readonly'});
+            $('input[name="apellido_materno"]').val(usuario.apellido_materno).attr({'readonly':'readonly'});
+            $('input[name="email"]').val(usuario.email);
+
+            var form_action = $('form').attr('action');
+            $('form').attr({'action': form_action + '/' + usuario.usuario_id});
+          }
+        }
+      }
+    });
+
+    var existe_usuario = true;
+    if(existe_usuario) {
+
+    }
+    else {
+
+    }
+  });
 
   if($('#servicio_tipo_pdi:checked').length) {
     $('#form_soap').hide();
@@ -328,9 +368,11 @@ $(document).ready(function() {
 
   // -- Datepicker para vencimiento de método de pago de pasarela
   if($('#pasarela_pago_vencimiento_muestra').length) {
-      $('#pasarela_pago_vencimiento_button').datepicker({
-          format: 'yyyymmdd',
-          startDate: '1d'
+    $('#pasarela_pago_vencimiento_button').click(function() {
+      $('#pasarela_pago_vencimiento').datepicker('show');
+    });
+      $('#pasarela_pago_vencimiento').datepicker({
+          format: 'yymmdd'
       }).on('changeDate', function (e) {
           $(this).datepicker('hide');
 
@@ -339,6 +381,20 @@ $(document).ready(function() {
           $('#pasarela_pago_vencimiento_muestra_texto').text((e.date.getDate() < 10 ? '0' : '') + e.date.getDate() + '/' + (month < 10 ? '0' : '') + month + '/' + e.date.getFullYear() + ' 00:00');
       });
   }
+
+  $('#areaFormulario a').click(function() {
+    setTimeout(function() {
+      $('#contenedor').click(function() {
+        if($(this).is(':checked')) {
+          $(this).val(1);
+          $('#leyenda_contenedor').removeClass('hidden').show();
+        }
+        else {
+          $('#leyenda_contenedor').addClass('hidden').hide();
+        }
+      });
+    }, 400);
+  });
 });
 
 // -- Revuelve un color aleatorio en hexadecimal

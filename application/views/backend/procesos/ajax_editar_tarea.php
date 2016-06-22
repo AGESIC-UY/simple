@@ -75,6 +75,7 @@
                 $(this).find("tr").each(function(i,e){
                     $(e).find("td:nth-child(1)").text(i+1);
                     $(e).find("input[name*=formulario_id]").attr("name","pasos["+(i+1)+"][formulario_id]");
+                    $(e).find("input[name*=nombre]").attr("name","pasos["+(i+1)+"][nombre]");
                     $(e).find("input[name*=regla]").attr("name","pasos["+(i+1)+"][regla]");
                     $(e).find("input[name*=modo]").attr("name","pasos["+(i+1)+"][modo]");
                 });
@@ -284,7 +285,7 @@
                                 </td>
                                 <td>
                                   <label class="hidden-accessible" for="regla">Condición</label>
-                                  <input class="pasoRegla" type="text" id="regla" placeholder="Escribir regla condición aquí" />
+                                  <input class="pasoRegla input-medium" type="text" id="regla" placeholder="Escribir regla condición aquí" />
                                 </td>
                                 <td>
                                   <label class="hidden-accessible" for="modo">Modo</label>

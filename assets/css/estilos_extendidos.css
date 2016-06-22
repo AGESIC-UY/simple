@@ -55,6 +55,7 @@ header h1, header .nombre-app{
   font-weight: normal;
   font-size: 18px;
   line-height: 1.2;
+  margin: 9px 0;
 }
 header.header-login .nombre-app {
     border-left: 0;
@@ -91,6 +92,60 @@ header #logo *{/*el logo del público*/
 }
 .container-menu .container-fluid{
     padding-bottom: 0;
+}
+/* Encabezados y textos */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h4 {
+    font-family: inherit;
+    font-weight: 600;
+    line-height: 1.1;
+    color: inherit;
+}
+fieldset fieldset h1, fieldset fieldset h2, fieldset fieldset h3,
+fieldset fieldset h4, fieldset fieldset h5, fieldset fieldset h6,  fieldset fieldset .table-title,fieldset fieldset .h4{
+    margin-left: 0;
+}
+h1 {
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+h2 {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+h4,.h4,
+h5,
+h6 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+h1 {
+    font-size: 2em;
+}
+h2 {
+    font-size: 1.45em;
+}
+h3 {
+    font-size: 1.25em;
+}
+h4, .h4 {
+    font-size: 1.15em;
+    display: block;
+}
+h5 {
+    font-size: 1em;
+}
+h6 {
+    font-size: 0.9em;
 }
 .navbar .nav > li > a {
     padding: 11px 15px 11px;
@@ -131,6 +186,11 @@ header #logo *{/*el logo del público*/
     padding: 0;
     position: absolute;
     width: 0px;
+}
+.version{
+  font-size: 0.9em;
+  margin-top: 8px;
+  display: inline-block;
 }
 #skip {
   list-style: none;
@@ -182,52 +242,41 @@ input[type="color"],
   padding: 5px 10px;
   line-height: 1.5;
   border: 1px solid #bebebe;
-  max-width: 100%;
   border-radius: 2px;
   box-shadow: none;
   background: #fff;
-  height: 31px;
-  width: 295px;
+  height: 32px;
+  width: 50%;
+  min-width: 295px;
+  max-width: 100%;
+  color: #000000;
 }
+
 input.input-mini, .input-mini {
   width: 60px;
+  min-width: auto;
 }
 input.input-small, .input-small {
   width: 90px;
+  min-width: auto;
 }
 input.input-medium, .input-medium {
   width: 150px;
+  min-width: auto;
 }
 input.input-large, .input-large {
   width: 340px;
+  min-width: auto;
 }
 input.input-xlarge, .input-xlarge {
   width: 530px;
+  min-width: auto;
 }
 input.input-xxlarge, .input-xxlarge {
   width: 100%;
+  min-width: auto;
 }
-input.datepicker{
-  width: 150px;
-}
-input[type="text"].pasoRegla {
-  width: 100%;
-}
-input[type="file"], input[type="image"], input[type="submit"], input[type="reset"], input[type="button"], input[type="radio"], input[type="checkbox"]{
-  width: auto;
-}
-input[type="file"]{
-  padding: 0px 10px;
-}
-input[type="image"], input[type="submit"], input[type="reset"], input[type="button"], input[type="radio"], input[type="checkbox"]{
-  height: auto;
-}
-input[type="radio"], input[type="checkbox"]{
-  margin-top: 3px;
-}
-textarea {
-  height: auto;
-}
+
 input:focus,
 select:focus,
 textarea:focus,
@@ -254,13 +303,42 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
   border: none;
   padding-left: 0;
   width: 100%;
+  min-width: auto;
   padding-right: 0;
   cursor: default;
   font-weight: bold;
   color: #000000;
+  background: transparent;
 }
 input[readonly]:focus, select[readonly]:focus, textarea[readonly]:focus{
   box-shadow: none;
+}
+input.datepicker{
+  width: 150px;
+  min-width: auto;
+}
+input[type="text"].pasoRegla {
+  width: 100%;
+}
+input[type="file"], input[type="image"], input[type="submit"], input[type="reset"], input[type="button"], input[type="radio"], input[type="checkbox"]{
+  width: auto;
+  min-width: inherit;
+}
+input[type="file"]{
+  padding: 0px 10px;
+}
+input[type="image"], input[type="submit"], input[type="reset"], input[type="button"], input[type="radio"], input[type="checkbox"]{
+  height: auto;
+}
+input[type="radio"], input[type="checkbox"]{
+  margin-top: 3px;
+  min-width: inherit;
+  border: none;
+  padding: 0;
+}
+textarea {
+  height: auto;
+  min-height: 130px;
 }
 .container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
     width: 100%;
@@ -268,7 +346,7 @@ input[readonly]:focus, select[readonly]:focus, textarea[readonly]:focus{
     box-sizing: border-box;
     max-width: 1360px;
 }
-.hidden {display:none;}
+.hidden {display:none !important;}
 
 .step-boxes {height:65px;margin:0;padding: 0;margin-top:20px;margin-bottom: 40px;overflow: hidden;background: #F5F5F5;border: 1px solid #d9d8d8;}
 .step-box {height:65px;position: relative;display: table-cell;float: left;list-style-type: none;padding: 10px 0;padding-left: 60px;box-sizing: border-box;}
@@ -342,18 +420,11 @@ input.error, select.error, textarea.error {border: solid 1px #DE9C9C;}
 .wrapper-popover-content {padding: 9px 14px;}
 .wrapper-popover-content .popover-content {padding: 9px 14px 9px 7px;}
 .wrapper-popover-content i {color: #b94a48 !important;}
-.aviso_campos_obligatorios {font-size: 11px;text-align: right;margin-bottom: 20px;}
+.aviso_campos_obligatorios {font-size: 11.7px;text-align: right;}
 dd {margin-bottom: 10px;}
 .pagination {margin-top: 50px;text-align: center;}
 .h1-tabs {font-size:20px;}
 .saltar{margin: 0;}
-h2 {
-    text-transform: none;
-    color: #000000;
-    font-weight: normal;
-    font-size: 2em;
-    margin-bottom: 15px;
-}
 a {
     color: #174f82;
     word-wrap: break-word;
@@ -361,7 +432,7 @@ a {
 }
 #sideMenu {
     background: #e0e0e0;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 #sideMenu li {
   font-size: 14px;
@@ -427,7 +498,7 @@ a {
 fieldset {
     margin-bottom: 20px;
     padding: 20px 45px 30px 45px;
-    border: 1px solid #a8a8a8;
+    border: 1px solid #59595C;
     min-width: 0;
     /*display: table-cell; comentado porque en ie se ven mal*/
 }
@@ -442,9 +513,9 @@ fieldset legend, .dynaForm legend {
     width: auto;
 }
 fieldset fieldset, .dynaForm fieldset fieldset{
-  border: 1px solid #b9b9b9;
-  margin-top: 35px;
-  margin-bottom: 35px;
+  border: 1px solid #808184;
+  margin-top: 20px;
+  margin-bottom: 40px;
 }
 fieldset fieldset legend, .dynaForm fieldset fieldset legend {
     font-size: 1em;
@@ -458,12 +529,16 @@ footer .area2 {
     padding: 20px 0;
     color: #ffffff;
 }
+.radio, .checkbox{
+      line-height: 19px;
+}
 .control-label {
     display: block;
     margin-bottom: 5px;
     font-size: 13px;
     font-weight: normal;
     line-height: 18px;
+    cursor: inherit;
 }
 .form-horizontal .control-label {
     width: 266px;
@@ -471,7 +546,8 @@ footer .area2 {
     padding-top: 7px;
 }
 .control-group.error .control-label, .control-group.error .help-block, .control-group.error .help-inline,
-.help-block, .dynaForm .help-block, .help-inline{
+.help-block, .dynaForm .help-block, .help-inline,
+.control-group.error .checkbox, .control-group.error .radio, .control-group.error input, .control-group.error select, .control-group.error textarea{
   color: #000000;
 }
 .control-group.error .help-block,
@@ -492,6 +568,7 @@ footer .area2 {
 }
 .dynaForm label {
     color: #000000;
+    cursor: inherit;
 }
 .form-horizontal .controls{
   margin-left: 286px;
@@ -532,7 +609,7 @@ footer .area2 {
 }
 .form-action-buttons ul {
 	/*margin-top: 25px;*/
-  margin-top: 5px;
+  margin-top: 10px;
 }
 .form-action-buttons button, .form-action-buttons a, .form-action-buttons input {
 	margin-bottom: 10px;
@@ -599,7 +676,7 @@ a .icon-chevron-right {
   color: #FFF;
 }
 .btn-link {
-    color: #174f82;
+    color: #064D8E;
     background-color: transparent;
     background-image: none;
     -webkit-box-shadow: none;
@@ -609,7 +686,7 @@ a .icon-chevron-right {
     text-decoration: underline;
 }
 .btn-link:hover, .btn-link:focus, .btn-link:active {
-    color: #174f82;
+    color: #064D8E;
     background: transparent;
     border-color: transparent;
 }
@@ -825,7 +902,7 @@ a .icon-chevron-right {
   background:#e2e9ef;
 }
 .table tr td {
-    color: #555;
+    color: #000;
 }
 .table tr td.time, .table tr td.name {
     color: #000;
@@ -1056,8 +1133,85 @@ header.header-login .logosSecundarios{
 @media (min-width: 1200px) {
 
 }
-@media (max-width: 979px) {
+@media screen and (max-width: 980px) {/* Estilos formulario tipo */
+    /* Elementos de formulario */
+    .dynaForm fieldset h1,.dynaForm fieldset h2,.dynaForm fieldset h3,
+    .dynaForm fieldset h4,.dynaForm fieldset h5,.dynaForm fieldset h6, .table-title,.dynaForm fieldset .h4 {
+        margin-left: 0px;
+    }
+    .dynaForm fieldset legend {
+        padding: 0 10px;
+        font-size: 1.35em;
+    }
+    .dynaForm fieldset fieldset legend {
+        font-size: 1.25em;
+    }
+    .dynaForm fieldset fieldset {
+        margin-top: 15px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .dynaForm fieldset label,.dynaForm fieldset span.control-label,.dynaForm fieldset fieldset label,.dynaForm fieldset fieldset span.control-label {
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin-right :0;
+        float: none;
+    }
+.dynaForm > fieldset > .campo > .control-group, .dynaForm > fieldset > .campo > p  {
+      margin: 5px 0;
+      padding: 7px 15px;
+    }
+    .dynaForm fieldset label,.dynaForm fieldset span.control-label {
+        font-weight: normal;
+        font-size: 1.3em;
+        margin-bottom: 3px;
+    }
+    .dynaForm fieldset label.checkbox, .dynaForm fieldset label.radio {
+        font-size: 13px;
+    }
+    .dynaForm fieldset label span {
+        font-weight: normal;
+        font-size: 1em;
+    }
 
+    /* Inputs */
+    button,
+    input,
+    select,
+    textarea {
+        line-height: normal!important;
+    }
+    input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly]{
+      padding: 0;
+      height: auto;
+      line-height: 18px !important;
+    }
+    .dynaForm fieldset {
+        border: none;
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 15px;
+        padding-bottom: 25px;
+        margin: 0;
+    }
+    .dynaForm > fieldset > legend {
+        display: block;
+        width: 100%;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #9aacb3;
+    }
+    .form-horizontal .control-label,.form-horizontal fieldset .control-label,.form-horizontal fieldset fieldset .control-label {
+        width: 100%;
+        text-align: left;
+        padding: 0;
+    }
+    .form-horizontal .controls, .form-horizontal fieldset .controls, .form-horizontal fieldset fieldset .controls {
+        margin-left: 0;
+    }
+    legend {
+        font-weight: normal;
+    }
 }
 @media (min-width: 768px) and (max-width: 979px) {
 
@@ -1066,7 +1220,10 @@ header.header-login .logosSecundarios{
   .container-fluid {
       padding: 0 15px;
   }
-  fieldset {
+  .container {
+      padding: 0 1.5%;
+  }
+  /*fieldset {
       padding: 15px;
   }
   .form-horizontal .control-label {
@@ -1086,10 +1243,117 @@ header.header-login .logosSecundarios{
   }
   .form-horizontal fieldset fieldset .controls {
       margin-left: 164px;
-  }
+  }*/
   #dashboard .widget {
       width: 48%;
   }
+  .table-title {
+      margin-left: 0px;
+  }
+  /* Tabla genérica */
+  table:not(.ui-datepicker-calendar),
+  table:not(.ui-datepicker-calendar) thead,
+  table:not(.ui-datepicker-calendar) tbody,
+  table:not(.ui-datepicker-calendar) th,
+  table:not(.ui-datepicker-calendar) td,
+  table:not(.ui-datepicker-calendar) tr {
+      display: block;
+      overflow: auto;
+  }
+  /* IE 8 fix */
+  table:not(.ui-datepicker-calendar) td, table:not(.ui-datepicker-calendar) tr {
+      box-sizing: border-box;
+      width: 100%;
+      float: left;
+  }
+  /* Oculto header */
+  table:not(.ui-datepicker-calendar) thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+  }
+  table:not(.ui-datepicker-calendar) tfoot{
+      width: 100%;float: right;
+  }
+  table:not(.ui-datepicker-calendar) tfoot td{
+      padding: 0px;
+  }
+  table:not(.ui-datepicker-calendar) tfoot tr{
+      border:none;
+  }
+  table:not(.ui-datepicker-calendar) tr {
+      border: 1px solid #ccc;
+      padding: 10px 0;
+  }
+  table:not(.ui-datepicker-calendar) tr td:first-child, table:not(.ui-datepicker-calendar) tr td:last-child {
+      border: none;
+  }
+  table:not(.ui-datepicker-calendar) tr.row-total {
+      padding: 0;
+  }
+  /* Los datos se muestran en filas */
+  table:not(.ui-datepicker-calendar) tr td {
+      border: none!important;
+      border-top: 1px solid #eee;
+      position: relative;
+      /*padding-left: 50%;*/
+      white-space: normal;
+      text-align: left;
+      font-weight: bold!important;
+  }
+
+  /*Label de las columnas th ahora en el td establecido en el data-title*/
+  table:not(.ui-datepicker-calendar) tr td:before {
+      display: block;
+      padding-bottom: 5px;
+      white-space: nowrap;
+      text-align: left;
+      font-weight: normal;
+      content: attr(data-title);
+  }
+
+  table:not(.ui-datepicker-calendar) tr td.cell-hide-mobile, table:not(.ui-datepicker-calendar) tr td.cell-no-border, table:not(.ui-datepicker-calendar) tr.row-spacer {
+      display: none;
+  }
+  .table tr td.actions {
+    width: auto;
+  }
+  /* Alineaciones de tabla */
+  table:not(.ui-datepicker-calendar) .align-center, .align-center button {
+      text-align: left;
+      margin: 0;
+  }
+  table:not(.ui-datepicker-calendar) .align-right {
+      text-align: left;
+  }
+  /* Header de tabla */
+  table:not(.ui-datepicker-calendar) tr td.header {
+      background: #EBEBEB;
+      padding: 8px 15px;
+      font-weight: bold;
+      color: #333;
+  }
+  table:not(.ui-datepicker-calendar) tr td.header:before {
+      display: block;
+      position :static;
+      width: 100%;
+      white-space: normal;
+      margin-bottom: 4px;
+  }
+  #sideMenu li.active a:after {
+    content: none;
+  }
+}
+@media screen and (max-width: 640px) {
+    /* Elementos de formulario */
+    .form-group, ul.form-group-list, .form-group, ul.form-group-list > li.form-error, input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select, textarea, input[type="file"], .campo-md, .campo-sm {
+        width: 100%;
+        max-width: 100%;
+        min-width: inherit;
+    }
+    .input-group {
+        width: 100%;
+    }
 }
 @media (max-width: 480px) {
   fieldset {
@@ -1103,6 +1367,24 @@ header.header-login .logosSecundarios{
   }
   #dashboard .widget {
       width: 98%;
+  }
+  /* Elementos de formulario */
+  .dynaForm fieldset fieldset {
+      border: none;
+      padding: 0 15px;
+      margin-left: 0;
+      margin-bottom: 0;
+      padding-top: 5px;
+  }
+  .dynaForm fieldset fieldset > legend {
+      font-weight: bold;
+      font-size: 1.25em;
+      padding: 0;
+      margin-bottom: 8px;
+  }
+  .dynaForm fieldset fieldset .control-group{
+      padding: 0 15px;
+      margin-top: 0;
   }
 }
 .codigo_operacion {
@@ -1144,3 +1426,576 @@ dl.lista_codigos_servicios dd {cursor: text;}
   padding: 7px 10px;
 }
 .tipo_ws {display: inline-block;padding-left: 0 !important;padding-right: 20px;}
+/* Mensaje o enlace para un fieldset */
+.fieldset-msg, .link-agregar {
+    margin: -20px 0 30px 0;
+    display: block;
+}
+
+fieldset .fieldset-msg, fieldset .link-agregar {
+    margin: -30px 0 30px;
+}
+@media screen and (max-width: 980px) {
+    fieldset .link-agregar {
+        margin: 0px 0 30px;
+    }
+}
+@media screen and (max-width: 480px) {
+    fieldset .fieldset-msg {
+        margin: 0px 0 30px;
+    }
+    fieldset fieldset .fieldset-msg {
+      margin: -30px 0 30px;
+  }
+}
+/*calendario*/
+.ui-datepicker {
+    padding: .3em .5em 0;
+    font-family: Arial, Helvetica, sans-serif;
+    z-index: 5000 !important;
+}
+.ui-datepicker .ui-datepicker-header{
+  background: none;
+  border: 0;
+}
+.ui-datepicker .ui-datepicker-header a{
+  background: none;
+  border: 0;
+}
+.ui-datepicker .ui-datepicker-next-hover{
+  top: 2px;
+  right: 2px;
+}
+.ui-datepicker .ui-datepicker-prev-hover{
+  top: 2px;
+  left: 2px;
+}
+.ui-datepicker th {
+    padding: .5em .3em;
+    font-weight: normal;
+    background: #f2f2f2;
+    border-bottom: 1px solid #ccc;
+}
+.ui-datepicker table{
+  border: 1px solid #4D90FE;
+}
+.ui-datepicker td {
+    padding: 0;
+}
+.ui-datepicker td a.ui-state-default{
+  background: none;
+  border: 1px solid #fff;
+  text-align: center;
+}
+.ui-datepicker td a.ui-state-highlight{
+  border: 1px solid #ccc;
+}
+.ui-datepicker td a.ui-state-hover{
+  background: #E5ECF8;
+  border: 1px solid #E5ECF8;
+}
+.ui-datepicker td a.ui-state-active{
+  background: #BCCDEC;
+  border: 1px solid #BCCDEC;
+}
+/* Accesibilidad */
+.hide-text-read-cross {
+    display: block;
+    float: left;
+    text-indent: -9999em;
+    color: #000;
+    font-size: 2em;
+    line-height: 1;
+}
+.hide-text-read {
+    display: block;
+    text-indent: -9999em;
+    color: #000;
+    /*font-size: 2em;*/
+    line-height: 1;
+}
+.hide-read {
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+}
+/*iconos y botones*/
+.button-no-style {
+    background: transparent;
+    border: transparent;
+    border-radius: 0;
+    margin: 0;
+}
+.button-no-style:focus {
+    box-shadow: none;
+}
+
+/* Íconos tamaño normal */
+.icn {
+    display: inline-block;
+}
+/* Flechas triángulos */
+.icn-triangle-left {
+    background: url(../img/icons/icn-triangle-left.png) no-repeat center;
+    width: 6px;
+    height: 10px;
+}
+.icn-triangle-right {
+    background: url(../img/icons/icn-triangle-right.png) no-repeat center;
+    width: 6px;
+    height: 10px;
+}
+.icn-triangle-up {
+    background: url(../img/icons/icn-triangle-up.png) no-repeat center;
+    width: 10px;
+    height: 6px;
+}
+.icn-triangle-down {
+    background: url(../img/icons/icn-triangle-down.png) no-repeat center;
+    width: 10px;
+    height: 6px;
+}
+
+/* Flechas chevrons */
+.icn-chevron-left {
+    background: url(../img/icons/icn-chevron-left.png) no-repeat center;
+    width: 16px;
+    height: 26px;
+}
+.icn-chevron-right {
+    background: url(../img/icons/icn-chevron-right.png) no-repeat center;
+    width: 16px;
+    height: 26px;
+}
+.icn-chevron-up {
+    background: url(../img/icons/icn-chevron-up.png) no-repeat center;
+    width: 26px;
+    height: 16px;
+}
+.icn-chevron-down {
+    background: url(../img/icons/icn-chevron-down.png) no-repeat center;
+    width: 26px;
+    height: 16px;
+}
+
+.icn-search {
+    background: url(../img/icons/icn-search.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-reload {
+    background: url(../img/icons/icn-reload.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+/* Íconos circulares */
+.icn-circle-success {
+    background: url(../img/icons/icn-circle-success.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-circle-plus {
+    background: url(../img/icons/icn-circle-plus.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-circle-minus {
+    background: url(../img/icons/icn-circle-minus.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-circle-error {
+    background: url(../img/icons/icn-circle-error.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-circle-help {
+    background: url(../img/icons/icn-circle-help.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-circle-info {
+    background: url(../img/icons/icn-circle-info.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+
+.icn-warning {
+    background: url(../img/icons/icn-warning.png) no-repeat center;
+    width: 20px;
+    height: 18px;
+}
+.icn-success {
+    background: url(../img/icons/icn-success.png) no-repeat center;
+    width: 18px;
+    height: 14px;
+}
+.icn-plus {
+    background: url(../img/icons/icn-plus.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-minus {
+    background: url(../img/icons/icn-minus.png) no-repeat center;
+    width: 18px;
+    height: 4px;
+}
+.icn-error {
+    background: url(../img/icons/icn-error.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-edit {
+    background: url(../img/icons/icn-edit.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-delete {
+    background: url(../img/icons/icn-delete.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-home {
+    background: url(../img/icons/icn-home.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-star {
+    background: url(../img/icons/icn-star.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-account {
+    background: url(../img/icons/icn-account.png) no-repeat center;
+    width: 18px;
+    height: 16px;
+}
+.icn-key {
+    background: url(../img/icons/icn-key.png) no-repeat center;
+    width: 12px;
+    height: 18px;
+}
+.icn-lock {
+    background: url(../img/icons/icn-lock.png) no-repeat center;
+    width: 15px;
+    height: 18px;
+}
+.icn-email {
+    background: url(../img/icons/icn-email.png) no-repeat center;
+    width: 25px;
+    height: 18px;
+}
+.icn-attach {
+    background: url(../img/icons/icn-attach.png) no-repeat center;
+    width: 20px;
+    height: 18px;
+}
+.icn-link {
+    background: url(../img/icons/icn-link.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-settings {
+    background: url(../img/icons/icn-settings.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-download {
+    background: url(../img/icons/icn-download.png) no-repeat center;
+    width: 20px;
+    height: 18px;
+}
+.icn-upload {
+    background: url(../img/icons/icn-upload.png) no-repeat center;
+    width: 20px;
+    height: 18px;
+}
+.icn-folder {
+    background: url(../img/icons/icn-folder.png) no-repeat center;
+    width: 22px;
+    height: 18px;
+}
+.icn-cloud {
+    background: url(../img/icons/icn-cloud.png) no-repeat center;
+    width: 27px;
+    height: 18px;
+}
+.icn-gps {
+    background: url(../img/icons/icn-gps.png) no-repeat center;
+    width: 12px;
+    height: 18px;
+}
+.icn-calendar {
+    background: url(../img/icons/icn-calendar.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-fullscreen {
+    background: url(../img/icons/icn-fullscreen.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-minimize {
+    background: url(../img/icons/icn-minimize.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-tag {
+    background: url(../img/icons/icn-tag.png) no-repeat center;
+    width: 23px;
+    height: 18px;
+}
+.icn-print {
+    background: url(../img/icons/icn-print.png) no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.icn-view {
+    background: url(../img/icons/icn-view.png) no-repeat center;
+    width: 25px;
+    height: 13px;
+}
+.icn-view-sm {
+    background: url(../img/icons/icn-view-sm.png) no-repeat center;
+    width: 19px;
+    height: 11px;
+}
+.icn-format-csv {
+    background: url(../img/icons/icn-format-csv.png) no-repeat center;
+    width: 15px;
+    height: 18px;
+}
+.icn-format-zip {
+    background: url(../img/icons/icn-format-zip.png) no-repeat center;
+    width: 15px;
+    height: 18px;
+}
+.icn-format-xls {
+    background: url(../img/icons/icn-format-xls.png) no-repeat center;
+    width: 15px;
+    height: 18px;
+}
+.icn-format-doc {
+    background: url(../img/icons/icn-format-doc.png) no-repeat center;
+    width: 15px;
+    height: 18px;
+}
+.icn-format-pdf {
+    background: url(../img/icons/icn-format-pdf.png) no-repeat center;
+    width: 15px;
+    height: 18px;
+}
+
+/* Íconos  tamaño chico */
+.icn-search-sm {
+    background: url(../img/icons/icn-search-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-reload-sm {
+    background: url(../img/icons/icn-reload-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+/* Íconos circulares */
+.icn-circle-success-sm {
+    background: url(../img/icons/icn-circle-success-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-circle-plus-sm {
+    background: url(../img/icons/icn-circle-plus-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-circle-minus-sm {
+    background: url(../img/icons/icn-circle-minus-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-circle-error-sm {
+    background: url(../img/icons/icn-circle-error-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-circle-help-sm {
+    background: url(../img/icons/icn-circle-help-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-circle-info-sm {
+    background: url(../img/icons/icn-circle-info-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-warning-sm {
+    background: url(../img/icons/icn-warning-sm.png) no-repeat center;
+    width: 13px;
+    height: 14px;
+}
+.icn-success-sm {
+    background: url(../img/icons/icn-success-sm.png) no-repeat center;
+    width: 17px;
+    height: 13px;
+}
+.icn-plus-sm {
+    background: url(../img/icons/icn-plus-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-minus-sm {
+    background: url(../img/icons/icn-minus-sm.png) no-repeat center;
+    width: 13px;
+    height: 3px;
+}
+.icn-error-sm {
+    background: url(../img/icons/icn-error-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-edit-sm {
+    background: url(../img/icons/icn-edit-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-delete-sm {
+    background: url(../img/icons/icn-delete-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-home-sm {
+    background: url(../img/icons/icn-home-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-star-sm {
+    background: url(../img/icons/icn-star-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-account-sm {
+    background: url(../img/icons/icn-account-sm.png) no-repeat center;
+    width: 14px;
+    height: 13px;
+}
+.icn-key-sm {
+    background: url(../img/icons/icn-key-sm.png) no-repeat center;
+    width: 8px;
+    height: 13px;
+}
+.icn-lock-sm {
+    background: url(../img/icons/icn-lock-sm.png) no-repeat center;
+    width: 13px;
+    height: 11px;
+}
+.icn-unlock-sm {
+    background: url(../img/icons/icn-unlock-sm.png) no-repeat center;
+    width: 13px;
+    height: 11px;
+}
+.icn-email-sm {
+    background: url(../img/icons/icn-email-sm.png) no-repeat center;
+    width: 18px;
+    height: 13px;
+}
+.icn-attach-sm {
+    background: url(../img/icons/icn-attach-sm.png) no-repeat center;
+    width: 14px;
+    height: 13px;
+}
+.icn-link-sm {
+    background: url(../img/icons/icn-link-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-settings-sm {
+    background: url(../img/icons/icn-settings-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-download-sm {
+    background: url(../img/icons/icn-download-sm.png) no-repeat center;
+    width: 14px;
+    height: 13px;
+}
+.icn-upload-sm {
+    background: url(../img/icons/icn-upload-sm.png) no-repeat center;
+    width: 14px;
+    height: 13px;
+}
+.icn-folder-sm {
+    background: url(../img/icons/icn-folder-sm.png) no-repeat center;
+    width: 16px;
+    height: 13px;
+}
+.icn-cloud-sm {
+    background: url(../img/icons/icn-cloud-sm.png) no-repeat center;
+    width: 19px;
+    height: 13px;
+}
+.icn-gps-sm {
+    background: url(../img/icons/icn-gps-sm.png) no-repeat center;
+    width: 9px;
+    height: 13px;
+}
+.icn-calendar-sm {
+    background: url(../img/icons/icn-calendar-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-fullscreen-sm {
+    background: url(../img/icons/icn-fullscreen-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-minimize-sm {
+    background: url(../img/icons/icn-minimize-sm.png) no-repeat center;
+    width: 13px;
+    height: 13px;
+}
+.icn-tag-sm {
+    background: url(../img/icons/icn-tag-sm.png) no-repeat center;
+    width: 17px;
+    height: 13px;
+}
+.icn-arrow-right-sm {
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid #000;
+}
+.icn-arrow-left-sm {
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-right: 5px solid #000;
+}
+/* Íconos  tamaño grande */
+.icn-circle-info-lg {
+    background: url(../img/icons/icn-circle-info-lg.png) no-repeat center;
+    width: 46px;
+    height: 46px;
+}
+.icn-circle-success-lg {
+    background: url(../img/icons/icn-circle-success-lg.png) no-repeat center;
+    width: 46px;
+    height: 46px;
+}
+.icn-circle-error-lg {
+    background: url(../img/icons/icn-circle-error-lg.png) no-repeat center;
+    width: 46px;
+    height: 46px;
+}
+.icn-warning-lg {
+    background: url(../img/icons/icn-warning-lg.png) no-repeat center;
+    width: 51px;
+    height: 46px;
+}
+.no-margin-box{
+  margin: 0;
+}
+.no-margin-box .controls{
+  margin-left: 0 !important;
+}

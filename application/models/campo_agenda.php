@@ -66,11 +66,13 @@ class CampoAgenda extends Campo{
         }
 
         $display = '<script>$(document).ready(function() {$(".form-action-buttons").find(".btn-primary").remove();});</script>';
-        // $display .= '<div class="controls">';
+        $display .= '<div class="no-margin-box">';
+        $display .= '<div class="controls" data-fieldset="'.$this->fieldset.'">';
         $display .= '<div class="well text-center box-agenda" id="'.$this->id.'" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display .= '<p>'. $this->etiqueta .'</p>';
-        $display .= '<a class="btn btn-primary" href="'. $url . '">Continuar</a>';
-        // $display .= '</div>';
+        $display .= '<a class="btn btn-primary" href="'. $url . '">Ir a Agenda</a>';
+        $display .= '</div>';
+        $display .= '</div>';
         $display .= '</div>';
 
         return $display;

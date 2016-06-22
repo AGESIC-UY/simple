@@ -296,7 +296,6 @@ class Proceso extends Doctrine_Record {
         }
 
         return $tareas[0];
-
     }
 
     //Obtiene todos los campos asociados a este proceso

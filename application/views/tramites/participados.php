@@ -16,9 +16,9 @@
         <tbody>
             <?php foreach ($tramites as $t): ?>
                 <tr>
-                    <td><?= $t->id ?></td>
-                    <td class="name"><?= $t->Proceso->nombre ?></td>
-                    <td>
+                    <td data-title="Id"><?= $t->id ?></td>
+                    <td class="name" data-title="Nombre"><?= $t->Proceso->nombre ?></td>
+                    <td data-title="Etapa actual">
                         <?php
                         $etapas_array = array();
                         foreach ($t->getEtapasActuales() as $e)
@@ -26,9 +26,9 @@
                         echo implode(', ', $etapas_array);
                         ?>
                     </td>
-                    <td class="time"><?= strftime('%d.%b.%Y', mysql_to_unix($t->updated_at)) ?><br /><?= strftime('%H:%M:%S', mysql_to_unix($t->updated_at)) ?></td>
-                    <td><?= $t->pendiente ? 'Pendiente' : 'Completado' ?></td>
-                    <td class="actions">
+                    <td class="time" data-title="Fecha Modificación"><?= strftime('%d.%b.%Y', mysql_to_unix($t->updated_at)) ?><br /><?= strftime('%H:%M:%S', mysql_to_unix($t->updated_at)) ?></td>
+                    <td data-title="Estado"><?= $t->pendiente ? 'Pendiente' : 'Completado' ?></td>
+                    <td class="actions" data-title="Acciones">
                         <?php $etapas = $t->getEtapasParticipadas(UsuarioSesion::usuario()->id) ?>
                         <?php if (count($etapas) == 3e4354) : ?>
                             <a href="<?= site_url('etapas/ver/' . $etapas[0]->id) ?>" class="btn btn-primary">Ver historial <span class="hide-text">de <?= $t->Proceso->nombre ?></span></a>

@@ -69,28 +69,10 @@ class AccionPasarelaPago extends Accion {
       $display .= '</div>';
 
       $display .= '<div class="control-group">';
-      $display .= '<label for="operacion" class="control-label">Fecha de vencimiento</label>';
+      $display .= '<label for="operacion" class="control-label">Fecha de vencimiento (AAAA/MM/DD)</label>';
       $display .= '<div class="controls">';
 
-      if(isset($vencimiento)) {
-          $datetime = date_create_from_format('YmdHi', $vencimiento);
-          if($datetime) {
-              $vencimiento = $datetime->format('d/m/Y H:i');
-          }
-          else {
-            $vencimiento = null;
-          }
-      }
-
-      $display .= '<div id="pasarela_pago_vencimiento_muestra">';
-      $display .= '<span id="pasarela_pago_vencimiento_muestra_texto" class="fecha">';
-      $display .= $vencimiento;
-      $display .= '</span> ';
-      $display .= '<a class="btn calendar" id="pasarela_pago_vencimiento_button" href="#">';
-      $display .= '<span class="icon-calendar"></span>';
-      $display .= '</a>';
-      $display .= '<input type="hidden" id="pasarela_pago_vencimiento" name="extra[vencimiento]" value="'. $vencimiento .'" />';
-      $display .= '</div>';
+      $display .= '<input class="input-large" type="text" id="pasarela_pago_vencimiento" name="extra[vencimiento]" value="'. $vencimiento .'" />';
       $display .= '</div>';
       $display .= '</div>';
 
@@ -122,9 +104,10 @@ class AccionPasarelaPago extends Accion {
     public function ejecutar(Etapa $etapa, $secuencia = null) {
       $pasarela_pago_id = $this->extra->pasarela_pago_id;
 
-      $id_sol = mt_rand() . mt_rand();
+      $id_sol = mt_rand(1000, 9999);
+      $id_sol = $etapa->tramite_id . '000' . $id_sol;
 
-      $fecha = str_replace("/", ".", $this->extra->vencimiento);
+      $fecha = str_replace('/', '', $this->extra->vencimiento.'0000');
       $fecha = strtotime($fecha);
       $fecha_vencimiento = date("YmdHi", $fecha);
 

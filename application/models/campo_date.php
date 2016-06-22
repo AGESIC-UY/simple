@@ -13,7 +13,7 @@ class CampoDate extends Campo{
             $valor_default=$this->valor_default;
         }
         $display  = '<div class="control-group">';
-        $display.='<label class="control-label" for="'.$this->id.'" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (!in_array('required', $this->validacion) ? ' (Opcional):' : '*:') . '</label>';
+        $display.='<label class="control-label" for="'.$this->id.'" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (!in_array('required', $this->validacion) ? ':' : '*:') . '</label>';
         $display.='<div class="controls" data-fieldset="'.$this->fieldset.'">';
         $display.='<input id="'.$this->id.'" class="datepicker" ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' type="text" name="'.$this->nombre.'" value="' . ($dato && $dato->valor?date('d-m-Y',strtotime($dato->valor)):$valor_default) . '" placeholder="dd-mm-aaaa" />';
         if($this->ayuda)
@@ -23,10 +23,4 @@ class CampoDate extends Campo{
 
         return $display;
     }
-
-    public function formValidate() {
-        $CI=& get_instance();
-        $CI->form_validation->set_rules($this->nombre, $this->etiqueta, implode('|', array_merge(array('date_prep'),$this->validacion)));
-    }
-
 }

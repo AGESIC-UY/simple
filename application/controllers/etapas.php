@@ -47,7 +47,7 @@ class Etapas extends MY_Controller {
         $iframe = $this->input->get('iframe');
 
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
-        if(!$etapa){
+        if(!$etapa) {
             show_404();
         }
         if ($etapa->usuario_id != UsuarioSesion::usuario()->id) {
@@ -84,12 +84,14 @@ class Etapas extends MY_Controller {
         $paso = $etapa->getPasoEjecutable($secuencia);
         if (!$paso) {
             redirect('etapas/ejecutar_fin/' . $etapa->id . ($qs ? '?' . $qs : ''));
-        } else if (($etapa->Tarea->final || !$etapa->Tarea->paso_confirmacion) && $paso->getReadonly() && end($etapa->getPasosEjecutables()) == $paso) { //No se requiere mas input
+        }
+        else if (($etapa->Tarea->final || !$etapa->Tarea->paso_confirmacion) && $paso->getReadonly() && end($etapa->getPasosEjecutables()) == $paso) { //No se requiere mas input
             $etapa->iniciarPaso($paso, $secuencia);
             $etapa->finalizarPaso($paso, $secuencia);
             $etapa->avanzar();
             redirect('etapas/ver/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables())-1));
-        }else{
+        }
+        else {
             $etapa->iniciarPaso($paso, $secuencia);
 
             $data['secuencia'] = $secuencia;
@@ -183,7 +185,6 @@ class Etapas extends MY_Controller {
 
                   // -- Si encuentra variables de errores avisa que se ha registrado un error de parte de una acción.
                   $errors = false;
-
                   foreach ($formulario->Campos as $c) {
                     if($c->tipo == 'error') {
                       $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId(str_replace("@@", "", $c->valor_default), $etapa->id);
@@ -200,11 +201,19 @@ class Etapas extends MY_Controller {
 
                   // -- Si la tarea requiere trazabilidad. Solo traza la primera y ultima secuencia unicamente.
                   if($etapa->Tarea->trazabilidad) {
+                    $tarea_inicial = $formulario->Proceso->getTareaInicial();
+
+                    $cabezal = 0;
+                    if($tarea_inicial->id == $etapa->Tarea->id) {
+                      $cabezal = 1;
+                    }
+
                     if (($secuencia == 0) || ($secuencia == sizeof($etapa->getPasosEjecutables()) - 1)) {
                       $args = array('tramite_id' => $etapa->Tramite->id, 'secuencia' => $secuencia,
                                     'organismo_id' => $formulario->Proceso->ProcesoTrazabilidad->organismo_id,
                                     'proceso_externo_id' => $formulario->Proceso->ProcesoTrazabilidad->proceso_externo_id,
-                                    'usuario_id' => UsuarioSesion::usuario()->id, 'pasos_ejecutables' => $etapa->getPasosEjecutables());
+                                    'usuario_id' => UsuarioSesion::usuario()->id, 'pasos_ejecutables' => $etapa->getPasosEjecutables(),
+                                    'cabezal' => $cabezal, 'nombre_tarea' => $etapa->Tarea->nombre);
 
                       try {
                         $CI =& get_instance();

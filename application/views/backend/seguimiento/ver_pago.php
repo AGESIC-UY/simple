@@ -11,7 +11,11 @@
       <dd><?=$registro->fecha_actualizacion?></dd>
     </dl>
     <dl  class="dl-horizontal">
-      <dt>ID de trámite</dt>
+      <dt>ID de trámite interno</dt>
+      <dd><a href="<?=site_url('backend/seguimiento/ver/'.$registro->id_tramite_interno)?>"><?=$registro->id_tramite_interno?></a></dd>
+    </dl>
+    <dl  class="dl-horizontal">
+      <dt>ID de trámite externo</dt>
       <dd><?=$registro->id_tramite?></dd>
     </dl>
     <dl  class="dl-horizontal">

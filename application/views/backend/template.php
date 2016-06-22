@@ -80,7 +80,7 @@
                       <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'pasarela_pagos'): ?>
                           <li <?= $this->uri->segment(2) == 'pasarela_pagos' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/pasarela_pagos') ?>">Pasarela de Pagos</a></li>
                       <?php endif ?>
-                      <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'operacion'): ?>
+                      <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'operacion' || UsuarioBackendSesion::usuario()->rol == 'seguimiento'): ?>
                           <li <?= $this->uri->segment(2) == 'seguimiento' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/seguimiento') ?>">Seguimiento</a></li>
                       <?php endif ?>
                       <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'gestion'): ?>

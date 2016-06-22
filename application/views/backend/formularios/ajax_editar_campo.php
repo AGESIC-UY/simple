@@ -135,7 +135,7 @@
         <?php if (!$campo->estatico): ?>
             <label class="checkbox" for="soloLectura"><input type="checkbox" id="soloLectura" name="readonly" value="1" <?=$campo->readonly?'checked':''?> /> Solo lectura</label>
         <?php endif; ?>
-        <?php if (!$campo->estatico): ?>
+        <?php if ((!$campo->estatico) && ($campo->requiere_validacion)): ?>
             <label for="validacion">Reglas de validación</label>
             <input class='validacion' id="validacion" type="text" name="validacion" value="<?= $edit ? implode('|', $campo->validacion) : 'required' ?>"/>
         <?php endif; ?>

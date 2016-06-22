@@ -67,7 +67,7 @@ class Documentos extends MY_Controller {
                             </security>
                             <resources>
                                 <j2se version="1.6+"/>
-                                <jar href="AgesicFirmaApplet-3.4.jar" main="true"/>
+                                <jar href="AgesicFirmaApplet-AgesicFirmaApplet-4.3.jar" main="true"/>
                                 <jar href="activation-1.1.jar" main="false"/>
                                 <jar href="aerogear-crypto-0.1.5.jar" main="false"/>
                                 <jar href="avalon-framework-4.1.3.jar" main="false"/>

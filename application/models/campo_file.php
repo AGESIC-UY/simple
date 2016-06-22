@@ -7,7 +7,7 @@ class CampoFile extends Campo {
     protected function display($modo, $dato,$etapa_id) {
         if(!$etapa_id){
             $display  = '<div class="control-group">';
-            $display.='<span class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*' : ' (Opcional)') . '</span>';
+            $display.='<span class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ':') . '</span>';
             $display.='<div class="controls" data-fieldset="'.$this->fieldset.'">';
             $display.='<button type="button" class="btn">Subir archivo</button>';
             if($this->ayuda)
@@ -20,7 +20,7 @@ class CampoFile extends Campo {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
 
         $display  = '<div class="control-group">';
-        $display.='<span class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ' (Opcional):') . '</span>';
+        $display.='<span class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ':') . '</span>';
         $display.='<div class="controls" data-fieldset="'.$this->fieldset.'">';
         if($modo!='visualizacion')
             $display.='<div class="file-uploader" data-action="'.site_url('uploader/datos/'.$this->id.'/'.$etapa->id).'"></div>';

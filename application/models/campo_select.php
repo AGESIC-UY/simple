@@ -6,7 +6,7 @@ class CampoSelect extends Campo {
         $valor_default=json_decode($this->valor_default);
 
         $display = '<div class="control-group">';
-        $display.= '<label class="control-label" for="'.$this->id.'" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ' (Opcional):') . '</label>';
+        $display.= '<label class="control-label" for="'.$this->id.'" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ':') . '</label>';
         $display.= '<div class="controls" data-fieldset="'.$this->fieldset.'">';
         $display.='<select id="'.$this->id.'" name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' data-modo="'.$modo.'">';
         $display.='<option value="">Seleccionar</option>';
@@ -23,11 +23,5 @@ class CampoSelect extends Campo {
     }
 
     public function backendExtraFields(){
-
-    }
-
-    public function backendExtraValidate(){
-        $CI=&get_instance();
-        //$CI->form_validation->set_rules('datos','Datos','required');
     }
 }

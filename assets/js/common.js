@@ -4,34 +4,81 @@ function muestraErrores () {
 
   $('.error').removeClass('error');
   $('.mensaje_error_campo').remove();
-
+  document.ayuda = [];
   $('.validacion > .alert').each(function() {
     $this = $(this);
 
     var error_reference_original = $this.find('strong').text();
-    var error_reference = $this.find('strong').text().toLowerCase();
+    error_reference_original = error_reference_original.split("@");
 
-    if(($('form *[name="'+ error_reference +'"]').length) && ($.inArray(error_reference, document.errors) == -1)) {
+    //var error_reference = $this.find('strong').text().toLowerCase();
+    var error_reference = error_reference_original[0];
+
+    if((($('form *[name="'+ error_reference +'"]').length) || ($('form *[name="'+ error_reference +'[]"]').length)) && ($.inArray(error_reference, document.errors) == -1)) {
       // -- $('form *[name="'+ error_reference +'"]').wrap('<div class="error_element_wrap"></div>'); /*comentado por mariana*/
 
       var element = $('form *[name="'+ error_reference +'"]');
+      if(!element.length) {
+        element = $('form *[name="'+ error_reference +'[]"]');
+      }
 
       var error_regexp = /"[a-zA-Z0-9_-]*"/
       var error_text = $this.text().replace('×', '').replace(error_regexp, '');
 
-      $(element).parent().parent().addClass('error');
+      if($(element).parent().parent().is('fieldset')) {
+        var label = $(element).parent().prev().first();
+        $(element).parent().prev().remove();
+        var nuevo_element = $(element).parent().wrap('<div class="control-group error"></div>');
+        $(nuevo_element).parent().prepend('<label class="control-label">'+ $(label).text() +'</label>');
+      }
+      else {
+        if($(element).parent().is('label')) {
+          if($(element).attr('type') == 'checkbox') {
+            $(element).parent().parent().parent().addClass('error');
+
+            var element = $(element).parent().last();
+          }
+          else {
+            $(element).parent().parent().parent().addClass('error');
+            var element = $(element).parent().last();
+          }
+        }
+        else {
+          $(element).parent().parent().addClass('error');
+        }
+      }
+
+      error_text = error_text.replace(error_reference+"@", "");
+
       $('<div class="mensaje_error_campo">'+ error_text +'</div>').insertAfter(element);
 
+      // -- Reemplazando el mensaje de error de este formato: NOMBRE@ETIQUETA por ETIQUETA.
+      //  Se necesita obtener el formato NOMBRE@ETIQUETA de parte de la libreria de validacion
+      // ya que se deben mostrar los errores tanto de forma de lista como local.
+      var mensaje_completo = $('.validacion').html();
+      mensaje_completo = mensaje_completo.replace(error_reference+"@", "");
+      $('.validacion').html(mensaje_completo);
+
       document.errors.push(error_reference);
+
+      if($(element).parent().find('.help-block')) {
+        var ayuda_contextual = $(element).parent().find('.help-block').first();
+        if(typeof ayuda_contextual[0] != 'undefined') {
+          $(ayuda_contextual[0]).insertAfter($(element));
+        }
+      }
     }
   });
 
-  // -- Si hay solo un error se eliminan los mensajes de error estandar, de lo contrario se muestran.
+  // -- Si hay mas de un error se muestran agrupados, de lo contrario se muestra de forma local.
   if(document.errors.length > 1) {
     $('.validacion').prepend('<span class="dialog-title">Hay <strong>' + document.errors.length + ' errores</strong> en el formulario</span>');
+
     $('.validacion').show();
+    $('body').scrollTo('.validacion', 500);
   }
   else if (document.errors.length == 1) {
+    $('.controls').find('.help-block').insertBefore('.mensaje_error_campo');
     $('.validacion').hide();
   }
 }
@@ -185,7 +232,6 @@ $(document).ready(function(){
     // -- Guarda paso sin avanzar
     $('#save_step').click(function(){
         $('#no_advance').val(1);
-        $('form').submit();
     });
 
     // -- Organiza los campos dentro de un fieldset.
@@ -203,7 +249,7 @@ $(document).ready(function(){
                   elementos.push($(this).parent().parent());
                 }
                 else {
-                  elementos.push($(this));
+                  elementos.push($(this).parent().parent());
                 }
               });
 

@@ -1,4 +1,4 @@
-<h2><?=$paso->Formulario->Proceso->nombre?></h2>
+<h1><?=$paso->Formulario->Proceso->nombre?></h1>
 <?php if($etapa->Tarea->vencimiento):?>
 <div class="alert alert-warning">Atención. Esta etapa <?=$etapa->getFechaVencimientoAsString()?>.</div>
 <?php endif ?>
@@ -17,30 +17,33 @@
         }
     ?>
 </ul>
+<?php if(count($etapa->getPasosEjecutables()) != 1):?>
+<h2><?=$etapa->getPasoEjecutable($step_position-1)->nombre?></h2>
+<?php endif ?>
 <form method="POST" class="ajaxForm dynaForm form-horizontal" action="<?=site_url('etapas/ejecutar_form/'.$etapa->id.'/'.$secuencia.($qs?'?'.$qs:''))?>">
     <input type="hidden" name="_method" value="post">
     <input type="hidden" name="no_advance" id="no_advance" value="0" />
-    <fieldset>
-        <legend><?=$paso->Formulario->nombre?></legend>
+	<div class="validacion validacion-error"></div>
 
-        <div class="validacion validacion-error"></div>
+    <div class="aviso_campos_obligatorios">Los campos indicados con * son obligatorios.</div>
+    <?=($paso->Formulario->contenedor == 1 ? '<fieldset>' : '<div>') ?>
+        <?=($paso->Formulario->contenedor == 1 ? '<legend>'.$paso->Formulario->leyenda.'</legend>' : '') ?>
 
-        <div class="aviso_campos_obligatorios">Los campos indicados con * son obligatorios.</div>
         <?php foreach($paso->Formulario->Campos as $c): ?>
             <div class="campo" data-id="<?=$c->id?>" <?= $c->dependiente_campo ? 'data-dependiente-campo="' . $c->dependiente_campo.'" data-dependiente-valor="' . $c->dependiente_valor .'" data-dependiente-tipo="' . $c->dependiente_tipo.'" data-dependiente-relacion="'.$c->dependiente_relacion.'"' : '' ?> data-readonly="<?=$paso->modo=='visualizacion' || $c->readonly?>" >
             <?=$c->displayConDatoSeguimiento($etapa->id,$paso->modo)?>
             </div>
         <?php endforeach ?>
-    </fieldset>
+    <?=($paso->Formulario->contenedor == 1 ? '</fieldset>' : '</div>') ?>
     <ul class="form-action-buttons">
         <li class="action-buttons-primary">
             <ul>
                 <li>
                   <?php if (UsuarioSesion::usuario()->registrado): ?>
-                      <button class="btn btn-secundary btn-lg" type="button" id="save_step"><span class="icon-ok icon-white"></span> Guardar y Cerrar</button>
+                      <button class="btn btn-secundary btn-lg" type="submit" id="save_step"><span class="icon-ok icon-white"></span> Guardar y Cerrar</button>
                   <?php endif; ?>
                   <button class="btn btn-primary btn-lg" type="submit">Siguiente <span class="icon-chevron-right icon-white"></span></button>
-                  <!--button class="btn-lg btn-primario">Continuar al paso siguiente &gt;&gt;</button-->
+                  <!--button class="btn-lg btn-primario btn-lg">Continuar al paso siguiente &gt;&gt;</button-->
                 </li>
             </ul>
         </li>

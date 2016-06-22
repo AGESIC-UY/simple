@@ -63,7 +63,6 @@
                           <option value="super" <?=  isset($usuario) && $usuario->rol=='super'?'selected':''?>>super</option>
                           <option value="modelamiento" <?=  isset($usuario) && $usuario->rol=='modelamiento'?'selected':''?>>modelamiento</option>
                           <option value="seguimiento" <?=  isset($usuario) && $usuario->rol=='seguimiento'?'selected':''?>>seguimiento</option>
-                          <option value="operacion" <?=  isset($usuario) && $usuario->rol=='operacion'?'selected':''?>>operación</option>
                           <option value="gestion" <?=  isset($usuario) && $usuario->rol=='gestion'?'selected':''?>>gestión</option>
                           <option value="desarrollo" <?=  isset($usuario) && $usuario->rol=='desarrollo'?'selected':''?>>desarrollo</option>
                           <option value="configuracion" <?=  isset($usuario) && $usuario->rol=='configuracion'?'selected':''?>>configuración</option>
@@ -73,7 +72,6 @@
                           <li>super: Tiene todos los privilegios del sistema.</li>
                           <li>modelamiento: Permite modelar y diseñar el funcionamiento del trámite.</li>
                           <li>seguimiento: Permite hacer seguimiento de los trámites.</li>
-                          <li>operación: Permite hacer seguimiento y operaciones sobre los trámites como eliminación y edición.</li>
                           <li>gestión: Permite acceder a reportes de gestión y uso de la plataforma.</li>
                           <li>desarrollo: Permite acceder a la API de desarrollo, para la integración con plataformas externas.</li>
                           <li>configuración: Permite configurar los usuarios y grupos de usuarios que tienen acceso al sistema.</li>

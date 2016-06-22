@@ -11,8 +11,6 @@ class Formularios extends MY_BackendController {
         UsuarioBackendSesion::force_login();
 
         if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
-            //echo 'No tiene permisos para acceder a esta seccion.';
-            //exit;
             redirect('backend');
         }
     }
@@ -95,7 +93,7 @@ class Formularios extends MY_BackendController {
         $this->load->view('backend/formularios/ajax_editar',$data);
     }
 
-    public function editar_form($formulario_id){
+    public function editar_form($formulario_id) {
         $formulario=Doctrine::getTable('Formulario')->find($formulario_id);
 
         if($formulario->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
@@ -105,9 +103,15 @@ class Formularios extends MY_BackendController {
 
         $this->form_validation->set_rules('nombre','Nombre','required');
 
+        if($this->input->post('contenedor')) {
+          $this->form_validation->set_rules('leyenda','Leyenda','required');
+        }
+
         $respuesta=new stdClass();
         if ($this->form_validation->run()==TRUE) {
             $formulario->nombre=$this->input->post('nombre');
+            $formulario->leyenda=$this->input->post('leyenda');
+            $formulario->contenedor=$this->input->post('contenedor');
             $formulario->save();
 
             $respuesta->validacion=TRUE;
@@ -170,14 +174,22 @@ class Formularios extends MY_BackendController {
             }
             else {
               $this->form_validation->set_rules('valor_default', 'valor_default', 'required');
+
+              if((!$this->input->post('nombre')) || (!$this->input->post('etiqueta'))) {
+                $respuesta->validacion=FALSE;
+                $respuesta->errores=validation_errors();
+
+                echo json_encode($respuesta);
+                exit;
+              }
             }
 
             $formulario_id = $formulario->id;
         }
 
-        $this->form_validation->set_rules('nombre','Nombre','required');
-        $this->form_validation->set_rules('etiqueta','Etiqueta','required');
-        $this->form_validation->set_rules('validacion','Validación','callback_clean_validacion');
+        $this->form_validation->set_rules('nombre','Nombre', 'required');
+        $this->form_validation->set_rules('etiqueta','Etiqueta', 'required');
+        $this->form_validation->set_rules('validacion','Validación', 'callback_clean_validacion');
 
         if(!$campo_id) {
             $this->form_validation->set_rules('formulario_id','Formulario','required|callback_check_permiso_formulario');
@@ -193,7 +205,7 @@ class Formularios extends MY_BackendController {
 
             }
             else {
-                $campo->nombre=$this->input->post('nombre');
+                $campo->nombre=str_replace(" ", "_", $this->input->post('nombre'));
                 $campo->etiqueta=$this->input->post('etiqueta',false);
                 $campo->readonly=$this->input->post('readonly');
                 $campo->valor_default=$this->input->post('valor_default',false);

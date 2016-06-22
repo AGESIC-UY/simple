@@ -43,28 +43,34 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 |
 |
 */
-define('DIRECTORIO_SUBIDA_DOCUMENTOS', 'uploads/documentos/');
-define('WS_TIMEOUT_CONEXION', 10);
-define('WS_TIMEOUT_RESPUESTA', 10);
-define('WS_FIRMA_DOCUMENTOS', 'xxxx'); // -- Tomcat Webapp Firma
-define('WS_AGESIC_FIRMA','xxxx'); // -- Tomcat Webapp Firma
-define('WS_AGESIC_FIRMA_OK', 'xxxx'); // -- Apache Simple
-define('WS_AGESIC_FIRMA_CODEBASE', 'xxxx'); // -- Apache Simple
+
+// -- Configuracion para servicios web
+define('WS_TIMEOUT_CONEXION', 30);
+define('WS_TIMEOUT_RESPUESTA', 30);
+define('WS_FIRMA_DOCUMENTOS', ''); // -- Tomcat Webapp Firma
+define('WS_AGESIC_FIRMA',''); // -- Tomcat Webapp Firma
+define('WS_AGESIC_FIRMA_OK',''); // -- Apache Simple
+define('WS_AGESIC_FIRMA_CODEBASE',''); // -- Apache Simple
 define('WS_AGESIC_FIRMA_XPATH', "//*[local-name() = 'respuesta']/text()");
 define('WS_AGESIC_DOCUMENTO_XPATH', "//*[local-name() = 'doc']/text()");
 define('WS_AGESIC_DOCUMENTO_SERVIDOR_XPATH', "//*[local-name() = 'doc']/text()");
-define('WS_AGESIC_TRAZABLIDAD_CABEZAL', 'xxxx');
-define('WS_AGESIC_TRAZABLIDAD_LINEA', 'xxxx');
-define('WS_VERSION_MODELO', '1');
+define('WS_AGESIC_TRAZABLIDAD_CABEZAL', '');
+define('WS_AGESIC_TRAZABLIDAD_LINEA', '');
+define('WS_CANAL_INICIO_TRAZABILIDAD', '1');
+define('WS_AGESIC_TIPO_PROCESO_TRAZABILIDAD', '1');
+define('WS_VERSION_MODELO_TRAZABILIDAD', '101');
 define('WS_XPATH_COD_TRAZABILIDAD', "//*[local-name() = 'guid']/text()");
 define('WS_VARIABLE_COD_TRAZABILIDAD', 'codigo_trazabilidad');
-define('WS_PASARELA_PAGO', 'xxxx');
-define('POST_PASARELA_PAGO', 'xxxx');
+define('WS_PASARELA_PAGO', '');
+define('POST_PASARELA_PAGO', '');
 define('PASARELA_PAGO_TIMEOUT_CONEXION', 30);
 define('PASARELA_PAGO_TIMEOUT_RESPUESTA', 30);
 
-define('JAR_FIRMA', 'xxxx'); // -- Ruta absoluta a vendors/xmlsigner.jar
-define('UBICACION_CERTIFICADOS_PDI', 'xxxx'); // -- uploads/pdi/
+// -- Validadores de firmas
+define('JAR_FIRMA', ''); // -- vendors/xmlsigner.jar
+define('JAR_VALIDACION', ''); // -- vendors/xmlsignaturevalidator.jar
+define('UBICACION_CERTIFICADOS_PDI', ''); // -- uploads/pdi/
+
 /*
 |--------------------------------------------------------------------------
 | Autenticación SAML
@@ -72,8 +78,12 @@ define('UBICACION_CERTIFICADOS_PDI', 'xxxx'); // -- uploads/pdi/
 |
 |
 */
+
+// -- Nombre del AUTHSOURCE utilizado en SimpleSAML. Se recomienda dejar tal cual
 define('SIMPLE_SAML_AUTHSOURCE', 'simplesaml');
-define('ORIGENES_CONFIABLES', serialize(array(0, 'http://localhost', 'http://127.0.0.1')));
+
+// -- URLs de origenes confiables (CSRF)
+define('ORIGENES_CONFIABLES', serialize(array(0, 'http://127.0.0.1')));
 
 /*
 |--------------------------------------------------------------------------
@@ -82,12 +92,35 @@ define('ORIGENES_CONFIABLES', serialize(array(0, 'http://localhost', 'http://127
 |
 |
 */
+define('DIRECTORIO_SUBIDA_DOCUMENTOS', 'uploads/documentos/');
 define('HOST_SISTEMA', (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '');
-define('DOMINIO', 'xxxx');
+
+// -- Dominio
+define('DOMINIO', '');
 define('HOST_SISTEMA_DOMINIO', '.'.DOMINIO);
+
+// -- En caso de que se configure un dominio con ruta, por ejemplo DOMINIO.GUB.UY/RUTA se debe ingresar la misma
+// al final de la siguiente constante. Quedaria de la siguiente manera:
+//
+// define('HOST_SISTEMA_COMPLETO', (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/RUTA');
+//
+define('HOST_SISTEMA_COMPLETO', (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/');
+
+// -- Max registros por pagina para paginacion
 define('MAX_REGISTROS_PAGINA', 5);
+
+// -- Configuracion para Redis
 define('REDIS_HOST', '127.0.0.1');
 define('REDIS_PORT', '6379');
+
+// -- Permitir/denegar remover campos de bloques
 define('DENEGAR_REMOVER_CAMPOS_BLOQUES', TRUE);
+
+// -- Utilizar CDA para  login
 define('LOGIN_ADMIN_COESYS', TRUE);
-define('CUENTA_DEFAULT_RAIZ', TRUE); // -- Permite acceder a la cuenta principal con el dominio raiz (necesario si CDA redirige a raiz).
+
+// -- Permite acceder a la cuenta principal con el dominio raiz (necesario si CDA redirige a raiz).
+define('CUENTA_DEFAULT_RAIZ', TRUE);
+
+// -- Certificado para validar respuesta de CDA
+define('CERTIFICADO_CDA_PUBLICO', '');

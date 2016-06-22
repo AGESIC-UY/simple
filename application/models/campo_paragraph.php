@@ -27,7 +27,7 @@ class CampoParagraph extends Campo{
             $etiqueta=$this->etiqueta;
         }
 
-        $display='<p data-fieldset="'.$this->fieldset.'">'.$etiqueta.'</p>';
+        $display='<div><div data-fieldset="'.$this->fieldset.'"><p>'.$etiqueta.'</p></div></div>';
 
         return $display;
     }

@@ -6,6 +6,7 @@ class Campo extends Doctrine_Record {
     public $estatico=false; //Indica si es un campo estatico, es decir que no es un input con informacion. Ej: Parrafos, titulos, etc.
     public $etiqueta_tamano='large'; //Indica el tamaño default que tendra el campo de etiqueta. Puede ser large o xxlarge.
     public $requiere_nombre=true;    //Indica si requiere que se le ingrese un nombre (Es decir, no generarlo aleatoriamente)
+    public $requiere_validacion = true; // Indica si se requiere validacion para el campo.
 
     public static function factory($tipo){
         if($tipo=='text')
@@ -50,6 +51,8 @@ class Campo extends Doctrine_Record {
             $campo=new CampoJavascript();
         else if($tipo=='grid')
             $campo=new CampoGrid();
+        else if($tipo=='tabla-responsive')
+            $campo=new CampoTablaResponsive();
         else if($tipo=='agenda')
             $campo=new CampoAgenda();
         else if($tipo=='pagos')
@@ -102,6 +105,7 @@ class Campo extends Doctrine_Record {
                 'CampoDocumento'  => array('tipo' => 'documento'),
                 'CampoJavascript'  => array('tipo' => 'javascript'),
                 'CampoGrid'  => array('tipo' => 'grid'),
+                'CampoTablaResponsive'  => array('tipo' => 'tabla-responsive'),
                 'CampoAgenda'  => array('tipo' => 'agenda'),
                 'CampoPagos'  => array('tipo' => 'pagos')
             ));
@@ -204,8 +208,7 @@ class Campo extends Doctrine_Record {
             $validacion = $regla->getExpresionParaOutput($etapa_id);
         }
 
-
-        $CI->form_validation->set_rules($this->nombre, ucfirst($this->nombre), implode('|', $validacion));
+        $CI->form_validation->set_rules($this->nombre, ucfirst($this->etiqueta), implode('|', $validacion));
     }
 
 

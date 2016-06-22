@@ -202,8 +202,8 @@ class AccionWebserviceExtended extends Accion {
 
             $soap_do = curl_init();
             curl_setopt($soap_do, CURLOPT_URL, $pdi->sts);
-            curl_setopt($soap_do, CURLOPT_CONNECTTIMEOUT, 60);
-            curl_setopt($soap_do, CURLOPT_TIMEOUT,        60);
+            curl_setopt($soap_do, CURLOPT_CONNECTTIMEOUT, $servicio->conexion_timeout);
+            curl_setopt($soap_do, CURLOPT_TIMEOUT,        $servicio->respuesta_timeout);
             curl_setopt($soap_do, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($soap_do, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($soap_do, CURLOPT_SSL_VERIFYHOST, false);
@@ -219,6 +219,21 @@ class AccionWebserviceExtended extends Accion {
             $curl_error = curl_error($soap_do);
             $http_code = curl_getinfo($soap_do, CURLINFO_HTTP_CODE);
             curl_close($soap_do);
+
+            if($curl_errno > 0) {
+              $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId('ws_error', $etapa->id);
+              if($dato)
+                $dato->delete();
+
+              $dato = new DatoSeguimiento();
+              $dato->nombre = 'ws_error';
+              $dato->valor = "Hubo un error al procesar su solicitud. Por favor, vuelva a intentarlo más tarde.";
+              $dato->etapa_id = $etapa->id;
+              $dato->save();
+
+              log_message('error', $curl_error);
+              return;
+            }
 
             try {
               // Cuerpo del SOAP
@@ -270,8 +285,8 @@ class AccionWebserviceExtended extends Accion {
 
             $soap_do = curl_init();
             curl_setopt($soap_do, CURLOPT_URL, $servicio->url_fisica);
-            curl_setopt($soap_do, CURLOPT_CONNECTTIMEOUT, 60);
-            curl_setopt($soap_do, CURLOPT_TIMEOUT,        60);
+            curl_setopt($soap_do, CURLOPT_CONNECTTIMEOUT, $servicio->conexion_timeout);
+            curl_setopt($soap_do, CURLOPT_TIMEOUT,        $servicio->conexion_timeout);
             curl_setopt($soap_do, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($soap_do, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($soap_do, CURLOPT_SSL_VERIFYHOST, false);
@@ -305,6 +320,7 @@ class AccionWebserviceExtended extends Accion {
           $dato->save();
 
           log_message('error', $curl_error);
+          return;
         }
         else {
             $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId('ws_error', $etapa->id);
@@ -315,17 +331,14 @@ class AccionWebserviceExtended extends Accion {
             $respuestas = json_decode($operacion->respuestas);
 
             if($xml->xpath("//*[local-name() = 'faultcode']")) {
-              $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId('ws_error', $etapa->id);
-              if($dato)
-                $dato->delete();
-
+              $error_servicio = $xml->xpath("//*[local-name() = 'faultstring']/text()");
               $dato = new DatoSeguimiento();
               $dato->nombre = 'ws_error';
-              $dato->valor = "Hubo un error al procesar su solicitud. Por favor, vuelva a intentarlo más tarde.";
+              $dato->valor = $error_servicio;
               $dato->etapa_id = $etapa->id;
               $dato->save();
 
-              log_message('error', $curl_error);
+              return false;
             }
 
             foreach($respuestas->respuestas as $respuesta) {
@@ -349,7 +362,7 @@ class AccionWebserviceExtended extends Accion {
 
                     $xmlobj = $proc->transformToDoc($xmldoc);
 
-                    $jsonString = '[[""],';
+                    $jsonString = '[';
 
                     $x = 0;
                     $j = 0;

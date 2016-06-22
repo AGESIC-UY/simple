@@ -39,12 +39,16 @@ class CampoPagos extends Campo {
         }
       }
 
-      $fecha_vencimiento = date("YmdHi", strtotime($pasarela->vencimiento));
+      $fecha = str_replace('/', '', $pasarela->vencimiento.'0000');
+      $fecha = strtotime($fecha);
+      $fecha_vencimiento = date("YmdHi", $fecha);
 
       $id_sol =  Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId('id_sol_pasarela_pagos', $etapa_id);
       $token =  Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId('token_pasarela_pagos', $etapa_id);
 
-      $display = '<div class="well text-center">';
+      $display = '<div class="no-margin-box">';
+      $display .= '<div class="controls" data-fieldset="'.$this->fieldset.'">';
+      $display .= '<div class="well text-center">';
       $display .= '<div data-action="'. POST_PASARELA_PAGO .'" id="form_pasarela_pago">';
 
       $display .= '<input name="IdSol" value="'. (isset($id_sol->valor) ? $id_sol->valor : '') .'" type="hidden" />';
@@ -65,6 +69,19 @@ class CampoPagos extends Campo {
       $display .= '<input type="submit" value="Continuar" class="btn btn-primary" />';
       $display .= '</div>';
       $display .= '</div>';
+      $display .= '</div>';
+      $display .= '</div>';
+
+      if(isset($etapa)) {
+        preg_match('/('. $etapa->id .')\/([0-9]*)/', $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], $match);
+
+        if($match) {
+          $secuencia = (int)$match[2] + 1;
+
+          $url_vuelta = site_url('etapas/ejecutar/' . $etapa->id . '/' . $secuencia);
+          setcookie('simple_bpm_gwp_redirect', base64_encode($url_vuelta), 0, '/', HOST_SISTEMA_DOMINIO);
+        }
+      }
 
       return $display;
     }

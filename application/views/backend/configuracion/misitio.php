@@ -28,12 +28,12 @@
                       <input class="input-xxlarge" id="nombreL" type="text" name="nombre_largo" value="<?=$cuenta->nombre_largo?>"/>
                     </div>
                   </div>
-                  <div class="control-group">
+                  <!-- div class="control-group">
                     <label for="mensaje" class="control-label">Mensaje de bienvenida (Puede contener HTML)</label>
                     <div class="controls">
                       <textarea name="mensaje" id="mensaje" class="input-xxlarge"><?=$cuenta->mensaje?></textarea>
                     </div>
-                  </div>
+                  </div -->
                   <div class="control-group">
                     <span class="control-label">Logo</span>
                     <div class="controls">

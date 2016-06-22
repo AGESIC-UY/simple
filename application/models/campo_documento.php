@@ -31,7 +31,8 @@ class CampoDocumento extends Campo {
 
     private function displayDescarga($modo, $dato, $etapa_id) {
         if (!$etapa_id) {
-            return '<div class="control-group"><div class="controls"><a class="btn btn-success" href="#"><span class="icon-download-alt icon-white"></span> ' . $this->etiqueta . '</a></div></div>';
+            //return '<div class="control-group"><div class="controls"><a class="btn-link" href="#"><span class="icon-download-alt icon-white"></span> ' . $this->etiqueta . '</a></div></div>';
+            return '<div class="control-group"><div class="controls"><a class="btn-link" href="#">' . $this->etiqueta . ' (.pdf)</a></div></div>';
         }
 
         $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
@@ -54,7 +55,15 @@ class CampoDocumento extends Campo {
             }
         }
 
-        $display = '<div class="control-group"><div class="controls"><a class="btn btn-success" href="' . site_url('documentos/get/' . $file->filename) . '?id='.$file->id.'&amp;token='.$file->llave.'"><span class="icon-download-alt icon-white"></span> ' . $this->etiqueta . '</a></div></div>';
+        try {
+          $file_size = number_format(filesize(DIRECTORIO_SUBIDA_DOCUMENTOS . $file->filename) / 1024, 2) . 'KB';
+        }
+        catch(Exception $error) {
+          log_error($error);
+        }
+
+        //$display = '<div class="control-group"><div class="controls"><a class="btn-link" href="' . site_url('documentos/get/' . $file->filename) . '?id='.$file->id.'&amp;token='.$file->llave.'"><span class="icon-download-alt icon-white"></span> ' . $this->etiqueta . '</a></div></div>';
+        $display = '<div class="control-group"><div class="controls"><a class="btn-link" href="' . site_url('documentos/get/' . $file->filename) . '?id='.$file->id.'&amp;token='.$file->llave.'">' . $this->etiqueta . ' (.pdf '. $file_size .')</a></div></div>';
 
         return $display;
     }
@@ -85,17 +94,17 @@ class CampoDocumento extends Campo {
             }
         }
 
-        $display = '<p>'.$this->etiqueta.'</p>';
+        $display = '<div class="control-group"><span class="control-label">'.$this->etiqueta.'</span>';
         $display .= '<div id="exito" class="alert alert-success" style="display: none;">Documento fue firmado con éxito.</div>';
-        $display .= '<p><a class="btn btn-info" href="' . site_url('documentos/get/' . $dato->valor) .'?id='.$file->id.'&amp;token='.$file->llave. '"><span class="icon-search icon-white"></span> Previsualizar el documento</a></p>';
-
+        $display .= '<div class="controls"><a class="btn btn-info" href="' . site_url('documentos/get/' . $dato->valor) .'?id='.$file->id.'&amp;token='.$file->llave. '"><span class="icon-search icon-white"></span> Previsualizar el documento</a></div>';
+        $display .= '</div>';
         $display .= '
             <script>
                 $(document).ready(function() {
                     $("#firmar_documento_ext").click(function() {
                         $.ajax({
                           type: "post",
-                          url: "'. HOST_SISTEMA .'/etapas/firmar_documento",
+                          url: "'. HOST_SISTEMA_COMPLETO .'/etapas/firmar_documento",
                           data: {filename: "'. $file->filename .'", campo: '. $this->id .'},
                           cache: false
                         })
@@ -112,10 +121,9 @@ class CampoDocumento extends Campo {
                     });
                 });
             </script>
-            <div id="firmaDiv">
-                <label>Seleccione la firma</label>
-                <div style="float: left;"></div>
-                <div><button type="button" class="btn btn-success" id="firmar_documento_ext"><span class="icon-pencil icon-white"></span> Firmar Documento</button></div>
+            <div id="firmaDiv" class="control-group">
+                <span class="control-label">Seleccione la firma</span>
+                <div class="controls"><button type="button" class="btn btn-success" id="firmar_documento_ext"><span class="icon-pencil icon-white"></span> Firmar Documento</button></div>
             </div>';
 
         return $display;

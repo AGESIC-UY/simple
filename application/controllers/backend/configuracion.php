@@ -104,6 +104,46 @@ class Configuracion extends MY_BackendController {
         $this->load->view('backend/template', $data);
     }
 
+    public function usuario_existe() {
+      if($this->input->post('usuario')) {
+        $usuario_sin_cuenta = Doctrine_Query::create()
+            ->from('Usuario u')
+            ->where('u.usuario = ? AND u.cuenta_id is NULL', $this->input->post('usuario'))
+            ->execute();
+
+        if(count($usuario_sin_cuenta) > 0) {
+          $usuario = $usuario_sin_cuenta[0];
+          $respuesta = array('usuario_id' => $usuario->id,
+                             'usuario' => $usuario->usuario,
+                             'nombres' => $usuario->nombres,
+                             'apellido_paterno' => $usuario->apellido_paterno,
+                             'apellido_materno' => $usuario->apellido_materno,
+                             'email' => $usuario->email);
+        }
+        else {
+          $usuario = Doctrine_Query::create()
+              ->from('Usuario u')
+              ->where('u.usuario = ? AND u.cuenta_id = ?', array($this->input->post('usuario'), UsuarioBackendSesion::usuario()->cuenta_id))
+              ->execute();
+
+          if(count($usuario) > 0) {
+            $usuario = $usuario[0];
+            $respuesta = array('usuario_id' => $usuario->id,
+                               'usuario' => $usuario->usuario,
+                               'nombres' => $usuario->nombres,
+                               'apellido_paterno' => $usuario->apellido_paterno,
+                               'apellido_materno' => $usuario->apellido_materno,
+                               'email' => $usuario->email);
+          }
+          else {
+              $respuesta = array('error' => 'El usuario ya existe en otra cuenta.');
+          }
+        }
+      }
+
+      echo json_encode($respuesta);
+    }
+
     public function usuario_editar($usuario_id = NULL) {
         if ($usuario_id) {
             $usuario = Doctrine::getTable('Usuario')->find($usuario_id);
@@ -128,10 +168,12 @@ class Configuracion extends MY_BackendController {
         if ($usuario_id) {
             $usuario = Doctrine::getTable('Usuario')->find($usuario_id);
 
+            /*
             if ($usuario->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
                 echo 'Usuario no tiene permisos para editar este usuario.';
                 exit;
             }
+            */
         }
 
         if(!$usuario){
@@ -153,7 +195,6 @@ class Configuracion extends MY_BackendController {
                 $usuario = new Usuario();
                 $usuario->usuario = $this->input->post('usuario');
             }
-
 
             if($this->input->post('password')) $usuario->setPasswordWithSalt($this->input->post('password'));
             $usuario->usuario = $this->input->post('usuario');

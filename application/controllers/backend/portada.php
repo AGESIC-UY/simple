@@ -27,5 +27,7 @@ class Portada extends MY_BackendController {
             redirect('backend/seguimiento');
         else if($usuario->rol=='configuracion')
             redirect('backend/configuracion');
+        else if($usuario->rol=='desarrollo')
+            redirect('backend/api');
     }
 }

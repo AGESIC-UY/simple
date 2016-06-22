@@ -17,12 +17,12 @@
     <tbody>
         <?php foreach ($etapas as $e): ?>
             <tr <?=$e->getPrevisualizacion()?'data-toggle="popover" data-html="true" data-title="<h4>Previsualización</h4>" data-content="'.htmlspecialchars($e->getPrevisualizacion()).'" data-trigger="hover" data-placement="bottom"':''?>>
-                <td><?=$e->Tramite->id?></td>
-                <td class="name"><?= $e->Tramite->Proceso->nombre ?></td>
-                <td><?=$e->Tarea->nombre?></td>
-                <td class="time"><?= strftime('%d.%b.%Y',mysql_to_unix($e->updated_at))?><br /><?= strftime('%H:%M:%S',mysql_to_unix($e->updated_at))?></td>
-                <td><?=$e->vencimiento_at?strftime('%c',strtotime($e->vencimiento_at)):'N/A'?></td>
-                <td class="actions">
+                <td data-title="Id"><?=$e->Tramite->id?></td>
+                <td class="name" data-title="Nombre"><?= $e->Tramite->Proceso->nombre ?></td>
+                <td data-title="Etapa"><?=$e->Tarea->nombre?></td>
+                <td class="time" data-title="Modificación"><?= strftime('%d.%b.%Y',mysql_to_unix($e->updated_at))?><br /><?= strftime('%H:%M:%S',mysql_to_unix($e->updated_at))?></td>
+                <td data-title="Vencimiento"><?=$e->vencimiento_at?strftime('%c',strtotime($e->vencimiento_at)):'N/A'?></td>
+                <td class="actions" data-title="Acciones">
                     <a href="<?=site_url('etapas/ejecutar/'.$e->id)?>" class="btn btn-primary preventDoubleRequest"><span class="icon-edit icon-white"></span> Realizar <span class="hide-text"><?= $e->Tramite->Proceso->nombre ?></span></a>
                     <?php if($e->netapas==1):?><a href="<?=site_url('tramites/eliminar/'.$e->tramite_id)?>" class="btn btn-danger" onclick="return confirm('¿Esta seguro que desea eliminar este tramite?')"><span class="icon-trash"></span><span class="hide-text">Eliminar <?= $e->Tramite->Proceso->nombre ?></span></a><?php endif ?>
                 </td>

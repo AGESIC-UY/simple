@@ -6,6 +6,7 @@ class CampoError extends Campo{
 
     public $requiere_nombre=true;
     public $requiere_datos=false;
+    public $requiere_validacion=false;
 
     protected function display($modo, $dato,$etapa_id) {
         if($etapa_id) {
@@ -25,5 +26,9 @@ class CampoError extends Campo{
         $display .= '</div>';
 
         return $display;
+    }
+
+    public function setReadonly($readonly){
+        $this->_set('readonly', 1);
     }
 }

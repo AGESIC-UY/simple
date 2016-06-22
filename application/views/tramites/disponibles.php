@@ -13,10 +13,10 @@
     <tbody>
         <?php foreach ($procesos as $p): ?>
             <tr>
-                <td class="name">
+                <td class="name" data-title="Nombre">
                     <?= $p->nombre ?>
                 </td>
-                <td class="actions">
+                <td class="actions" data-title="Acciones">
                     <?php if($p->canUsuarioIniciarlo(UsuarioSesion::usuario()->id)):?>
                     <a href="<?=site_url('tramites/iniciar/'.$p->id)?>" class="btn btn-primary preventDoubleRequest"><span class="icon-play icon-white"></span> Iniciar <span class="hide-text"><?= $p->nombre ?></span></a>
                     <?php else: ?>

@@ -10,7 +10,8 @@
   <caption class="hide-text">Seguimiento de Pagos</caption>
     <thead>
         <tr>
-            <th>ID trámite</th>
+            <th>ID trámite interno</th>
+            <th>ID trámite externo</th>
             <th>ID solicitud</th>
             <th>Pasarela</th>
             <th>Estado</th>
@@ -20,6 +21,7 @@
     <tbody>
         <?php foreach($registros as $p): ?>
         <tr>
+            <td><a href="<?=site_url('backend/seguimiento/ver/'.$p->id_tramite_interno)?>"><?=$p->id_tramite_interno?></a></td>
             <td><?=$p->id_tramite?></td>
             <td><?=$p->id_solicitud?></td>
             <td><?=$p->pasarela?></td>

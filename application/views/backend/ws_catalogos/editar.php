@@ -31,9 +31,9 @@
           <div class="control-group">
             <label for="timeout" class="control-label">Timeout de conexión y respuesta (segundos)</label>
             <div class="controls">
-              <input id="timeout" class="input-small" type="text" value="<?= ($catalogo->conexion_timeout == 0 ? 10 : $catalogo->conexion_timeout) ?>" name="conexion_timeout" placeholder="10" />
+              <input id="timeout" class="input-small" type="text" value="<?= ($catalogo->conexion_timeout == 0 ? 10 : $catalogo->conexion_timeout) ?>" name="conexion_timeout"  />
               <label for="respuesta_timeout" class="hidden-accessible">Timeout de conexión y respuesta (segundos)</label>
-              <input class="input-small" type="text" id="respuesta_timeout" value="<?= ($catalogo->respuesta_timeout == 0 ? 10 : $catalogo->respuesta_timeout) ?>" name="respuesta_timeout" placeholder="10" title="Timeout de respuesta" />
+              <input class="input-small" type="text" id="respuesta_timeout" value="<?= ($catalogo->respuesta_timeout == 0 ? 10 : $catalogo->respuesta_timeout) ?>" name="respuesta_timeout" title="Timeout de respuesta" />
             </div>
           </div>
           <div class="control-group">
@@ -65,9 +65,9 @@
           <div class="control-group">
             <label for="timeout" class="control-label">Timeout de conexión y respuesta (segundos)</label>
             <div class="controls">
-              <input id="timeout" class="input-small" type="text" value="<?= ($catalogo->conexion_timeout == 0 ? 10 : $catalogo->conexion_timeout) ?>" name="conexion_timeout" placeholder="10" />
+              <input id="timeout" class="input-small" type="text" value="<?= ($catalogo->conexion_timeout == 0 ? 10 : $catalogo->conexion_timeout) ?>" name="conexion_timeout" />
               <label for="respuesta_timeout" class="hidden-accessible">Timeout de conexión y respuesta (segundos)</label>
-              <input class="input-small" type="text" id="respuesta_timeout" value="<?= ($catalogo->respuesta_timeout == 0 ? 10 : $catalogo->respuesta_timeout) ?>" name="respuesta_timeout" placeholder="10" title="Timeout de respuesta" />
+              <input class="input-small" type="text" id="respuesta_timeout" value="<?= ($catalogo->respuesta_timeout == 0 ? 10 : $catalogo->respuesta_timeout) ?>" name="respuesta_timeout" title="Timeout de respuesta" />
             </div>
           </div>
           <div class="control-group">

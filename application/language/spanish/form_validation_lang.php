@@ -23,4 +23,5 @@ $lang['less_than'] = 'El campo "<strong>%s</strong>" debe contener un número me
 $lang['greater_than'] = 'El campo "<strong>%s</strong>" debe contener un número mayor que %s.';
 $lang['rut'] = 'El campo "<strong>%s</strong>" no es un RUN válido.';
 $lang['is_unique'] = 'El campo "<strong>%s</strong>" ya se encuentra en uso."';
+$lang['decimal'] = 'El campo "<strong>%s</strong>" debe contener un número decimal (separado por punto).';
 ?>

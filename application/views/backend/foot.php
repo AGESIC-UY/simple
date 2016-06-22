@@ -1,5 +1,6 @@
 <div class="area2">
   <div class="container-fluid">
+	<span class="version">Versión 1.0</span>
     <div class="pull-right">
         <img src="<?= base_url() ?>assets/img/logoTramites.png" alt="tramites.gub.uy">
     </div>
@@ -9,8 +10,8 @@
 <script src="<?= base_url() ?>assets/js/chartjs/chartjs.min.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/randomColors/randomColors.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-<script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
+<!--<script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>-->
+<!--<script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>-->
 <script src="<?= base_url() ?>assets/js/bootstrap-typeahead-multiple/bootstrap-typeahead-multiple.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/handsontable/dist/handsontable.full.min.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/jquery.chosen/chosen.jquery.min.js"></script>

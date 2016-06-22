@@ -64,31 +64,9 @@
         </div>
       </div>
       <div class="control-group">
-        <span class="control-label">Vencimiento</span>
+        <span class="control-label">Vencimiento (AAAA/MM/DD)</span>
         <div class="controls">
-          <?php
-              if(isset($pasarela_metodo->vencimiento)) {
-                  $datetime = date_create_from_format('YmdHi', $pasarela_metodo->vencimiento);
-                  if($datetime) {
-                      $vencimiento = $datetime->format('d/m/Y H:i');
-                  }
-                  else {
-                    $vencimiento = null;
-                  }
-              }
-              else {
-                  $vencimiento = '';
-              }
-          ?>
-          <div id="pasarela_pago_vencimiento_muestra">
-              <span id="pasarela_pago_vencimiento_muestra_texto" class="fecha">
-                <?=($pasarela->metodo == 'antel' ? $vencimiento : '')?>
-              </span>
-              <a class="btn calendar" id="pasarela_pago_vencimiento_button" href="#">
-                <span class="icon-calendar"></span>
-              </a>
-          </div>
-          <input type="hidden" id="pasarela_pago_vencimiento" name="pasarela_metodo_antel_vencimiento" value="<?=($pasarela->metodo == 'antel' ? $pasarela_metodo->vencimiento : '')?>" />
+          <input type="text" id="pasarela_pago_vencimiento" name="pasarela_metodo_antel_vencimiento" value="<?=($pasarela->metodo == 'antel' ? $pasarela_metodo->vencimiento : '')?>" />
         </div>
       </div>
       <div class="control-group">

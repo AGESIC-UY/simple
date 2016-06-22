@@ -135,6 +135,9 @@ class CI_Form_validation {
 			$is_array	= FALSE;
 		}
 
+		// -- 06/06/2016  Modificado para poder desplegar mensajes de error locales.
+		$label = $field ."@". $label;
+
 		// Build our master array
 		$this->_field_data[$field] = array(
 			'field'				=> $field,
@@ -937,7 +940,7 @@ class CI_Form_validation {
 
 		return ($str !== $field) ? FALSE : TRUE;
 	}
-	
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -952,7 +955,7 @@ class CI_Form_validation {
 	{
 		list($table, $field)=explode('.', $field);
 		$query = $this->CI->db->limit(1)->get_where($table, array($field => $str));
-		
+
 		return $query->num_rows() === 0;
     }
 

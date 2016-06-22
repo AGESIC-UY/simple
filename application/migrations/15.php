@@ -1,7 +1,7 @@
 <?php
 
 class Migration_15 extends Doctrine_Migration_Base {
-  
+
   public function up() {
 
     // --
@@ -469,6 +469,13 @@ class Migration_15 extends Doctrine_Migration_Base {
     // -- Modifica tabla Formulario
     // --
     $this->addColumn('formulario', 'bloque_id', 'integer', 10, array('notnull' => 0));
+    $this->addColumn('formulario', 'leyenda', 'varchar', 100, array('notnull' => 0));
+    $this->addColumn('formulario', 'contenedor', 'integer', 1, array('default' => 1));
+
+    // --
+    // -- Modifica tabla Pago
+    // --
+    $this->addColumn('pago', 'id_tramite_interno', 'integer', 10, array('notnull' => 1));
 
     // --
     // -- Modifica tabla Paso

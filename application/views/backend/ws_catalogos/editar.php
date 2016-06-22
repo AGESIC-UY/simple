@@ -4,6 +4,8 @@
     </li>
     <li class="active"><?= $catalogo->nombre ?></li>
 </ul>
+<a href="#" class="btn btn-ayuda btn-secundary" id="ayuda_contextual_servicios_editar"><span class="icon-white icon-question-sign"></span> Ayuda</a>
+
 <h2><?= $catalogo->nombre ?></h2>
 <form class="ajaxForm" action="<?=site_url('backend/ws_catalogos/editar_form/'.$catalogo->id)?>" method="post">
   <div class="validacion validacion-error"></div>
@@ -11,9 +13,9 @@
       <legend>Datos generales</legend>
       <div class="form-horizontal">
         <div class="control-group">
-          <div class="controls">
+          <div class="controls" >
             <label class="checkbox tipo_ws" for="tipo"><input type="radio" id="servicio_tipo_pdi" name="tipo" value="pdi" <?= ($catalogo->tipo == 'pdi') ? 'checked' : ''; ?> />PDI</label>
-            <label class="checkbox tipo_ws" for="tipo"><input type="radio" id="servicio_tipo_soap" name="tipo" value="soap" <?= ($catalogo->tipo == 'soap') ? 'checked' : ''; ?> />SOAP</label>
+            <label id="accion-tipo-servicio" class="checkbox tipo_ws" for="tipo"><input type="radio" id="servicio_tipo_soap" name="tipo" value="soap" <?= ($catalogo->tipo == 'soap') ? 'checked' : ''; ?> />SOAP</label>
           </div>
         </div>
         <div class="control-group">
@@ -23,7 +25,7 @@
         </div>
         <div class="control-group">
           <label for="nombre" class="control-label">Nombre*</label>
-          <div class="controls">
+          <div class="controls" id="accion-nombre-servicio">
             <input id="nombre" class="input-xlarge" type="text" value="<?= $catalogo->nombre ?>" name="nombre" />
           </div>
         </div>

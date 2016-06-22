@@ -232,9 +232,9 @@ class Formularios extends MY_BackendController {
                         ->where('f.bloque_id = ?', $this->input->post('valor_default'))
                         ->execute();
             $formulario_bloque = $formulario_bloque[0];
-
             $campos_bloque = Doctrine_Query::create()->from('Campo c')
                         ->where('c.formulario_id = ?', $formulario_bloque->id)
+                        ->orderBy('c.posicion')
                         ->execute();
 
             foreach($campos_bloque as $campo_bloque) {
@@ -260,6 +260,7 @@ class Formularios extends MY_BackendController {
                 $campo_nuevo->datos=$campo_bloque->datos;
                 $campo_nuevo->documento_id=$campo_bloque->documento_id;
                 $campo_nuevo->fieldset=$this->input->post('nombre').'.'.$campo_bloque->fieldset;
+                $campo_nuevo->posicion=$campo_bloque->posicion;
                 $campo_nuevo->extra=$campo_bloque->extra;
                 $campo_nuevo->save();
             }

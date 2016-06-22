@@ -7,12 +7,17 @@ class Campo extends Doctrine_Record {
     public $etiqueta_tamano='large'; //Indica el tamaño default que tendra el campo de etiqueta. Puede ser large o xxlarge.
     public $requiere_nombre=true;    //Indica si requiere que se le ingrese un nombre (Es decir, no generarlo aleatoriamente)
     public $requiere_validacion = true; // Indica si se requiere validacion para el campo.
+    public $sin_etiqueta=false; // Indica que no se debe mostrar la etiqueta.
+    public $valor_default_tamano='small'; // Indica si el campo valor_default debe ser mas grande y se debe quitar el campo etiqueta. Se utilza en dialogos.
+    public $dialogo=false; // Indica si el campo es de tipo DIALOGO.
 
     public static function factory($tipo){
         if($tipo=='text')
             $campo=new CampoText();
+        if($tipo=='dialogo')
+            $campo=new CampoDialogo();
         if($tipo=='error')
-            $campo=new CampoError();
+            $campo=new CampoError(); // -- Deprecado
         if($tipo=='fieldset')
             $campo=new CampoFieldset();
         if($tipo=='encuesta')
@@ -86,6 +91,7 @@ class Campo extends Doctrine_Record {
         $this->setSubclasses(array(
                 'CampoText'  => array('tipo' => 'text'),
                 'CampoError'  => array('tipo' => 'error'),
+                'CampoDialogo'  => array('tipo' => 'dialogo'),
                 'CampoFieldset'  => array('tipo' => 'fieldset'),
                 'CampoEncuesta'  => array('tipo' => 'encuesta'),
                 'CampoTextArea'  => array('tipo' => 'textarea'),
@@ -141,7 +147,7 @@ class Campo extends Doctrine_Record {
         return $this->display($modo,$dato,$etapa_id);
     }
 
-    public function displaySinDato($modo = 'edicion'){
+    public function displaySinDato($modo = 'edicion') {
         if($this->readonly)$modo='visualizacion';
         return $this->display($modo,NULL,NULL);
     }

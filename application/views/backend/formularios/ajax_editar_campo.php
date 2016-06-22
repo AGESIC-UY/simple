@@ -99,16 +99,20 @@
             <input type="hidden" name="formulario_id" value="<?= $formulario->id ?>" />
             <input type="hidden" name="tipo" value="<?= $campo->tipo ?>" />
         <?php endif; ?>
-        <label for="etiqueta">Etiqueta</label>
-        <?php if($campo->etiqueta_tamano=='xxlarge'):?>
-          <?php if($campo->tipo == 'javascript'):?>
-            <textarea id="etiqueta" class="input-xxlarge campo_javascript_codigo" rows="15" name="etiqueta"><?= htmlspecialchars($campo->etiqueta) ?></textarea>
+        <?php if (!$campo->sin_etiqueta): ?>
+          <label for="etiqueta">Etiqueta</label>
+          <?php if($campo->etiqueta_tamano=='xxlarge'):?>
+            <?php if($campo->tipo == 'javascript'):?>
+              <textarea id="etiqueta" class="input-xxlarge campo_javascript_codigo" rows="15" name="etiqueta"><?= htmlspecialchars($campo->etiqueta) ?></textarea>
+            <?php else: ?>
+              <textarea id="etiqueta" class="input-xxlarge" rows="5" name="etiqueta"><?= htmlspecialchars($campo->etiqueta) ?></textarea>
+            <?php endif; ?>
           <?php else: ?>
-            <textarea id="etiqueta" class="input-xxlarge" rows="5" name="etiqueta"><?= htmlspecialchars($campo->etiqueta) ?></textarea>
-          <?php endif; ?>
+            <input type="text" id="etiqueta" name="etiqueta" value="<?= htmlspecialchars($campo->etiqueta) ?>" />
+          <?php endif ?>
         <?php else: ?>
-        <input type="text" id="etiqueta" name="etiqueta" value="<?= htmlspecialchars($campo->etiqueta) ?>" />
-        <?php endif ?>
+          <input type="hidden" id="etiqueta" name="etiqueta" value="etiqueta" />
+        <?php endif; ?>
         <?php if($campo->requiere_nombre):?>
         <label for="nombre">Nombre</label>
         <input type="text" id="nombre" name="nombre" value="<?= $campo->nombre ?>" />
@@ -127,22 +131,50 @@
         <input type="hidden" name="nombre" value="<?=$campo->nombre?$campo->nombre:uniqid();?>" />
         <?php endif; ?>
 
-        <?php if(!$campo->estatico):?>
-        <label for="ayuda">Ayuda contextual (Opcional)</label>
-        <input type="text" class="input-xxlarge" id="ayuda" name="ayuda" value="<?=$campo->ayuda?>" />
+        <?php if (!$campo->sin_etiqueta): ?>
+          <?php if(!$campo->estatico):?>
+          <label for="ayuda">Ayuda contextual (Opcional)</label>
+          <input type="text" class="input-xxlarge" id="ayuda" name="ayuda" value="<?=$campo->ayuda?>" />
+          <?php endif ?>
         <?php endif ?>
 
-        <?php if (!$campo->estatico): ?>
-            <label class="checkbox" for="soloLectura"><input type="checkbox" id="soloLectura" name="readonly" value="1" <?=$campo->readonly?'checked':''?> /> Solo lectura</label>
+        <?php if (!$campo->sin_etiqueta): ?>
+          <?php if (!$campo->estatico): ?>
+              <label class="checkbox" for="soloLectura"><input type="checkbox" id="soloLectura" name="readonly" value="1" <?=$campo->readonly?'checked':''?> /> Solo lectura</label>
+          <?php endif; ?>
         <?php endif; ?>
         <?php if ((!$campo->estatico) && ($campo->requiere_validacion)): ?>
             <label for="validacion">Reglas de validación</label>
             <input class='validacion' id="validacion" type="text" name="validacion" value="<?= $edit ? implode('|', $campo->validacion) : 'required' ?>"/>
         <?php endif; ?>
             <?php if(!$campo->estatico):?>
-            <label for="valor_default">Valor por defecto</label>
-            <input type="text" id="valor_default" name="valor_default" value="<?=htmlspecialchars($campo->valor_default)?>" />
+              <?php if($campo->valor_default_tamano == 'large'): ?>
+                <?php if($campo->dialogo):?>
+                  <label for="campo_dialogo_titulo">Título</label>
+                  <input type="text" id="campo_dialogo_titulo" class="input-xxlarge" />
+                  <label for="campo_dialogo_contenido">Contenido</label>
+                  <textarea id="campo_dialogo_contenido" class="input-xxlarge"></textarea>
+                  <label for="campo_dialogo_titulo_enlace">Título del enlace</label>
+                  <input type="text" id="campo_dialogo_titulo_enlace" class="input-xxlarge" />
+                  <label for="campo_dialogo_enlace">Enlace</label>
+                  <input type="text" id="campo_dialogo_enlace" class="input-xxlarge" />
+
+                  <div class="hidden" id="valor_default_html"><?=htmlspecialchars($campo->valor_default)?></div>
+                  <textarea id="valor_default" name="valor_default" class="input-xxlarge hidden"><?=htmlspecialchars($campo->valor_default)?></textarea>
+                <?php else: ?>
+                  <label for="valor_default">Contenido del diálogo</label>
+                  <textarea id="valor_default" name="valor_default" class="input-xxlarge"><?=htmlspecialchars($campo->valor_default)?></textarea>
+                <?php endif; ?>
+              <?php else: ?>
+                <?php if($campo->tipo == 'error'): ?>
+                  <label for="valor_default">Variable</label>
+                <?php else: ?>
+                  <label for="valor_default">Valor por defecto</label>
+                <?php endif; ?>
+                <input type="text" id="valor_default" name="valor_default" value="<?=htmlspecialchars($campo->valor_default)?>" />
+              <?php endif; ?>
             <?php endif ?>
+
             <?php if(($campo->tipo != 'fieldset') && ($campo->tipo != 'bloque')):?>
             <label for="lista_de_fieldsets">Fieldset al que pertenece</label>
             <input type="text" id="fieldset" name="fieldset" value="<?=htmlspecialchars($campo->fieldset)?>" />
@@ -235,8 +267,7 @@
         <?=$campo->backendExtraFields()?>
   </div>
   <div class="modal-footer">
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <!-- a href="#" onclick="javascript:$('#formEditarCampo').submit();return false;" class="btn btn-primary">Guardar</a -->
     <a href="#" data-dismiss="modal" class="btn btn-link">Cerrar</a>
+    <button type="submit" class="btn btn-primary">Guardar</button>
   </div>
 </form>

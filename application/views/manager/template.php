@@ -61,7 +61,11 @@
                   <div class="btn-group">
                     <a class="btn btn-small btn-link dropdown-toggle" data-toggle="dropdown" href="#"><span><?= UsuarioManagerSesion::usuario()->usuario ?></span> <span class="caret"></span></a>
                     <ul class="dropdown-menu pull-right">
+                      <?php if (LOGIN_CON_CDA): ?>
                         <li><a href="<?= site_url('autenticacion/logout_saml') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                      <?php else: ?>
+                        <li><a href="<?= site_url('manager/autenticacion/logout') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                      <?php endif; ?>
                     </ul>
                   </div>
                 </div>
@@ -104,7 +108,8 @@
     </div>
     <footer class="row-fluid">
       <div class="area2">
-        <div class="container">
+        <div class="container-fluid">
+      	<span class="version">Versión 1.01</span>
           <div class="pull-right">
               <img src="<?= base_url() ?>assets/img/logoTramites.png" alt="tramites.gub.uy">
           </div>

@@ -36,6 +36,7 @@
         </div>
         <div class="btn-group">
             <button class="btn btn-inverse campo_no_requerido" onclick="return agregarCampo(<?= $formulario->id ?>,'error')">Mensaje de error</button>
+            <button class="btn btn-inverse campo_no_requerido" onclick="return agregarCampo(<?= $formulario->id ?>,'dialogo')">Diálogo</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'fieldset')" title="Grupo de campos" >Fieldset</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'text')" title="Línea de texto">Textbox</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'textarea')" title="Texto largo">Textarea</button>

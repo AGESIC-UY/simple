@@ -124,7 +124,7 @@ $(document).ready(function(){
 
 
     $(".ajaxForm :submit").attr("disabled",false);
-    $(document).on("submit",".ajaxForm",function(){
+    $(document).on("submit",".ajaxForm",function() {
         var form=this;
         if(!form.submitting){
             form.submitting=true;
@@ -166,6 +166,7 @@ $(document).ready(function(){
                     }
                 },
                 error: function(){
+                  alert(0)
                     form.submitting=false;
                     $(ajaxLoader).remove();
                     $(form).find(":submit").attr("disabled",false);

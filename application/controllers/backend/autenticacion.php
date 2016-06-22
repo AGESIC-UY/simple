@@ -8,7 +8,7 @@ class Autenticacion extends MY_BackendController {
     public function login(){
       UsuarioBackendSesion::registrar_acceso();
 
-      if((!UsuarioBackendSesion::usuario()) && (LOGIN_ADMIN_COESYS)) {
+      if((!UsuarioBackendSesion::usuario()) && (LOGIN_CON_CDA)) {
         redirect(site_url('autenticacion/login_saml'));
       }
       else {

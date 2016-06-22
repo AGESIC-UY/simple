@@ -38,7 +38,11 @@
                       </div>
                       <div id="userMenu" class="pull-right userMenu">
                         <?php if (!UsuarioSesion::usuario()->registrado): ?>
+                          <?php if (LOGIN_CON_CDA): ?>
                             <a class="btn btn-small btn-link" href="<?= site_url('autenticacion/login_saml') ?>">Iniciar la sesión</a>
+                          <?php else: ?>
+                            <a class="btn btn-small btn-link" href="<?= site_url('autenticacion/login') ?>">Iniciar la sesión</a>
+                          <?php endif; ?>
                         <?php else: ?>
                           <?php if (UsuarioSesion::registrado_saml()): ?>
                             <span class="btn-small">Bienvenido,</span>

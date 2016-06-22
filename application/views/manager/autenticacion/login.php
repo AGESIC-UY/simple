@@ -65,7 +65,13 @@
                 <legend>Ingreso de usuario</legend>
 
                 <div id="tab1" tabindex="-1">
+                  <?php $this->load->view('messages') ?>
                   <div class="validacion validacion-error"></div>
+                  <?php
+                    if(isset($error_login)) {
+                      echo $error_login;
+                    }
+                  ?>
                   <input type="hidden" name="redirect" value="<?= $redirect ?>" />
 
                   <div class="form-horizontal">

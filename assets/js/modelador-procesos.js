@@ -113,7 +113,6 @@ $(document).ready(function(){
         return false;
     });
 
-
     $( "#draw .box" ).liveDraggable({
         stop: updateModel
     });

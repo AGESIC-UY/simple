@@ -7,15 +7,16 @@
     </li>
     <li class="active">Operaciones</li>
 </ul>
-<h2>Operaciones</h2>
+<a href="#" class="btn btn-ayuda btn-secundary" id="ayuda_contextual_servicios_operaciones"><span class="icon-white icon-question-sign"></span> Ayuda</a>
+<h2 id="accion-operaciones">Operaciones</h2>
 <div class="acciones-generales">
-  <a class="btn btn-success" href="<?=site_url('backend/ws_catalogos/'.$catalogo->id.'/operaciones/crear/')?>"><span class="icon-file"></span> Nueva</a>
+  <a id="accion-nueva-operacion" class="btn btn-success" href="<?=site_url('backend/ws_catalogos/'.$catalogo->id.'/operaciones/crear/')?>"><span class="icon-file"></span> Nueva</a>
 </div>
 <table class="table">
   <caption class="hide-text">Operaciones</caption>
     <thead>
         <tr>
-            <th>Nombre</th>
+            <th id="accion-lista-operaciones">Nombre</th>
             <th>Acciones</th>
         </tr>
     </thead>

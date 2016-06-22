@@ -12,6 +12,7 @@
 </ul>
 
 <form class="ajaxForm" action="<?=site_url('backend/ws_catalogos/operaciones_editar_form/'.$operacion->id)?>" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+  <a href="#" class="btn btn-ayuda btn-secundary" id="ayuda_contextual_operacion_editar"><span class="icon-white icon-question-sign"></span> Ayuda</a>
   <div class="validacion validacion-error"></div>
   <div class="titulo-form">
     <h2><?= $operacion->nombre ?></h2>
@@ -30,7 +31,7 @@
       <div class="control-group">
         <label for="nombre" class="control-label">Nombre*</label>
         <div class="controls">
-          <input id="nombre" class="input-xlarge" type="text" value="<?= $operacion->nombre ?>" name="nombre" />
+          <input id="nombre"  class="input-xlarge" type="text" value="<?= $operacion->nombre ?>" name="nombre" />
         </div>
       </div>
       <div class="control-group">

@@ -414,7 +414,7 @@ ul.breadcrumb li {
 .validacion:not(.cuenta-editar) {display: none;height: auto;margin-top: 10px;}
 #formEditarCampo input.validacion, #formEditarCampo label.validacion, #formEditarCampo label[for=validacion], #formLogin .validacion {display:block !important;}
  #formLogin .validacion:empty {display:none !important;}
-.validacion .alert {display: block;margin-bottom: 10px;}
+.validacion .alert, .campo_error .alert, .dialogo .alert {display: block;margin-bottom: 10px;}
 .error_element_wrap .popover-content {color: #b94a48;}
 input.error, select.error, textarea.error {border: solid 1px #DE9C9C;}
 .wrapper-popover-content {padding: 9px 14px;}
@@ -641,12 +641,12 @@ a .icon-chevron-right {
   background: #d7d6d6;;
   color: #231F20;
 }
-.btn-primary, .btn-secundary, .btn-danger{
+.btn-primary, .btn-secundary, .btn-danger, .btn.disabled, .btn[disabled]{
   text-shadow: none;
   color: #FFF;
   box-shadow: 0 2px 0 #384450;
 }
-.btn-secundary{
+.btn-secundary, .btn.btn-secundary.disabled, .btn.btn-secundary[disabled] {
   border-color: #607a92;
   background: #607a92;
 }
@@ -655,7 +655,7 @@ a .icon-chevron-right {
   border-color: #556879;
   color: #FFF;
 }
-.btn-primary {
+.btn-primary, .btn.btn-primary.disabled, .btn.btn-primary[disabled] {
     border-color: #337ab7;
     background: #337ab7;
     box-shadow: 0 2px 0 #1A2F5A;
@@ -665,7 +665,7 @@ a .icon-chevron-right {
   border-color: #296192;
   color: #FFF;
 }
-.btn-danger {
+.btn-danger, .btn.btn-danger.disabled, .btn.btn-danger[disabled] {
     border-color:#B9433E;
     background: #B9433E;
     color: #FFF;
@@ -675,7 +675,7 @@ a .icon-chevron-right {
   border-color: #bd362f;
   color: #FFF;
 }
-.btn-link {
+.btn-link, .btn.btn-link.disabled, .btn.btn-link[disabled] {
     color: #064D8E;
     background-color: transparent;
     background-image: none;
@@ -700,6 +700,23 @@ a .icon-chevron-right {
     font-weight: bold;
     margin-bottom: 20px;
     line-height: 1.1em;
+}
+.btn-ayuda{
+  float: right;
+}
+.btn-toolbar{
+  margin-left: -5px;
+}
+.btn-toolbar .btn-group{
+  margin-left: 5px;
+}
+.popover{
+    min-width: 300px;
+}
+@media screen and (max-width: 640px) {
+  .popover{
+    min-width:inherit;
+  }
 }
 .titulo-form{
   margin-bottom: 25px;
@@ -809,7 +826,19 @@ a .icon-chevron-right {
   font-weight: normal;
   border-radius: 4px;
 }
-.campo_error span {
+.campo_error > span {
+  background-color: #ffeded;
+  border: 1px solid #e3c4c4;
+  color: #BF2026;
+  width: 100%;
+  font-size: 12px;
+  min-height: 34px;
+  display: block;
+  padding: 9px 10px;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+.campo_error > div {
   background-color: #ffeded;
   border: 1px solid #e3c4c4;
   color: #BF2026;
@@ -842,10 +871,39 @@ a .icon-chevron-right {
   background-repeat: no-repeat;
   background-position: 35px center;
 }
+.dialogo[class*="validacion-"]{
+  width: 100%;
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  margin: 0 auto;
+  margin-bottom: 25px;
+  border-radius: 2px;
+  padding: 20px 20px 20px 115px;
+  background-repeat: no-repeat;
+  background-position: 35px center;
+}
+.campo_error[class*="validacion-"]{
+  width: 100%;
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  margin: 0 auto;
+  margin-bottom: 25px;
+  border-radius: 2px;
+  padding: 20px 20px 20px 115px;
+  background-repeat: no-repeat;
+  background-position: 35px center;
+}
 .validacion-error{
   border-color: #e3c4c4;
   background: #ffeded;
   background-image: url(../img/icn-circle-error-lg.png);
+}
+.validacion-warning{
+  border-color: #e7e2c5;
+  background: #fbf8ea;
+  background-image: url(../img/icn-warning-lg.png);
 }
 .validacion-success{
   border-color: #c1e0b4;
@@ -1998,4 +2056,21 @@ fieldset .fieldset-msg, fieldset .link-agregar {
 }
 .no-margin-box .controls{
   margin-left: 0 !important;
+}
+.acciones_t {text-align: center;}
+.popover-title {font-weight: bold;}
+.btn-toolbar button.disabled {display:none;}
+.dialogos_titulo {
+  display: block;
+  font-weight: normal;
+  font-size: 1.25em;
+  line-height: 1.1;
+}
+.dialogos_contenido {
+  margin: 20px 0;
+}
+.dialogos_enlace {
+  font-size: 1.1em;
+  color: #064D8E;
+  word-wrap: break-word;
 }

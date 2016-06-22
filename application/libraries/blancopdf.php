@@ -7,7 +7,7 @@ define('PAGE_MARGIN', 10);
 class BlancoPDF extends TCPDF {
 
     public $content='';
-    
+
 
     function __construct($size = 'letter') {
         parent::__construct('P', 'mm', $size, true, 'UTF-8', false, false);
@@ -26,7 +26,7 @@ class BlancoPDF extends TCPDF {
     }
 
     public function Footer() {
-       
+
     }
 
     public function Output($name = 'doc.pdf', $dest = 'I') {

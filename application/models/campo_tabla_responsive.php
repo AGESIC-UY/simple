@@ -24,13 +24,13 @@ class CampoTablaResponsive extends Campo{
         $display  = '<div class="control-group">';
         $display.='<span class="h4" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (!in_array('required', $this->validacion) ? ':' : '*:') . '</span>';
         $display.='<div class="" data-fieldset="'.$this->fieldset.'">';
+        if($this->ayuda)
+            $display.='<span class="help-block">'.$this->ayuda.'</span>';
         $display.='<table id="'.$this->id.'" class="display dataTable" role="grid"><caption class="hide-read">'.$this->etiqueta.'</caption><thead></thead><tbody></tbody></table>';
         if(!$this->readonly) {
           $display .= '<span class="link-agregar"><input type="button" id="addR-'.$this->id.'" value="+ Agregar fila" class="btn-link"/></span>';
         }
         $display.='<input class="input-xxlarge" type="hidden" autocomplete="off" name="' . $this->nombre . '" value=\'' . ($dato?json_encode($dato->valor):$valor_default) . '\' />';
-        if($this->ayuda)
-            $display.='<span class="help-block">'.$this->ayuda.'</span>';
         $display.='</div>';
         $display.='</div>';
 
@@ -276,7 +276,6 @@ class CampoTablaResponsive extends Campo{
             }
             catch(e) {
             }
-
               if(table_readonly == 0) {
                 columns.unshift({title: "Acciones", class: "acciones_t", width: "3%", "render": function ( data, type, row , meta) {
                      var dt = "<input type=\'button\' id=\'eliminar" +meta.row +  "\' value=\'eliminar\' name=\'eliminar\' onClick=\'removeFs'.$this->id.'(this);\' class=\'button-no-style icn icn-error-sm hide-text-read\' />";
@@ -349,15 +348,16 @@ class CampoTablaResponsive extends Campo{
 
                function removeFs'.$this->id.'(btnElement) {
                   var table =  $("#'.$this->id.'").DataTable();
-                  var rowElement = btnElement.closest("tr");
+                  var rowElement = $(btnElement).closest("tr");
                   var row =  table.row(rowElement);
                   row.remove();
                   table.draw(false);
                   updateTableData'.$this->id.'();
                 }
 
-                $("#addR-'.$this->id.'").click(function() {
-                 appendRow'.$this->id.'();
+                $("#addR-'.$this->id.'").off("click");
+                $("#addR-'.$this->id.'").click(function(event) {
+                  appendRow'.$this->id.'();
                 });
             </script>';
 

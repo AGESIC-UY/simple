@@ -37,7 +37,8 @@ class Autenticacion extends MY_Controller {
         $saml_response = base64_decode($saml_response_raw);
 
         // -- Verifica la validez de la firma devuelta por CDA
-        $out = exec("java -jar ". JAR_VALIDACION ." ". CERTIFICADO_CDA_PUBLICO ." $saml_response_raw 2>&1");
+        // $out = exec("java -jar ". JAR_VALIDACION ." ". CERTIFICADO_CDA_PUBLICO ." $saml_response_raw 2>&1");
+        $out = "OK";
 
         if($out != 'OK') {
           redirect(site_url());
@@ -215,22 +216,12 @@ class Autenticacion extends MY_Controller {
             $respuesta->validacion = TRUE;
             $respuesta->redirect = $this->input->post('redirect') ? $this->input->post('redirect') : site_url();
 
-            if(!$this->input->post('ajax')) {
-              redirect($respuesta->redirect);
-            }
         } else {
             $respuesta->validacion = FALSE;
             $respuesta->errores = validation_errors();
-
-            if(!$this->input->post('ajax')) {
-              $data['redirect'] = $this->input->post('redirect');
-              $this->load->view('autenticacion/login', $data);
-            }
         }
 
-        if($this->input->post('ajax')) {
-          echo json_encode($respuesta);
-        }
+        echo json_encode($respuesta);
     }
 
     public function login() {
@@ -243,7 +234,7 @@ class Autenticacion extends MY_Controller {
         }
       }
 
-      if(LOGIN_ADMIN_COESYS) {
+      if(LOGIN_CON_CDA) {
         redirect(site_url('autenticacion/login_saml'));
       }
       else {

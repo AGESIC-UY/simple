@@ -8,7 +8,7 @@ class Autenticacion extends CI_Controller {
     public function login() {
       UsuarioManagerSesion::registrar_acceso();
 
-      if((!UsuarioManagerSesion::usuario()) && (LOGIN_ADMIN_COESYS)) {
+      if((!UsuarioManagerSesion::usuario()) && (LOGIN_CON_CDA)) {
         redirect(site_url('autenticacion/login_saml'));
       }
       else {
@@ -26,7 +26,6 @@ class Autenticacion extends CI_Controller {
             UsuarioManagerSesion::login($this->input->post('usuario'),$this->input->post('password'));
             $respuesta->validacion=TRUE;
             $respuesta->redirect=$this->input->post('redirect')?$this->input->post('redirect'):site_url('manager');
-
         }
         else {
             $respuesta->validacion=FALSE;

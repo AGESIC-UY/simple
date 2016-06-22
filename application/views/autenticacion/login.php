@@ -22,6 +22,7 @@
                 <div id="tab1">
                   <?php $this->load->view('messages') ?>
                   <div class="validacion validacion-error"></div>
+                  <input type="hidden" name="redirect" value="<?= $redirect ?>" />
 
                   <h2>Ingrese su código de usuario y contraseña</h2>
                   <div class="row">

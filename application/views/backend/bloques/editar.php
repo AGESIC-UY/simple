@@ -10,11 +10,9 @@
     </li>
     <li class="active"><?=$bloque->nombre ?></li>
 </ul>
-<div class="titulo-form">
-  <h2><?= $bloque->nombre ?></h2>
-</div>
 <form id="formEditarFormulario" action="<?=site_url('backend/bloques/editar_form/'.$bloque->id)?>" method="post" class="form-horizontal dynaForm debugForm">
 	<input type="hidden" name="bloque_id" value="<?= $bloque->id ?>" />
+  <!--
   <div class="control-group">
     <label for="nombre_bloque" class="control-label">Nombre</label>
     <div class="controls">
@@ -22,8 +20,13 @@
       <input class="btn btn-primary" type="submit" value="Guardar" />
     </div>
   </div>
+  -->
 
     <div id="areaFormulario">
+      <div class="titulo-form">
+        <h2><?= $bloque->nombre ?><a href="#" onclick="return editarBloque(<?= $bloque->id ?>)"><span class="icon-edit" style="vertical-align:middle;"></span></a></h2>
+      </div>
+
 	    <div class="btn-toolbar toolbar-formulario">
 	        <div class="btn-group">
 	            <!--button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'title')">Título</button-->

@@ -3,14 +3,15 @@
         Catálogos de bloques
     </li>
 </ul>
-<h2>Catálogos de bloques</h2>
+<a href="#" class="btn btn-ayuda btn-secundary" id="ayuda_contextual_bloques"><span class="icon-white icon-question-sign"></span> Ayuda</a>
+<h2 id="accion-bloques">Catálogos de bloques</h2>
 <div class="acciones-generales">
-  <a class="btn btn-success" href="<?=site_url('backend/bloques/crear/')?>"><span class="icon-file"></span> Nuevo</a>
+  <a class="btn btn-success" id="accion-nuevo-bloque" href="<?=site_url('backend/bloques/crear/')?>"><span class="icon-file"></span> Nuevo</a>
 </div>
 <table class="table">
   <caption class="hide-text">Catálogos de bloques</caption>
     <thead>
-        <tr>
+        <tr id="accion-lista-bloques">
             <th>Nombre</th>
             <th>Acciones</th>
         </tr>

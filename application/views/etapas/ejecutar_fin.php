@@ -1,30 +1,42 @@
 <h2><?=$etapa->Tarea->Proceso->nombre?></h2>
 
 <form method="POST" class="ajaxForm dynaForm" action="<?= site_url('etapas/ejecutar_fin_form/' . $etapa->id.($qs?'?'.$qs:'')) ?>">
-    <fieldset>
-        <legend>Paso final</legend>
+    <!--<fieldset>-->
+        <!--<legend class>Paso final</legend>-->
         <div class="validacion validacion-error"></div>
         <?php if ($tareas_proximas->estado == 'pendiente'): ?>
             <?php foreach ($tareas_proximas->tareas as $t): ?>
-                <p>Para confirmar y enviar el formulario a la siguiente etapa haga click en Finalizar.</p>
-                <?php if ($t->asignacion == 'manual'): ?>
-                    <label>Asignar próxima etapa a</label>
-                    <select class="chosen" name="usuarios_a_asignar[<?= $t->id ?>]">
-                        <?php foreach ($t->getUsuarios($etapa->id) as $u): ?>
-                            <option value="<?= $u->id ?>"><?= $u->displayUsername(true)?></option>
-                        <?php endforeach; ?>
-                    </select>
-                <?php endif; ?>
+              <div class="dialogo validacion-warning">
+                <h3 class="dialogos_titulo">Paso final</h3>
+                <div class="alert alert-warning">Para confirmar y enviar el formulario a la siguiente etapa haga click en Finalizar.</div>
+              </div>
+              <?php if ($t->asignacion == 'manual'): ?>
+                  <label>Asignar próxima etapa a</label>
+                  <select class="chosen" name="usuarios_a_asignar[<?= $t->id ?>]">
+                      <?php foreach ($t->getUsuarios($etapa->id) as $u): ?>
+                          <option value="<?= $u->id ?>"><?= $u->displayUsername(true)?></option>
+                      <?php endforeach; ?>
+                  </select>
+              <?php endif; ?>
             <?php endforeach; ?>
         <?php elseif($tareas_proximas->estado=='standby'): ?>
-            <p>Luego de hacer click en Finalizar esta etapa quedara detenida momentaneamente hasta que se completen el resto de etapas pendientes.</p>
+          <div class="dialogo validacion-warning">
+            <h3 class="dialogos_titulo">Paso final</h3>
+            <div class="alert alert-warning">Luego de hacer click en Finalizar esta etapa quedara detenida momentaneamente hasta que se completen el resto de etapas pendientes.</div>
+          </div>
         <?php elseif($tareas_proximas->estado=='completado'):?>
-            <p>Luego de hacer click en Finalizar este trámite quedará completado.</p>
+          <div class="dialogo validacion-warning">
+            <h3 class="dialogos_titulo">Validación previa al envío</h3>
+            <div class="alert alert-warning">El formulario está completo y listo para enviarse, una vez enviado no podrá realizar modificaciones.</div>
+          </div>
         <?php elseif($tareas_proximas->estado=='sincontinuacion'):?>
-            <p>Este trámite no tiene una etapa donde continuar.</p>
+          <div class="dialogo validacion-warning">
+            <h3 class="dialogos_titulo">Paso final</h3>
+            <div class="alert alert-warning">Este trámite no tiene una etapa donde continuar.</div>
+          </div>
         <?php endif; ?>
 
-    </fieldset>
+    <!--</fieldset>-->
     <ul class="form-action-buttons">
       <li class="action-buttons-primary">
         <ul>

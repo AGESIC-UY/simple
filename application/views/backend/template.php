@@ -3,7 +3,12 @@
     <head>
         <?php $this->load->view('backend/head') ?>
     </head>
+    <!--[if lt IE 9]>
+    <body class="ie_support">
+    <![endif]-->
+    <!--[if (gte IE 9)|!(IE)] -->
     <body>
+    <!--<![endif]-->
       <ul id="skip">
         <li><a href="#main">Ir al contenido</a></li>
         <li><a href="#menu">Ir al menú de navegación</a></li>
@@ -42,7 +47,11 @@
                             <a class="btn btn-small btn-link dropdown-toggle" data-toggle="dropdown" href="#"><span><?= UsuarioBackendSesion::usuario()->email ?></span> <span class="caret"></span></a>
                             <ul class="dropdown-menu pull-right">
                               <li><a href="<?= site_url('backend/cuentas') ?>"><span class="icon-user"></span> Mi Cuenta</a></li>
-                              <li><a href="<?= site_url('autenticacion/logout_saml') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                              <?php if (LOGIN_CON_CDA): ?>
+                                <li><a href="<?= site_url('autenticacion/logout_saml') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                              <?php else: ?>
+                                <li><a href="<?= site_url('backend/autenticacion/logout') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                              <?php endif; ?>
                             </ul>
                           </div>
                         </div>

@@ -13,7 +13,7 @@ $(document).ready(function() {
   // -- Limpia el formulario de elementos vacios del modelador
   if($('.step-boxes').length) {
     $('.control-group').each(function() {
-      if(!$(this).find('.campo_error').length) {
+      if(!$(this).find('.campo_error, .campo_alerta, .campo_exito').length) {
         if($(this).text().trim().length == 0) {
           $(this).remove();
         }

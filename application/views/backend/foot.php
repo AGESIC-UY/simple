@@ -1,12 +1,15 @@
 <div class="area2">
   <div class="container-fluid">
-	<span class="version">Versión 1.0</span>
+	<span class="version">Versión 1.01</span>
     <div class="pull-right">
         <img src="<?= base_url() ?>assets/img/logoTramites.png" alt="tramites.gub.uy">
     </div>
   </div>
 </div>
 
+<!--[if lt IE 9]>
+<script src="<?= base_url() ?>assets/js/chartjs/excanvas.js" type="text/javascript"></script>
+<![endif]-->
 <script src="<?= base_url() ?>assets/js/chartjs/chartjs.min.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/randomColors/randomColors.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/bootstrap.min.js" type="text/javascript"></script>
@@ -27,3 +30,4 @@
 <script src="<?= base_url() ?>assets/js/common.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/backend.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/backend_extendido.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>assets/js/backend_ayuda_contextual.js" type="text/javascript"></script>

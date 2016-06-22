@@ -10,9 +10,10 @@
             </li>
             <li class="active">Configuración</li>
         </ul>
+        <a href="#" class="btn btn-ayuda btn-secundary" id="ayuda_contextual_pdi"><span class="icon-white icon-question-sign"></span> Ayuda</a>
         <h2>Plataforma de interoperabilidad: Configuración</h2>
         <form class="ajaxForm" method="post" action="<?= site_url('backend/configuracion/pdi_form/') ?>">
-            <fieldset>
+            <fieldset id="accion-pdi">
                 <legend>Editar información de PDI</legend>
                 <div class="validacion validacion-error"></div>
                 <div class="form-horizontal">

@@ -1,4 +1,27 @@
 $(document).ready(function() {
+  $(".toolbar-formulario .btn, .botones-edit .btn-primary").click(function() {
+    setTimeout(function() {
+      if($(".dialogos_titulo").size()) {
+        var contenido_default = $('#valor_default_html').html($("#valor_default").val());
+
+        document.content = $('#valor_default_html');
+
+        $("#campo_dialogo_titulo").val($('#valor_default_html').find('.dialogos_titulo').text());
+        $("#campo_dialogo_contenido").val($('#valor_default_html').find('.dialogos_contenido').html());
+        $("#campo_dialogo_titulo_enlace").val($('#valor_default_html').find('.dialogos_enlace').text());
+        $("#campo_dialogo_enlace").val($('#valor_default_html').find('.dialogos_enlace').attr('href'));
+      }
+
+      $("#campo_dialogo_titulo, #campo_dialogo_contenido, #campo_dialogo_enlace, #campo_dialogo_titulo_enlace").on("change", function() {
+        var titulo = "<h3 class='dialogos_titulo'>" + $("#campo_dialogo_titulo").val() + "</h3>";
+        var contenido = "<div class='dialogos_contenido'>" + $("#campo_dialogo_contenido").val() + "</div>";
+        var enlace = "<a class='dialogos_enlace' href='"+ $("#campo_dialogo_enlace").val() +"' target='_blank'>" + $("#campo_dialogo_titulo_enlace").val() + "</a>";
+        $("#valor_default").html(titulo + contenido + enlace);
+      });
+    }, 400);
+  });
+
+
   $('#verificar_existe_usuario').click(function() {
     var usuario = $('input[name="usuario"]').val();
 
@@ -60,36 +83,6 @@ $(document).ready(function() {
   });
 
   setTimeout(function() {$(".controls").find(".ht_master.handsontable").not(':first').hide();}, 200);
-
-  // -- Muestra el tour
-  var template = "<div class='popover tour'>";
-  template += "<div class='arrow'></div>";
-  template += "<h3 class='popover-title'></h3>";
-  template += "<div class='popover-content'></div>";
-  template += "<div class='popover-navigation'><div class='btn-group'>";
-  template += "    <button class='btn btn-default' data-role='prev'>« Ant</button>";
-  template += "    <span data-role='separator'> </span>";
-  template += "    <button class='btn btn-default' data-role='next'>Sig »</button>";
-  template += "</div>";
-  template += "<button class='btn btn-default' data-role='end'>Finalizar</button></div>";
-  template += "</div>";
-
-  var tour = new Tour({
-    steps: [
-      {
-        element: "a[href='#modalImportar']",
-        title: "Importar un proceso",
-        content: "Para importar un proceso anteriormente exportado haga clic aquí."
-      }
-    ],
-    template: template
-  });
-
-  // Initialize the tour
-  //tour.init();
-
-  // Start the tour
-  //tour.start();
 
   // -- Muestra campo Error si se esta visualizando desde el modelador de formularios
   $('#areaFormulario .campo_error').show().removeClass('hidden');
@@ -184,6 +177,7 @@ $(document).ready(function() {
   // -- Manejador de fieldsets para editor de formulario
   $('#formEditarFormulario .btn').on('click', function() {
       setTimeout(function() {
+        try {
           document.lista_de_fieldsets = $('.custom-fieldset');
 
           var lista_de_fieldsets = '<select id="lista_de_fieldsets" name="fieldset">';
@@ -203,11 +197,16 @@ $(document).ready(function() {
           lista_de_fieldsets += '</select>';
 
           $('#formEditarCampo input[name="fieldset"]').replaceWith(lista_de_fieldsets);
-      }, 200);
+        }
+        catch(error) {
+          console.log(error);
+        }
+      }, 500);
   });
 
   $('.btn-group .btn').on('click', function() {
       setTimeout(function() {
+        try {
           document.lista_de_fieldsets = $('.custom-fieldset');
 
           var lista_de_fieldsets = '<select id="lista_de_fieldsets" name="fieldset">';
@@ -225,6 +224,10 @@ $(document).ready(function() {
           lista_de_fieldsets += '</select>';
 
           $('#formEditarCampo input[name="fieldset"]').replaceWith(lista_de_fieldsets);
+        }
+        catch(error) {
+          console.log(error);
+        }
       }, 500);
   });
 
@@ -399,5 +402,11 @@ $(document).ready(function() {
 
 // -- Revuelve un color aleatorio en hexadecimal
 function getRandomColor() {
-  return randomColor({hue: 'blue', luminosity: 'light', count: 1});
+  return randomColor({hue: 'blue'});
+}
+
+function editarBloque(bloqueId){
+    $("#modal").load(site_url+"backend/bloques/ajax_editar/"+bloqueId);
+    $("#modal").modal({backdrop: 'static', keyboard: false});
+    return false;
 }

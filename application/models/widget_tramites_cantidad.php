@@ -85,7 +85,14 @@ class WidgetTramitesCantidad extends Widget {
                 this.xScalePaddingLeft = 20;
             }
 
+            var isOldIE = $("body").hasClass("ie_support");
+            var $canvas = $("body").find("canvas");
+            var canvas = $canvas[0];
+            if(isOldIE) {
+              canvas = G_vmlCanvasManager.initElement(canvas);
+            }
             var ctx = $("#'. $elem_id .'").get(0).getContext("2d");
+
             new Chart(ctx).Bar(data, {barShowStroke: false, responsive: true, multiTooltipTemplate: "<%=datasetLabel%> : <%= value %>"});
           });
         </script>';

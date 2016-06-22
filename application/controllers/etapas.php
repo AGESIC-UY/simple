@@ -161,7 +161,7 @@ class Etapas extends MY_Controller {
                 foreach ($formulario->Campos as $c) {
                     //Almacenamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
                     if ($c->isEditableWithCurrentPOST()) {
-                        if($c->tipo != 'error') {
+                        if(($c->tipo != 'error') && ($c->tipo != 'dialogo')) {
                           $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($c->nombre, $etapa->id);
                           if (!$dato)
                             $dato = new DatoSeguimiento();
@@ -178,7 +178,7 @@ class Etapas extends MY_Controller {
                 // Si se requiere guardado parcial.
                 if($this->input->post('no_advance') == 1) {
                   $respuesta->validacion = TRUE;
-                  $respuesta->redirect = site_url('/');
+                  $respuesta->redirect = site_url('/etapas/inbox');
                 }
                 else {
                   $etapa->finalizarPaso($paso, $secuencia);
@@ -186,7 +186,7 @@ class Etapas extends MY_Controller {
                   // -- Si encuentra variables de errores avisa que se ha registrado un error de parte de una acción.
                   $errors = false;
                   foreach ($formulario->Campos as $c) {
-                    if($c->tipo == 'error') {
+                    if(($c->tipo == 'error') || ($c->tipo == 'dialogo')) {
                       $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId(str_replace("@@", "", $c->valor_default), $etapa->id);
 
                       if($dato) {
@@ -228,21 +228,22 @@ class Etapas extends MY_Controller {
 
                   $qs = $this->input->server('QUERY_STRING');
                   $prox_paso = $etapa->getPasoEjecutable($secuencia + 1);
-                  if (!$prox_paso) {
-                      $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id) . ($qs ? '?' . $qs : '');
-                  } else if ($etapa->Tarea->final && $prox_paso->getReadonly() && end($etapa->getPasosEjecutables()) == $prox_paso) { //Cerrado automatico
-                      $etapa->iniciarPaso($prox_paso, $secuencia);
-                      $etapa->finalizarPaso($prox_paso, $secuencia);
-                      $etapa->avanzar();
-                      $respuesta->redirect = site_url('etapas/ver/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables())-1));
-                  } else {
-                      // Si hay registro de error de parte de una acción invocada vuelve a mostrar la secuencia actual, de lo contrario avanza.
-                      if($errors) {
-                          $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia)) . ($qs ? '?' . $qs : '');
-                      }
-                      else {
-                          $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia + 1)) . ($qs ? '?' . $qs : '');
-                      }
+
+                  // Si hay registro de error de parte de una acción invocada vuelve a mostrar la secuencia actual, de lo contrario avanza.
+                  if($errors) {
+                      $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia)) . ($qs ? '?' . $qs : '');
+                  }
+                  else {
+                    if (!$prox_paso) {
+                        $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id) . ($qs ? '?' . $qs : '');
+                    } else if ($etapa->Tarea->final && $prox_paso->getReadonly() && end($etapa->getPasosEjecutables()) == $prox_paso) { //Cerrado automatico
+                        $etapa->iniciarPaso($prox_paso, $secuencia);
+                        $etapa->finalizarPaso($prox_paso, $secuencia);
+                        $etapa->avanzar();
+                        $respuesta->redirect = site_url('etapas/ver/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables())-1));
+                    } else {
+                        $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia + 1)) . ($qs ? '?' . $qs : '');
+                    }
                   }
               }
             } else {

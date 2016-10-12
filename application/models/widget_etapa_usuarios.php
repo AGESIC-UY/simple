@@ -36,11 +36,39 @@ class WidgetEtapaUsuarios extends Widget {
 
         $elem_id = mt_rand() . '_widget';
 
+        $nombre_tarea = explode(' ', $tarea->nombre);
+        $nombre_tarea = $nombre_tarea[0] . ' ' . $nombre_tarea[1] . ' ' . $nombre_tarea[2];
+
         $display = '<div class="dashboard_wrap_chart">';
         $display .= '<canvas id="'. $elem_id .'" width="390" height="280" class="dashboard_pie_chart"></canvas>';
         $display .='
             <script type="text/javascript">
               $(document).ready(function(){
+                Chart.types.Doughnut.extend({
+                    name: "DoughnutTextInside",
+                    showTooltip: function() {
+                        this.chart.ctx.save();
+                        Chart.types.Doughnut.prototype.showTooltip.apply(this, arguments);
+                        this.chart.ctx.restore();
+                    },
+                    draw: function() {
+                        Chart.types.Doughnut.prototype.draw.apply(this, arguments);
+
+                        var width = this.chart.width,
+                            height = this.chart.height;
+
+                        var fontSize = (height / 300).toFixed(2);
+                        this.chart.ctx.font = fontSize + "em Verdana";
+                        this.chart.ctx.textBaseline = "middle";
+
+                        var text = "'. $nombre_tarea .'",
+                            textX = Math.round((width - this.chart.ctx.measureText(text).width) / 2),
+                            textY = height / 2;
+
+                        this.chart.ctx.fillText(text, textX, textY);
+                    }
+                });
+
                 var data = ['. $datos_armados .'];
 
                 var originalCalculateXLabelRotation = Chart.Scale.prototype.calculateXLabelRotation
@@ -58,7 +86,7 @@ class WidgetEtapaUsuarios extends Widget {
                 }
                 var ctx = $("#'. $elem_id .'").get(0).getContext("2d");
 
-                new Chart(ctx).Doughnut(data, {maintainAspectRatio: true, responsive: true});
+                new Chart(ctx).DoughnutTextInside(data, {maintainAspectRatio: true, responsive: true, percentageInnerCutout: 70});
               });
             </script>';
         $display .= '</div>';

@@ -6,13 +6,14 @@ if (!defined('BASEPATH'))
 class Autenticacion extends MY_Controller {
 
     public function __construct() {
-        parent::__construct();
+      parent::__construct();
+      $this->load->helper('cookies_helper');
     }
 
     public function login_saml() {
       if($this->input->get('redirect')) {
         $int = 600;
-        setcookie('redirect', $this->input->get('redirect'), time()+$int, '/', HOST_SISTEMA_DOMINIO);
+        set_cookie('redirect', $this->input->get('redirect'), time()+$int, '/', HOST_SISTEMA_DOMINIO);
       }
 
       $auth = new SimpleSAML_Auth_Simple(SIMPLE_SAML_AUTHSOURCE);
@@ -37,7 +38,7 @@ class Autenticacion extends MY_Controller {
         $saml_response = base64_decode($saml_response_raw);
 
         // -- Verifica la validez de la firma devuelta por CDA
-        // $out = exec("java -jar ". JAR_VALIDACION ." ". CERTIFICADO_CDA_PUBLICO ." $saml_response_raw 2>&1");
+        $out = exec("java -jar ". JAR_VALIDACION ." ". CERTIFICADO_CDA_PUBLICO ." $saml_response_raw 2>&1");
         $out = "OK";
 
         if($out != 'OK') {
@@ -65,10 +66,10 @@ class Autenticacion extends MY_Controller {
                 case 'backend':
                   if (UsuarioBackendSesion::login_saml($uid)) {
                     if(isset($_COOKIE['simple_bpm_saml_session_ref_k'])) {
-                      setcookie('simple_bpm_saml_session_ref_k', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
+                      set_cookie('simple_bpm_saml_session_ref_k', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
                     }
 
-                    setcookie('simple_bpm_saml_session_ref_k', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+                    set_cookie('simple_bpm_saml_session_ref_k', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
 
                     if(isset($_COOKIE['simple_bpm_location'])) {
                       redirect(base64_decode($_COOKIE['simple_bpm_location']));
@@ -91,10 +92,10 @@ class Autenticacion extends MY_Controller {
                 case 'manager':
                   if (UsuarioManagerSesion::login_saml($uid)) {
                     if(isset($_COOKIE['simple_bpm_saml_session_ref_k'])) {
-                      setcookie('simple_bpm_saml_session_ref_k', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
+                      set_cookie('simple_bpm_saml_session_ref_k', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
                     }
 
-                    setcookie('simple_bpm_saml_session_ref_k', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+                    set_cookie('simple_bpm_saml_session_ref_k', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
 
                     if(isset($_COOKIE['simple_bpm_location'])) {
                       redirect(base64_decode($_COOKIE['simple_bpm_location']));
@@ -128,10 +129,10 @@ class Autenticacion extends MY_Controller {
                     UsuarioSesion::login_saml($uid);
 
                     if(isset($_COOKIE['simple_bpm_saml_session_ref'])) {
-                      setcookie('simple_bpm_saml_session_ref', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
+                      set_cookie('simple_bpm_saml_session_ref', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
                     }
 
-                    setcookie('simple_bpm_saml_session_ref', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+                    set_cookie('simple_bpm_saml_session_ref', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
 
                     if(isset($_COOKIE['simple_bpm_location'])) {
                       redirect(base64_decode($_COOKIE['simple_bpm_location']));
@@ -142,10 +143,10 @@ class Autenticacion extends MY_Controller {
                   }
                   else {
                     if(isset($_COOKIE['simple_bpm_saml_session_ref'])) {
-                      setcookie('simple_bpm_saml_session_ref', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
+                      set_cookie('simple_bpm_saml_session_ref', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
                     }
 
-                    setcookie('simple_bpm_saml_session_ref', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+                    set_cookie('simple_bpm_saml_session_ref', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
 
                     if(isset($_COOKIE['simple_bpm_location'])) {
                       redirect(base64_decode($_COOKIE['simple_bpm_location']));
@@ -170,10 +171,10 @@ class Autenticacion extends MY_Controller {
                 UsuarioSesion::login_saml($uid);
 
                 if(isset($_COOKIE['simple_bpm_saml_session_ref'])) {
-                  setcookie('simple_bpm_saml_session_ref', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
+                  set_cookie('simple_bpm_saml_session_ref', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
                 }
 
-                setcookie('simple_bpm_saml_session_ref', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+                set_cookie('simple_bpm_saml_session_ref', base64_encode($session_index[0].'/'.$uid.'/'.$name_id[0]), 0, '/', HOST_SISTEMA_DOMINIO);
 
                 if(isset($_COOKIE['simple_bpm_location'])) {
                   echo $_COOKIE['simple_bpm_location']; exit;
@@ -198,6 +199,7 @@ class Autenticacion extends MY_Controller {
       }
     }
 
+    /*
     public function login_openid() {
         $this->load->library('LightOpenID');
         $redirect = $this->input->get('redirect') ? $this->input->get('redirect') : site_url();
@@ -205,6 +207,7 @@ class Autenticacion extends MY_Controller {
         $this->lightopenid->required = array('person/guid');
         redirect($this->lightopenid->authUrl());
     }
+    */
 
     public function login_form() {
         $this->form_validation->set_rules('usuario', 'Usuario', 'required');
@@ -254,6 +257,7 @@ class Autenticacion extends MY_Controller {
       $this->load->view('autenticacion/olvido',$data);
     }
 
+    /*
     public function olvido_form() {
       exit;
       $this->form_validation->set_rules('usuario', 'Usuario', 'required|callback_check_usuario_existe');
@@ -290,7 +294,9 @@ class Autenticacion extends MY_Controller {
 
       echo json_encode($respuesta);
     }
+    */
 
+    /*
     public function reestablecer(){
       redirect('/');
 
@@ -320,7 +326,9 @@ class Autenticacion extends MY_Controller {
       $data['title']='Reestablecer';
       $this->load->view('autenticacion/reestablecer',$data);
     }
+    */
 
+    /*
     public function reestablecer_form(){
       exit;
       $id=$this->input->get('id');
@@ -365,6 +373,7 @@ class Autenticacion extends MY_Controller {
 
       echo json_encode($respuesta);
     }
+    */
 
     function logout() {
         UsuarioSesion::logout();

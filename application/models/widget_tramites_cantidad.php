@@ -82,7 +82,7 @@ class WidgetTramitesCantidad extends Widget {
             Chart.Scale.prototype.calculateXLabelRotation = function () {
                 originalCalculateXLabelRotation.apply(this, arguments);
                 this.xScalePaddingRight = 20;
-                this.xScalePaddingLeft = 20;
+                this.xScalePaddingLeft = 26;
             }
 
             var isOldIE = $("body").hasClass("ie_support");

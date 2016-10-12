@@ -24,11 +24,11 @@ class CampoFile extends Campo {
         $display.='<div class="controls" data-fieldset="'.$this->fieldset.'">';
         if($modo!='visualizacion')
             $display.='<div class="file-uploader" data-action="'.site_url('uploader/datos/'.$this->id.'/'.$etapa->id).'"></div>';
-        $display.='<input type="hidden" name="' . $this->nombre . '" value="' . ($dato ? htmlspecialchars($dato->valor) : '') . '" />';
+        $display.='<input type="hidden" name="' . $this->nombre . '" value="' . ($dato ? htmlspecialchars($dato->valor) : '') . '" id="'. $this->nombre .'" />';
         if ($dato){
             $file=Doctrine::getTable('File')->findOneByTipoAndFilename('dato',$dato->valor);
             if($file){
-                $display.='<p class="link"><a href="' . site_url('uploader/datos_get/'.$file->filename).'?id='.$file->id.'&amp;token='.$file->llave.'" target="_blank">' . htmlspecialchars ($dato->valor) . '</a>';
+                $display.='<p class="link"><a href="' . site_url('uploader/datos_get/'.$file->id).'?token='.$file->llave.'" target="_blank">' . htmlspecialchars ($dato->valor) . '</a>';
                 if(!($modo=='visualizacion'))
                     $display.='(<a class="remove" href="#">X</a>)</p>';
             }else{
@@ -61,6 +61,7 @@ class CampoFile extends Campo {
         $output.='<option value="pdf" '.(in_array('pdf', $filetypes)?'selected':'').'>pdf</option>';
         $output.='<option value="doc" '.(in_array('doc', $filetypes)?'selected':'').'>doc</option>';
         $output.='<option value="docx" '.(in_array('docx', $filetypes)?'selected':'').'>docx</option>';
+        $output.='<option value="odt" '.(in_array('odt', $filetypes)?'selected':'').'>odt</option>';
         $output.='<option value="xls" '.(in_array('xls', $filetypes)?'selected':'').'>xls</option>';
         $output.='<option value="xlsx" '.(in_array('xlsx', $filetypes)?'selected':'').'>xlsx</option>';
         $output.='<option value="mpp" '.(in_array('mpp', $filetypes)?'selected':'').'>mpp</option>';

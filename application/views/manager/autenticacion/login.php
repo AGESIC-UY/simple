@@ -78,14 +78,14 @@
                       <div class="control-group">
                         <label class="control-label" for="email">Usuario:</label>
                         <div class="controls">
-                          <input id="usuario" name="usuario" type="text" >
+                          <input id="usuario" name="usuario" type="text" autofocus autocomplete="off" />
                         </div>
                       </div>
 
                       <div class="control-group">
                         <label class="control-label" for="password">Contraseña:</label>
                         <div class="controls">
-                          <input id="password" name="password" type="password">
+                          <input id="password" name="password" type="password" autocomplete="off" />
                         </div>
                       </div>
 

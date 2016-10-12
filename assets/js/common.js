@@ -110,7 +110,7 @@ $(document).ready(function(){
                 if(!respuesta.error){
                     $parentDiv.find("input[type=hidden]").val(respuesta.file_name);
                     $parentDiv.find(".qq-upload-list").empty();
-                    $parentDiv.find(".link").html("<a target='blank' href='"+site_url+"uploader/datos_get/"+respuesta.file_name+"?id="+respuesta.id+"&token="+respuesta.llave+"'>"+respuesta.file_name+"</a> (<a href='#' class='remove'>X</a>)")
+                    $parentDiv.find(".link").html("<a target='blank' href='"+site_url+"uploader/datos_get/"+respuesta.id+"?token="+respuesta.llave+"'>"+respuesta.file_name+"</a> (<a href='#' class='remove'>X</a>)")
                 }
             }
         });
@@ -140,33 +140,40 @@ $(document).ready(function(){
                 data: $(form).serialize(),
                 type: form.method,
                 dataType: "json",
-                success: function(response){
-                    if(response.validacion){
-                        if(response.redirect){
-                            window.location=response.redirect;
-                        }else{
-                            var f=window[$(form).data("onsuccess")];
-                            f(form);
-                        }
+                success: function(response) {
+                  if(response.validacion) {
+                    if(response.redirect) {
+                      window.location=response.redirect;
                     }
-                    else{
-                        form.submitting=false;
-                        $(ajaxLoader).remove();
-                        $(form).find(":submit").attr("disabled",false);
-
-                        if($(".validacion").html(response.errores)) {
-                            muestraErrores();
-                        }
-
-                        /*
-                        $('html, body').animate({
-                            scrollTop: $(".validacion").offset().top-10
-                        });
-                        */
+                    else {
+                      var f=window[$(form).data("onsuccess")];
+                      f(form);
                     }
+                  }
+                  else {
+                    form.submitting=false;
+                    $(ajaxLoader).remove();
+                    $(form).find(":submit").attr("disabled", false);
+
+                    if(response) {
+                      if($(".validacion").html(response.errores)) {
+                        muestraErrores();
+                      }
+
+                      if(response.error_paso_final) {
+                				$(".validacion").html(response.error_paso_final);
+                				$(".validacion-error").show();
+                			}
+                    }
+
+                    /*
+                    $('html, body').animate({
+                        scrollTop: $(".validacion").offset().top-10
+                    });
+                    */
+                  }
                 },
                 error: function(){
-                  alert(0)
                     form.submitting=false;
                     $(ajaxLoader).remove();
                     $(form).find(":submit").attr("disabled",false);

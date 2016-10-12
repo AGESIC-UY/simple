@@ -175,6 +175,11 @@
               <?php endif; ?>
             <?php endif ?>
 
+            <?php if($campo->tipo == 'estado_pago'): ?>
+              <label for="valor_default">Variable de ID de solicitud</label>
+              <input type="text" id="valor_default" name="valor_default" value="<?=htmlspecialchars($campo->valor_default)?>" />
+            <?php endif ?>
+
             <?php if(($campo->tipo != 'fieldset') && ($campo->tipo != 'bloque')):?>
             <label for="lista_de_fieldsets">Fieldset al que pertenece</label>
             <input type="text" id="fieldset" name="fieldset" value="<?=htmlspecialchars($campo->fieldset)?>" />
@@ -198,7 +203,8 @@
                 <?php } ?>
             </select>
             <?php echo form_error('valor_default'); ?>
-            <?php endif ?>
+        <?php endif ?>
+
             <div class="campoDependientes">
                 <label for="dependiente_campo">Visible solo si</label>
                 <select class="input-medium" id="dependiente_campo" name="dependiente_campo">

@@ -31,17 +31,83 @@ class CampoPagos extends Campo {
 
       foreach($this->Formulario->Proceso->Acciones as $accion) {
         if($accion->id == $valor_default) {
-          $pasarela = Doctrine_Query::create()
-              ->from('PasarelaPagoAntel')
-              ->where('pasarela_pago_id = ?', $accion->extra->pasarela_pago_id)
-              ->execute();
-          $pasarela = $pasarela[0];
+          $pasarela = $accion->extra;
         }
       }
 
-      $fecha = str_replace('/', '', $pasarela->vencimiento.'0000');
+      // ID tramite
+      preg_match("/^(@@)([a-zA-Z0-9_-]*)$/", $pasarela->id_tramite, $variable_encontrada);
+      if($variable_encontrada) {
+        $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId(str_replace("@@", "", $variable_encontrada[0]), $etapa_id);
+        $id_tramite = $dato->valor;
+      }
+      else {
+        $id_tramite = $pasarela->id_tramite;
+      }
+
+      //  tasa 1
+      preg_match("/^(@@)([a-zA-Z0-9_-]*)$/", $pasarela->tasa_1, $variable_encontrada);
+      if($variable_encontrada) {
+        $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId(str_replace("@@", "", $variable_encontrada[0]), $etapa_id);
+        $tasa_1 = $dato->valor;
+      }
+      else {
+        $tasa_1 = $pasarela->tasa_1;
+      }
+
+      //  tasa 2
+      preg_match("/^(@@)([a-zA-Z0-9_-]*)$/", $pasarela->tasa_2, $variable_encontrada);
+      if($variable_encontrada) {
+        $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId(str_replace("@@", "", $variable_encontrada[0]), $etapa_id);
+        $tasa_2 = $dato->valor;
+      }
+      else {
+        $tasa_2 = $pasarela->tasa_2;
+      }
+
+      //  tasa 3
+      preg_match("/^(@@)([a-zA-Z0-9_-]*)$/", $pasarela->tasa_3, $variable_encontrada);
+      if($variable_encontrada) {
+        $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId(str_replace("@@", "", $variable_encontrada[0]), $etapa_id);
+        $tasa_3 = $dato->valor;
+      }
+      else {
+        $tasa_3 = $pasarela->tasa_3;
+      }
+
+      // vencimiento
+      preg_match("/^(@@)([a-zA-Z0-9_-]*)$/", $pasarela->vencimiento, $variable_encontrada);
+      if($variable_encontrada) {
+        $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId(str_replace("@@", "", $variable_encontrada[0]), $etapa_id);
+        $vencimiento = $dato->valor;
+      }
+      else {
+        $vencimiento = $pasarela->vencimiento;
+      }
+
+      $fecha = str_replace('/', '', $vencimiento.'0000');
       $fecha = strtotime($fecha);
       $fecha_vencimiento = date("YmdHi", $fecha);
+
+      //  codigos desglose
+      preg_match("/^(@@)([a-zA-Z0-9_-]*)$/", $pasarela->codigos_desglose, $variable_encontrada);
+      if($variable_encontrada) {
+        $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId(str_replace("@@", "", $variable_encontrada[0]), $etapa_id);
+        $codigos_desglose = $dato->valor;
+      }
+      else {
+        $codigos_desglose = $pasarela->codigos_desglose;
+      }
+
+      //  montos desglose
+      preg_match("/^(@@)([a-zA-Z0-9_-]*)$/", $pasarela->montos_desglose, $variable_encontrada);
+      if($variable_encontrada) {
+        $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId(str_replace("@@", "", $variable_encontrada[0]), $etapa_id);
+        $montos_desglose = $dato->valor;
+      }
+      else {
+        $montos_desglose = $pasarela->montos_desglose;
+      }
 
       $id_sol =  Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId('id_sol_pasarela_pagos', $etapa_id);
       $token =  Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId('token_pasarela_pagos', $etapa_id);
@@ -51,19 +117,7 @@ class CampoPagos extends Campo {
       $display .= '<div class="well text-center">';
       $display .= '<div data-action="'. POST_PASARELA_PAGO .'" id="form_pasarela_pago">';
 
-      $display .= '<input name="IdSol" value="'. (isset($id_sol->valor) ? $id_sol->valor : '') .'" type="hidden" />';
       $display .= '<input name="Token" value="'. (isset($token->valor) ? $token->valor : '') .'" type="hidden" />';
-
-      $display .= '<input name="IdTramite" value="'. $pasarela->id_tramite .'" type="hidden" />';
-      $display .= '<input name="ImporteTasa1" value="'. $pasarela->tasa_1 .'" type="hidden" />';
-      $display .= '<input name="ImporteTasa2" value="'. $pasarela->tasa_2 .'" type="hidden" />';
-      $display .= '<input name="ImporteTasa3" value="'. $pasarela->tasa_3 .'" type="hidden" />';
-      $display .= '<input name="FechaVto" value="'. $fecha_vencimiento .'" type="hidden" />';
-      $display .= '<input name="UsuarioPeu" value="anonimo" type="hidden" />';
-      $display .= '<input name="CodsDesglose" value="'. $pasarela->codigos_desglose .'" type="hidden" />';
-      $display .= '<input name="MontosDesglose" value="'. $pasarela->montos_desglose .'" type="hidden" />';
-      $display .= '<input name="IdFormaDePago" value="0" type="hidden" />';
-      $display .= '<input name="PassOrganismo" value="'. $pasarela->clave_organismo .'" type="hidden" />';
 
       $display .= '<p>'. $this->etiqueta .'</p>';
       $display .= '<input type="submit" value="Continuar" class="btn btn-primary" />';
@@ -79,7 +133,10 @@ class CampoPagos extends Campo {
           $secuencia = (int)$match[2] + 1;
 
           $url_vuelta = site_url('etapas/ejecutar/' . $etapa->id . '/' . $secuencia);
-          setcookie('simple_bpm_gwp_redirect', base64_encode($url_vuelta), 0, '/', HOST_SISTEMA_DOMINIO);
+
+          $CI=&get_instance();
+          $CI->load->helper('cookies_helper');
+          set_cookie('simple_bpm_gwp_redirect', base64_encode($url_vuelta), 0, '/', HOST_SISTEMA_DOMINIO);
         }
       }
 
@@ -87,7 +144,7 @@ class CampoPagos extends Campo {
     }
 
     public function backendExtraValidate(){
-        $CI=&get_instance();
-        $CI->form_validation->set_rules('valor_default', 'Valor_default', 'required');
+      $CI=&get_instance();
+      $CI->form_validation->set_rules('valor_default', 'Valor_default', 'required');
     }
 }

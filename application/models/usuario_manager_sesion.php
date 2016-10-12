@@ -4,7 +4,6 @@ class UsuarioManagerSesion {
     private static $user;
 
     private function __construct() {
-
     }
 
     public static function usuario() {
@@ -132,7 +131,8 @@ class UsuarioManagerSesion {
       $uri = $protocolo.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
       $uri_array = explode('/autenticacion', $uri);
 
-      setcookie('simple_bpm_query', base64_encode('manager'), 0, '/', HOST_SISTEMA_DOMINIO);
-      setcookie('simple_bpm_location', base64_encode($uri_array[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+      $this->load->helper('cookies_helper');
+      set_cookie('simple_bpm_query', base64_encode('manager'), 0, '/', HOST_SISTEMA_DOMINIO);
+      set_cookie('simple_bpm_location', base64_encode($uri_array[0]), 0, '/', HOST_SISTEMA_DOMINIO);
     }
 }

@@ -241,9 +241,17 @@ class CampoTablaResponsive extends Campo{
               var data;
 
               try {
-                data = JSON.parse($("[name=\"'.$this->nombre.'\"]").val());
-                document.dd = data;
-                // data = data.slice(1);
+
+                //version 1.02 se hace esta validacion
+                if ($("[name=\"'.$this->nombre.'\"]").val() == "\"\""){
+                  data = [
+                    new Array(headers.length)
+                  ];
+                  $("[name=\"'.$this->nombre.'\"]").val("");
+
+                }else{
+                  data = JSON.parse($("[name=\"'.$this->nombre.'\"]").val());
+                }
               }
               catch(err) {
                 data = [

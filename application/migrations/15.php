@@ -38,6 +38,11 @@ class Migration_15 extends Doctrine_Migration_Base {
          'length' => 40,
          'notnull' => true
       ),
+      'id_etapa' => array(
+         'type'   => 'integer',
+         'length' => 40,
+         'notnull' => true
+      ),
       'id_solicitud' => array(
          'type'   => 'integer',
          'length' => 40,
@@ -486,10 +491,68 @@ class Migration_15 extends Doctrine_Migration_Base {
     // -- Modifica tabla Tarea
     // --
     $this->addColumn('tarea', 'trazabilidad', 'integer', 1, array('notnull' => 1, 'default' => 1));
+    $this->addColumn('tarea', 'trazabilidad_id_oficina', 'varchar', 64, array('notnull' => 0));
+    $this->addColumn('tarea', 'asignacion_notificar_mensaje', 'longtext');
 
     // --
     // -- Modifica tabla UsuarioBackend
     // --
     $this->addColumn('usuario_backend', 'usuario', 'varchar', 128, array('notnull' => 0));
+
+    // --
+    // -- Crea tabla Trazabilidad
+    // --
+    $columnas = array(
+      'id_etapa' => array(
+          'type'   => 'integer',
+          'length' => 10,
+          'notnull' => true
+      ),
+      'id_tramite' => array(
+          'type'   => 'integer',
+          'length' => 10,
+          'notnull' => true
+      ),
+      'num_paso' => array(
+          'type'   => 'integer',
+          'length' => 64,
+          'notnull' => true
+      ),
+      'secuencia' => array(
+          'type'   => 'integer',
+          'length' => 64,
+          'notnull' => true
+      ),
+      'estado' => array(
+         'type'   => 'varchar',
+         'length' => 1,
+         'notnull' => true
+      ),
+    );
+
+    $opciones = array(
+    'type'    => 'INNODB',
+    'charset' => 'utf8'
+    );
+    $this->createTable('trazabilidad', $columnas, $opciones);
+
+    $columna_id = array(
+      'id' => array(
+        'type' => 'integer',
+        'autoincrement' => true
+      )
+    );
+    $this->createPrimaryKey('trazabilidad', $columna_id);
+
+    $this->addColumn('trazabilidad', 'num_paso_real', 'integer', 10);
+    $this->addColumn('trazabilidad', 'id_tarea', 'integer', 10);
+
+    // --
+    // -- Modifica tabla PasarelaPagoAntel
+    // --
+    $this->addColumn('pasarela_pago_antel', 'clave_tramite', 'varchar', 128, array('notnull' => 0));
+    $this->addColumn('pasarela_pago_antel', 'certificado', 'varchar', 256, array('notnull' => 0));
+    $this->addColumn('pasarela_pago_antel', 'clave_certificado', 'varchar', 256, array('notnull' => 0));
+    $this->addColumn('pasarela_pago_antel', 'pass_clave_certificado', 'varchar', 256, array('notnull' => 0));
   }
 }

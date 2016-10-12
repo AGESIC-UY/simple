@@ -16,8 +16,8 @@ class Etapas extends MY_Controller {
           redirect(site_url());
       }
 
-      $orderby = $this->input->get('orderby') ? str_replace("'", '', str_replace('"', '', $this->input->get('updated_at'))) : 'updated_at'; // -- Previniendo SQL Injection
-      $direction = $this->input->get('direction') == 'desc' ? 'desc' : 'asc'; // -- Previniendo SQL Injection
+      $orderby = 'updated_at';
+      $direction = $this->input->get('direction') == 'desc' ? 'desc' : 'asc';
 
       $data['etapas'] = Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio(),$orderby,$direction);
 
@@ -156,7 +156,21 @@ class Etapas extends MY_Controller {
                     $validar_formulario = TRUE;
                 }
             }
-            if (!$validar_formulario || $this->form_validation->run() == TRUE) {
+
+            // Si se requiere guardado parcial.
+            if($this->input->post('no_advance') == 1) {
+              $validado = true;
+            }
+            else {
+              if($this->form_validation->run() == TRUE) {
+                $validado = true;
+              }
+              else {
+                $validado = false;
+              }
+            }
+
+            if (!$validar_formulario || $validado) {
                 //Almacenamos los campos
                 foreach ($formulario->Campos as $c) {
                     //Almacenamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
@@ -199,32 +213,162 @@ class Etapas extends MY_Controller {
 
                   $respuesta->validacion = TRUE;
 
-                  // -- Si la tarea requiere trazabilidad. Solo traza la primera y ultima secuencia unicamente.
+                  // ----- traza inicio
                   if($etapa->Tarea->trazabilidad) {
                     $tarea_inicial = $formulario->Proceso->getTareaInicial();
 
-                    $cabezal = 0;
-                    if($tarea_inicial->id == $etapa->Tarea->id) {
-                      $cabezal = 1;
+										$cabezal = 0;
+										$num_paso = $secuencia;
+										$num_paso_linea = $secuencia + 1;
+
+										if((sizeof($etapa->getPasosEjecutables())-1) == $secuencia) {
+											$estado = 2;
+											$estado_linea = 'F';
+										}
+										else {
+											if(($tarea_inicial->id == $etapa->Tarea->id) && ($secuencia == 0)) {
+												$cabezal = 1;
+												$estado = 1;
+											}
+											else {
+												$estado = 2;
+											}
+
+											$estado_linea = 'I';
+										}
+
+                    try {
+      								$traza_existente = Doctrine_Query::create()
+													->from('Trazabilidad ts')
+													->where('ts.id_tramite = ? AND ts.id_etapa = ? AND ts.num_paso_real = ?',
+														array($etapa->Tramite->id, $etapa->id, $paso->orden))
+													->limit(1)
+													->fetchOne();
+
+											$paso_existe = null;
+											if(!empty($traza_existente)) {
+												$paso_existe = $traza_existente->num_paso_real;
+											}
+
+											$traza_tramite = Doctrine_Query::create()
+															->from('Trazabilidad ts')
+															->where('ts.id_tramite = ?', array($etapa->Tramite->id))
+															->orderBy('secuencia DESC')
+															->limit(1)
+															->fetchOne();
+
+											if(empty($traza_tramite)) {
+												$traza_cabezal = Doctrine_Query::create()
+															->from('Trazabilidad ts')
+															->where('ts.id_tramite = ? AND ts.estado = ?', array($etapa->Tramite->id, 'C'))
+															->orderBy('secuencia ASC')
+															->fetchOne();
+
+												$sec = 0;
+												$sec_linea = $sec + 1;
+
+												if(empty($traza_cabezal)) {
+													$traza = new Trazabilidad();
+													$traza->id_etapa = $etapa->id;
+													$traza->id_tramite = $etapa->tramite_id;
+													$traza->id_tarea = $etapa->Tarea->id;
+													$traza->num_paso = 0;
+													$traza->secuencia = $sec;
+													$traza->estado = 'C';
+													$traza->save();
+												}
+												else {
+													$cabezal = 0;
+												}
+
+												$traza = new Trazabilidad();
+												$traza->id_etapa = $etapa->id;
+												$traza->id_tramite = $etapa->tramite_id;
+												$traza->id_tarea = $etapa->Tarea->id;
+												$traza->num_paso = $num_paso + 1;
+												$traza->secuencia = $sec + 1;
+												$traza->estado = $estado_linea;
+												$traza->num_paso_real = $paso->orden;
+												$traza->save();
+											}
+											else {
+												$traza_cabezal = Doctrine_Query::create()
+															->from('Trazabilidad ts')
+															->where('ts.id_tramite = ? AND ts.estado = ?', array($etapa->Tramite->id, 'C'))
+															->orderBy('secuencia ASC')
+															->fetchOne();
+
+												if(!empty($traza_cabezal)) {
+													$cabezal = 0;
+												}
+
+												$traza_tramite_actual = Doctrine_Query::create()
+															->from('Trazabilidad ts')
+															->where('ts.id_tramite = ? AND ts.id_etapa = ?', array($etapa->Tramite->id, $etapa->id))
+															->orderBy('secuencia DESC')
+															->fetchOne();
+
+												$sec = $traza_tramite->secuencia + 1;
+												$sec_linea = $sec;
+
+												$traza = new Trazabilidad();
+												$traza->id_etapa = $etapa->id;
+												$traza->id_tramite = $etapa->tramite_id;
+												$traza->id_tarea = $etapa->Tarea->id;
+
+												if(empty($traza_tramite_actual)) {
+													$traza_misma_tarea = Doctrine_Query::create()
+																->from('Trazabilidad ts')
+																->where('ts.id_tramite = ? AND ts.id_tarea = ? AND ts.num_paso_real = ?', array($etapa->Tramite->id, $etapa->Tarea->id, $paso->orden))
+																->orderBy('secuencia DESC')
+																->fetchOne();
+
+													$traza->num_paso = (!$traza_misma_tarea ? $traza_tramite->num_paso + 1 : $traza_misma_tarea->num_paso);
+													$num_paso = $traza_tramite->num_paso + 1;
+													$num_paso_linea = (!$traza_misma_tarea ? $num_paso : $traza_misma_tarea->num_paso);
+													$traza->secuencia = $sec;
+												}
+												else {
+													$traza->num_paso = (!$paso_existe ? $traza_tramite->num_paso + 1 : $traza_tramite->num_paso);
+													$num_paso = (!$paso_existe ? $traza_tramite->num_paso + 1 : $paso_existe);
+													$num_paso_linea = (!$paso_existe ? $num_paso : $paso_existe);
+													$traza->secuencia = $traza_tramite->secuencia + 1;
+												}
+
+												$traza->estado = $estado_linea;
+												$traza->num_paso_real = $paso->orden;
+												$traza->save();
+											}
+
+											$this->load->helper('device_helper');
+											$canal_inicio = detect_current_device();
+
+											$cantidad_total_pasos = 0;
+											foreach($formulario->Proceso->Tareas as $tarea) {
+												$cantidad_total_pasos = $cantidad_total_pasos + count($tarea->Pasos);
+											}
+
+											(empty($etapa->Tarea->trazabilidad_id_oficina) ? $oficina_id = $formulario->Proceso->ProcesoTrazabilidad->organismo_id : $oficina_id = $etapa->Tarea->trazabilidad_id_oficina);
+
+											if (($secuencia == 0) || ($secuencia == sizeof($etapa->getPasosEjecutables()) - 1)) {
+												$args = array('tramite_id' => $etapa->tramite_id, 'secuencia' => $sec_linea, 'paso' => $num_paso_linea,
+																		  'organismo_id' => $formulario->Proceso->ProcesoTrazabilidad->organismo_id, 'oficina_id' => $oficina_id,
+																		  'proceso_externo_id' => $formulario->Proceso->ProcesoTrazabilidad->proceso_externo_id,
+																		  'usuario_id' => UsuarioSesion::usuario()->id, 'pasos_ejecutables' => $cantidad_total_pasos,
+																		  'cabezal' => $cabezal, 'nombre_tarea' => $etapa->Tarea->nombre, 'estado' => $estado,
+																		  'canal_inicio' => $canal_inicio, 'nombre_paso' => $paso->nombre);
+
+												// -- Encola la operacion
+												$CI =& get_instance();
+												$CI->load->library('resque/resque');
+												Resque::enqueue('default', 'Trazabilidad', $args);
+											}
                     }
-
-                    if (($secuencia == 0) || ($secuencia == sizeof($etapa->getPasosEjecutables()) - 1)) {
-                      $args = array('tramite_id' => $etapa->Tramite->id, 'secuencia' => $secuencia,
-                                    'organismo_id' => $formulario->Proceso->ProcesoTrazabilidad->organismo_id,
-                                    'proceso_externo_id' => $formulario->Proceso->ProcesoTrazabilidad->proceso_externo_id,
-                                    'usuario_id' => UsuarioSesion::usuario()->id, 'pasos_ejecutables' => $etapa->getPasosEjecutables(),
-                                    'cabezal' => $cabezal, 'nombre_tarea' => $etapa->Tarea->nombre);
-
-                      try {
-                        $CI =& get_instance();
-                        $CI->load->library('resque/resque');
-                        Resque::enqueue('default', 'Trazabilidad', $args);
-                      }
-                      catch(Exception $e) {
-                        log_message('error', $e->getMessage());
-                      }
+                    catch(Exception $e) {
+                      log_message('error', $e->getMessage());
                     }
                   }
+                  // ----- traza fin
 
                   $qs = $this->input->server('QUERY_STRING');
                   $prox_paso = $etapa->getPasoEjecutable($secuencia + 1);
@@ -355,16 +499,41 @@ class Etapas extends MY_Controller {
             $this->load->view('template', $data);
         }
 
-
         $etapa->avanzar($this->input->post('usuarios_a_asignar'));
 
-        $respuesta = new stdClass();
-        $respuesta->validacion = TRUE;
+        // -- Si encuentra variables de errores avisa que se ha registrado un error de parte de una acción.
+        $errors = false;
+        $errors_msg = '';
+        $error_servicio_com = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId("ws_error", $etapa->id);
+        $error_servicio = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId("error", $etapa->id);
 
-        if ($this->input->get('iframe'))
-            $respuesta->redirect = site_url('etapas/ejecutar_exito');
-        else
-            $respuesta->redirect = site_url();
+        if($error_servicio_com) {
+          if($error_servicio_com->valor != "") {
+            $errors = true;
+            $errors_msg = $error_servicio_com->valor;
+          }
+        }
+        if($error_servicio) {
+          if($error_servicio->valor != "") {
+            $errors = true;
+            $errors_msg = $error_servicio->valor;
+          }
+        }
+
+        // Si hay registro de error de parte de una acción invocada vuelve a mostrar la secuencia actual, de lo contrario avanza.
+        if($errors) {
+          $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id);
+          $respuesta->error_paso_final = $errors_msg;
+        }
+        else {
+          $respuesta = new stdClass();
+          $respuesta->validacion = TRUE;
+
+          if ($this->input->get('iframe'))
+              $respuesta->redirect = site_url('etapas/ejecutar_exito');
+          else
+              $respuesta->redirect = site_url();
+        }
 
         echo json_encode($respuesta);
     }

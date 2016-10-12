@@ -24,7 +24,7 @@ class CampoError extends Campo{
         ($dato ? $valor = htmlspecialchars($dato->valor) : $valor = htmlspecialchars($valor_default));
         $display  = '<div class="control-group">';
         $display .= '<div class="campo_error validacion-error '. ($valor == "" ? "hidden" : "") .'" data-fieldset="'.$this->fieldset.'">';
-        $display .= '<span class="alert alert-error" id="'.$this->id.'">' . ($dato?htmlspecialchars($dato->valor):htmlspecialchars($valor_default)) . '</span>';
+        $display .= '<span class="alert alert-error" id="'.$this->id.'">' . ($dato?$dato->valor:$valor_default) . '</span>';
         $display .= '</div>';
         $display .= '</div>';
 

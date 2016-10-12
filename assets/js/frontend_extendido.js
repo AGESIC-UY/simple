@@ -21,6 +21,41 @@ $(document).ready(function() {
     });
   }
 
+  // -- Consulta y muestra estado de pago
+  $('.consulta_estado_pago').click(function(e) {
+    e.preventDefault();
+
+    document.texto_boton_consulta_estado_pago = $('.consulta_estado_pago').text();
+    $('.consulta_estado_pago').attr({'disabled': true});
+    $('.consulta_estado_pago').text('Consultando...');
+
+    $.ajax({
+      type: 'post',
+      url: document.Constants.host + '/pagos/consulta_estado',
+      data: {'IdSol': $('input[name="IdSol"]').val(), 'IdTramite': $('input[name="IdTramite"]').val(), 'IdEtapa': $('input[name="IdEtapa"]').val()},
+      complete: function(resultado) {
+        $('.consulta_estado_pago').text(document.texto_boton_consulta_estado_pago);
+        $('.consulta_estado_pago').attr({'disabled': false});
+
+        resultado = $.parseJSON(resultado.responseText);
+        var mensaje = '';
+
+        switch(resultado.estado) {
+          case 'error':
+            mensaje += '<div class="dialogo validacion-error"><h3 class="dialogos_titulo">'+ resultado.titulo +'</h3><div class="alert alert-error">'+ resultado.mensaje +'</div></div>';
+            break;
+          case 'ok':
+            mensaje += '<div class="dialogo validacion-success"><h3 class="dialogos_titulo">'+ resultado.titulo +'</h3><div class="alert alert-success">'+ resultado.mensaje +'</div></div>';
+            break;
+          default:
+            mensaje += '<div class="dialogo validacion-error"><h3 class="dialogos_titulo">'+ resultado.titulo +'</h3><div class="alert alert-error">'+ resultado.mensaje +'</div></div>';
+        }
+
+        $('.mensaje_estado_pago').html(mensaje).removeClass('hidden');
+      }
+    });
+  });
+
 	// -- Gestiona encuesta de satisfacción
   if($('#encuesta_satisfaccion_form').length) {
     $('button[type="submit"]').not('.login-btn').hide();

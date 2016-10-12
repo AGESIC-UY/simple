@@ -178,6 +178,7 @@ class Procesos extends MY_BackendController {
             $tarea->asignacion=$this->input->post('asignacion');
             $tarea->asignacion_usuario=$this->input->post('asignacion_usuario');
             $tarea->asignacion_notificar=$this->input->post('asignacion_notificar');
+            $tarea->asignacion_notificar_mensaje=$this->input->post('asignacion_notificar_mensaje');
             $tarea->setGruposUsuariosFromArray($this->input->post('grupos_usuarios'));
             $tarea->setPasosFromArray($this->input->post('pasos',false));
             $tarea->paso_confirmacion=$this->input->post('paso_confirmacion');
@@ -197,6 +198,7 @@ class Procesos extends MY_BackendController {
             $tarea->vencimiento_notificar_email=$this->input->post('vencimiento_notificar_email');
             $tarea->previsualizacion=$this->input->post('previsualizacion');
             $tarea->trazabilidad=$this->input->post('trazabilidad');
+            $tarea->trazabilidad_id_oficina=$this->input->post('trazabilidad_id_oficina');
             $tarea->save();
 
             $respuesta->validacion=TRUE;
@@ -341,7 +343,7 @@ class Procesos extends MY_BackendController {
       $nombre_archivo = $_FILES['archivo']['name'];
       $ext = pathinfo($nombre_archivo, PATHINFO_EXTENSION);
       if(!in_array($ext, $permitido) ) {
-        $mensajes = '<div class="alert alert-error"><i class="icon-exclamation-sign"></i> La extención del archivo de importación no es la correcta.</div>';
+        $mensajes = '<div class="alert alert-error"><i class="icon-exclamation-sign"></i> La extensión del archivo de importación no es la correcta.</div>';
       }
       else {
         if($file_path) {

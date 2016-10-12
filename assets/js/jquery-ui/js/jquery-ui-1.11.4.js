@@ -2821,7 +2821,7 @@ $.widget( "ui.autocomplete", {
 		this.valueMethod = this.element[ isTextarea || isInput ? "val" : "text" ];
 		this.isNewMenu = true;
 
-		/*
+		/* sofis - eliminar el atributo autocomplete=off que no es valido
 		this.element
 			.addClass( "ui-autocomplete-input" )
 			.attr( "autocomplete", "off" );
@@ -5428,15 +5428,15 @@ $.extend(Datepicker.prototype, {
 			this._daylightSavingAdjust(new Date(drawYear, drawMonth - stepMonths, 1)),
 			this._getFormatConfig(inst)));
 
-		prev =
+		prev = 
 			(this._canAdjustMonth(inst, -1, drawYear, drawMonth) ?
 				"<a id='mesAnt' href='#mesAnt' onclick='return false;' onkeypress='return false;' class='ui-datepicker-prev ui-corner-all' data-handler='prev' data-event='click' title='Mes anterior'>" +
 					"<span class='ui-icon ui-icon-circle-triangle-" + ( isRTL ? "e" : "w") + "'>" + prevText + "</span>" +
-				"</a>"
+				"</a>" 
 			:
-				(hideIfNoPrevNext ?
-						""
-				:
+				(hideIfNoPrevNext ? 
+						"" 
+				: 
 					"<a id='mesAnt' href='#mesAnt' onclick='return false;' onkeypress='return false;' class='ui-datepicker-prev ui-corner-all ui-state-disabled' title='Mes anterior'>" +
 						"<span class='ui-icon ui-icon-circle-triangle-" + ( isRTL ? "e" : "w") + "'>" + prevText + "</span>" +
 					"</a>"
@@ -14994,7 +14994,7 @@ var spinner = $.widget( "ui.spinner", {
 			.parent()
 				// add buttons
 				.append( this._buttonHtml() );
-
+		
 		this.element.attr( "role", "spinbutton" );
 
 		// button bindings

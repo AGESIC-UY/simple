@@ -249,7 +249,6 @@ class Etapa extends Doctrine_Record {
 
     public function notificarTareaPendiente(){
         if ($this->Tarea->asignacion_notificar) {
-
             if($this->usuario_id)
                 $usuarios = Doctrine::getTable('Usuario')->findById($this->usuario_id);
             else
@@ -262,7 +261,14 @@ class Etapa extends Doctrine_Record {
                     $CI->email->from($cuenta->nombre.'@'.$CI->config->item('main_domain'), $cuenta->nombre_largo);
                     $CI->email->to($usuario->email);
                     $CI->email->subject('SIMPLE - Tiene una tarea pendiente');
-                    $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Tiene una tarea pendiente por realizar: ' . $this->Tarea->nombre . '</p><p>Podra realizarla en: ' . ($this->usuario_id?site_url('etapas/ejecutar/' . $this->id):site_url('etapas/sinasignar')) . '</p>');
+
+                    if($this->Tarea->asignacion_notificar_mensaje) {
+                      $CI->email->message('<p>'. $this->Tarea->asignacion_notificar_mensaje .'</p><p>Enlace a la tarea: ' . ($this->usuario_id?site_url('etapas/ejecutar/' . $this->id):site_url('etapas/sinasignar')) . '</p>');
+                    }
+                    else {
+                      $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Tiene una tarea pendiente por realizar: ' . $this->Tarea->nombre . '</p><p>Podra realizarla en: ' . ($this->usuario_id?site_url('etapas/ejecutar/' . $this->id):site_url('etapas/sinasignar')) . '</p>');
+                    }
+
                     $CI->email->send();
                 }
             }
@@ -271,7 +277,7 @@ class Etapa extends Doctrine_Record {
     }
 
     public function cerrar() {
-        //Si ya fue cerrada, retornamos inmediatamente.
+        // Si ya fue cerrada, retornamos inmediatamente.
         if (!$this->pendiente)
             return;
 
@@ -291,8 +297,10 @@ class Etapa extends Doctrine_Record {
                 ->execute();
         foreach ($eventos as $e) {
                 $r = new Regla($e->regla);
-                if ($r->evaluar($this->id))
-                    $e->Accion->ejecutar($this);
+                if ($r->evaluar($this->id)) {
+                  //$e->Accion->ejecutar($this);
+                  if ($e->Accion->ejecutar($this) != null && $e->Accion->ejecutar($this) != false) return;
+                }
         }
 
         //Cerramos la etapa

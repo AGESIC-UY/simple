@@ -114,6 +114,12 @@ class Pasarela_pagos extends MY_BackendController {
                     $pasarela_metodo->codigos_desglose=$this->input->post('pasarela_metodo_antel_codigos_desglose');
                     $pasarela_metodo->montos_desglose=$this->input->post('pasarela_metodo_antel_montos_desglose');
                     $pasarela_metodo->clave_organismo=$this->input->post('pasarela_metodo_antel_clave_organismo');
+                    $pasarela_metodo->clave_tramite=$this->input->post('pasarela_metodo_antel_clave_tramite');
+                    $pasarela_metodo->certificado=$this->input->post('pasarela_metodo_antel_certificado');
+                    $pasarela_metodo->clave_certificado=$this->input->post('pasarela_metodo_antel_clave_certificado');
+                    $pasarela_metodo->pass_clave_certificado=$this->input->post('pasarela_metodo_antel_pass_clave_certificado');
+
+
                     $pasarela_metodo->save();
                     break;
             }

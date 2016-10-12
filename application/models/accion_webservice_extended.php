@@ -45,11 +45,10 @@ class AccionWebserviceExtended extends Accion {
 
         $ayuda = explode("\n", $soap_help);
         foreach($ayuda as $a) {
-            $display .= '<p class="info">'.$a.'</p>';
+          $display .= '<p class="info">'.$a.'</p>';
         }
 
         $display .= '</div>';
-
         $display .= '</div>';
         $display .= '</div>';
         $display .= '</div>';
@@ -74,6 +73,11 @@ class AccionWebserviceExtended extends Accion {
 
         $servicio = Doctrine::getTable('WsCatalogo')->find($operacion->catalogo_id);
 
+
+        $regla = new Regla($this->extra->soap_operacion_operacion);
+        $soap_operacion = $regla->getExpresionParaOutput($etapa->id);
+
+
         if($servicio->tipo == 'soap') {
           // WSDL
           $soap_wsdl = $servicio->wsdl;
@@ -81,21 +85,31 @@ class AccionWebserviceExtended extends Accion {
           // Endpoint loctaion
           $soap_endpoint_location = $servicio->endpoint_location;
 
-          // Cuerpo del SOAP
-          $regla = new Regla($this->extra->soap_body);
-          $soap_body = $regla->getExpresionParaOutput($etapa->id);
-
           try {
-              preg_match_all("/(?<=@@).*?(?=<\/[a-zA-Z:]*>)/", $soap_body, $soap_campos);
-              $campos_encontrados = array();
+            preg_match_all("/(?<=@@).*?(?=<\/[a-zA-Z0-9:]*>)/", $this->extra->soap_body, $soap_campos);
 
-              foreach($etapa->getPasoEjecutable($secuencia)->Formulario->Campos as $campo) {
-                  if(in_array($campo->nombre, $soap_campos[0])) {
-                      $campo_dato = Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa($campo->nombre, $etapa->id);
-                      //$soap_body = str_replace('%'.$campo->nombre.'%', $campo_dato->valor, $soap_body);
-                      array_push($campos_encontrados, $campo->nombre .':'.$campo_dato->valor);
+            $soap_body_new = $this->extra->soap_body;
+            foreach($soap_campos[0] as $campo) {
+              if(strpos($campo, '[contenido]')) {
+                $regla = new Regla("@@".str_replace('[contenido]', '', $campo));
+                $file_name = $regla->getExpresionParaOutput($etapa->id);
+
+                $file=Doctrine_Query::create()
+                  ->from('File f, f.Tramite t')
+                  ->where('f.filename = ? AND t.id = ?', array($file_name, $etapa->Tramite->id))
+                  ->fetchOne();
+                if($file) {
+                  $folder = $file->tipo=='dato' ? 'datos' : 'documentos';
+                  if(file_exists('uploads/'.$folder.'/'.$file->filename)) {
+                    $str = '<![CDATA['.base64_encode(file_get_contents('uploads/'.$folder.'/'.$file->filename)).']]>';
+                    $soap_body_new = str_replace("@@".$campo, $str, $soap_body_new);
                   }
+                }
               }
+            }
+
+            $regla = new Regla($soap_body_new);
+            $soap_body = $regla->getExpresionParaOutput($etapa->id);
           }
           catch (Exception $e) {
               log_message('error', $e->getMessage());
@@ -119,6 +133,7 @@ class AccionWebserviceExtended extends Accion {
               curl_setopt($soap_do, CURLOPT_SSL_VERIFYPEER, false);
               curl_setopt($soap_do, CURLOPT_SSL_VERIFYHOST, false);
               curl_setopt($soap_do, CURLOPT_POST,           true);
+              curl_setopt($soap_do, CURLOPT_ENCODING,       'gzip');
               curl_setopt($soap_do, CURLOPT_POSTFIELDS,     $soap_body);
               curl_setopt($soap_do, CURLOPT_HTTPHEADER,     $soap_header);
               $soap_response = curl_exec($soap_do);
@@ -126,6 +141,21 @@ class AccionWebserviceExtended extends Accion {
               $curl_error = curl_error($soap_do); // -- Descripcion del error
               $http_code = curl_getinfo($soap_do, CURLINFO_HTTP_CODE); // -- Codigo respuesta HTTP
               curl_close($soap_do);
+
+              if($curl_errno > 0) {
+                $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId('ws_error', $etapa->id);
+                if($dato)
+                  $dato->delete();
+
+                $dato = new DatoSeguimiento();
+                $dato->nombre = 'ws_error';
+                $dato->valor = "Hubo un error al procesar su solicitud. Por favor, vuelva a intentarlo más tarde.";
+                $dato->etapa_id = $etapa->id;
+                $dato->save();
+
+                log_message('error', $curl_error);
+                return true;
+              }
           }
           catch (Exception $e) {
             log_message('error', $e->getMessage());
@@ -171,13 +201,13 @@ class AccionWebserviceExtended extends Accion {
             $assertion = '<saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:1.0:assertion" xmlns="urn:oasis:names:tc:SAML:1.0:assertion" IssueInstant="'. date("Y-m-d\TH:i:s.000") .'Z" Issuer="Agesic" MajorVersion="1" MinorVersion="1" AssertionID="_'. mt_rand().mt_rand() .'"><saml:Conditions NotBefore="'. $past_date .'Z" NotOnOrAfter="'. $future_date .'Z"/><saml:AuthenticationStatement AuthenticationInstant="'. date("Y-m-d\TH:i:s.000") .'Z" AuthenticationMethod="urn:oasis:names:tc:SAML:1.0:am:password"><saml:Subject><saml:NameIdentifier Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress">ou=gerencia de proyectos,o=agesic</saml:NameIdentifier><saml:SubjectConfirmation><saml:ConfirmationMethod>urn:oasis:names:tc:SAML:1.0:cm:bearer</saml:ConfirmationMethod></saml:SubjectConfirmation></saml:Subject></saml:AuthenticationStatement><saml:AttributeStatement><saml:Subject><saml:NameIdentifier Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress">ou=gerencia de proyectos,o=agesic</saml:NameIdentifier><saml:SubjectConfirmation><saml:ConfirmationMethod>urn:oasis:names:tc:SAML:1.0:cm:bearer</saml:ConfirmationMethod></saml:SubjectConfirmation></saml:Subject><saml:Attribute AttributeName="User" AttributeNamespace="urn:tokensimple"><saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string" /></saml:Attribute></saml:AttributeStatement></saml:Assertion>';
 
             $assertion_base64 = base64_encode($assertion);
-            $raw_signed_assertion = exec("java -jar ". JAR_FIRMA ." ". $pdi->certificado_organismo ." ". $pdi->clave_organismo ." $assertion_base64 2>&1");
+            $raw_signed_assertion = exec("java -jar ". JAR_FIRMA ." firma ". $pdi->certificado_organismo ." ". $pdi->clave_organismo ." $assertion_base64 2>&1");
 
             preg_match('/^ERR:/', $raw_signed_assertion, $match);
 
             if(!empty($match)) {
               echo str_replace('ERR: ', '', $raw_signed_assertion) . "\n";
-              return false;
+              return true;
             }
 
             $signed_assertion = base64_decode(str_replace('OK: ', '', $raw_signed_assertion));
@@ -232,28 +262,53 @@ class AccionWebserviceExtended extends Accion {
               $dato->save();
 
               log_message('error', $curl_error);
-              return;
+              return true;
+            }
+            else {
+              $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId('ws_error', $etapa->id);
+              if($dato)
+                $dato->delete();
+
+              $xml = new SimpleXMLElement($soap_response);
+              $respuestas = json_decode($operacion->respuestas);
+
+              if($xml->xpath("//*[local-name() = 'faultcode']")) {
+                $error_servicio = $xml->xpath("//*[local-name() = 'faultstring']/text()");
+                $dato = new DatoSeguimiento();
+                $dato->nombre = 'ws_error';
+                $dato->valor = (string)$error_servicio[0];
+                $dato->etapa_id = $etapa->id;
+                $dato->save();
+
+                return true;
+              }
             }
 
             try {
-              // Cuerpo del SOAP
-              $regla = new Regla($this->extra->soap_body);
-              $soap_body = $regla->getExpresionParaOutput($etapa->id);
+              preg_match_all("/(?<=@@).*?(?=<\/[a-zA-Z0-9:]*>)/", $this->extra->soap_body, $soap_campos);
+              $soap_body_new = $this->extra->soap_body;
 
-              // Action
-              $regla = new Regla($this->extra->soap_operacion_operacion);
-              $soap_operacion = $regla->getExpresionParaOutput($etapa->id);
+              foreach($soap_campos[0] as $campo) {
+                if(strpos($campo, '[contenido]')) {
+                  $regla = new Regla("@@".str_replace('[contenido]', '', $campo));
+                  $file_name = $regla->getExpresionParaOutput($etapa->id);
 
-              preg_match_all("/(?<=@@).*?(?=<\/[a-zA-Z:]*>)/", $soap_body, $soap_campos);
-              $campos_encontrados = array();
-
-              foreach($etapa->getPasoEjecutable($secuencia)->Formulario->Campos as $campo) {
-                  if(in_array($campo->nombre, $soap_campos[0])) {
-                      $campo_dato = Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa($campo->nombre, $etapa->id);
-                      // $soap_body = str_replace('%'.$campo->nombre.'%', $campo_dato->valor, $soap_body);
-                      array_push($campos_encontrados, $campo->nombre .':'.$campo_dato->valor);
+                  $file=Doctrine_Query::create()
+                    ->from('File f, f.Tramite t')
+                    ->where('f.filename = ? AND t.id = ?',array($file_name, $etapa->Tramite->id))
+                    ->fetchOne();
+                  if($file) {
+                    $folder = $file->tipo=='dato' ? 'datos' : 'documentos';
+                    if(file_exists('uploads/'.$folder.'/'.$file->filename)) {
+                      $str = '<![CDATA['.base64_encode(file_get_contents('uploads/'.$folder.'/'.$file->filename)).']]>';
+                      $soap_body_new = str_replace("@@".$campo, $str, $soap_body_new);
+                    }
                   }
+                }
               }
+
+              $regla = new Regla($soap_body_new);
+              $soap_body = $regla->getExpresionParaOutput($etapa->id);
             }
             catch (Exception $e) {
               log_message('error', $e->getMessage());
@@ -264,7 +319,7 @@ class AccionWebserviceExtended extends Accion {
               $xml = simplexml_load_string($soap_response);
               $samlassertion = $xml->children('soapenv', true)->Body->children('wst', true)->RequestSecurityTokenResponse->RequestedSecurityToken->children('saml', true)->Assertion->asXML();
               $service_soap_init = '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><wsse:Security xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" SOAP-ENV:mustUnderstand="1">';
-              $service_soap_end ='</wsse:Security><wsa:To>'. $servicio->url_logica .'</wsa:To><wsa:Action>'. $soap_operacion .'</wsa:Action><wsa:MessageID>urn:uuid:2411e349-0820-4a70-a638-a04909ff9e4d</wsa:MessageID><wsa:ReplyTo>http://www.w3.org/2005/08/addressing/anonymous</wsa:ReplyTo></SOAP-ENV:Header>'. $soap_body .'</soap:Envelope>';
+              $service_soap_end ='</wsse:Security><wsa:To>'. $servicio->url_logica .'</wsa:To><wsa:Action>'.$soap_operacion.'</wsa:Action><wsa:MessageID>urn:uuid:2411e349-0820-4a70-a638-a04909ff9e4d</wsa:MessageID><wsa:ReplyTo>http://www.w3.org/2005/08/addressing/anonymous</wsa:ReplyTo></SOAP-ENV:Header>'. $soap_body .'</soap:Envelope>';
               $service_soap = $service_soap_init . $samlassertion . $service_soap_end;
             }
             catch (Exception $e) {
@@ -302,6 +357,7 @@ class AccionWebserviceExtended extends Accion {
             $curl_error = curl_error($soap_do);
             $http_code = curl_getinfo($soap_do, CURLINFO_HTTP_CODE);
             curl_close($soap_do);
+
           }
           catch (Exception $e) {
             log_message('error', $e->getMessage());
@@ -320,7 +376,7 @@ class AccionWebserviceExtended extends Accion {
           $dato->save();
 
           log_message('error', $curl_error);
-          return;
+          return true;
         }
         else {
             $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId('ws_error', $etapa->id);
@@ -334,11 +390,11 @@ class AccionWebserviceExtended extends Accion {
               $error_servicio = $xml->xpath("//*[local-name() = 'faultstring']/text()");
               $dato = new DatoSeguimiento();
               $dato->nombre = 'ws_error';
-              $dato->valor = $error_servicio;
+              $dato->valor = (string)$error_servicio[0];
               $dato->etapa_id = $etapa->id;
               $dato->save();
 
-              return false;
+              return true;
             }
 
             foreach($respuestas->respuestas as $respuesta) {
@@ -354,10 +410,11 @@ class AccionWebserviceExtended extends Accion {
                     $xslt = $operacion_respuesta[0]->xslt;
 
                     // -- Comienza a procesar el XSLT
-                    $xmldoc = DOMDocument::loadXML($result[0]->saveXML());
-                    $xsldoc = DOMDocument::loadXML($xslt);
+                  $xmldoc = DOMDocument::loadXML($result[0]->saveXML());
+                  $xsldoc = DOMDocument::loadXML($xslt); // FIXME Aca esta el problema, no carga el XSLT
 
                     $proc = new XSLTProcessor();
+
                     $proc->importStyleSheet($xsldoc);
 
                     $xmlobj = $proc->transformToDoc($xmldoc);
@@ -404,6 +461,7 @@ class AccionWebserviceExtended extends Accion {
                     $dato->valor = (string)$jsonString;
                     $dato->etapa_id = $etapa->id;
                     $dato->save();
+
                 }
                 else {
                     try {

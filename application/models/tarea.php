@@ -31,6 +31,8 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('paso_confirmacion');              //Boolean que indica si se debe incorporar una ultima pantalla de confirmacion antes de avanzar la tarea
         $this->hasColumn('previsualizacion');               //Texto de previsualizacion de la tarea al aparecer en las bandejas de entrada.
         $this->hasColumn('trazabilidad');
+        $this->hasColumn('trazabilidad_id_oficina');
+        $this->hasColumn('asignacion_notificar_mensaje');   //Texto personalizado que se envia por correo si se debe notificar la asignacion de la tarea al usuario.
     }
 
     function setUp() {

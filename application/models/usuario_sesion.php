@@ -5,7 +5,6 @@ class UsuarioSesion {
     private static $user;
 
     private function __construct() {
-
     }
 
     public static function usuario() {
@@ -162,8 +161,9 @@ class UsuarioSesion {
     public function limpiar_sesion() {
       // -- Limpia datos de autenticación
       if ((!UsuarioSesion::usuario()->registrado) && (isset($_COOKIE['simple_bpm_saml_session_ref']))) {
-        setcookie('simple_bpm_saml_session_ref', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
-        setcookie('simple_bpm_saml', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
+        $this->load->helper('cookies_helper');
+        set_cookie('simple_bpm_saml_session_ref', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
+        set_cookie('simple_bpm_saml', null, time()-1, '/', HOST_SISTEMA_DOMINIO);
       }
     }
 
@@ -179,7 +179,8 @@ class UsuarioSesion {
       $uri = $protocolo.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
       $uri_array = explode('/autenticacion', $uri);
 
-      setcookie('simple_bpm_query', base64_encode('frontend'), 0, '/', HOST_SISTEMA_DOMINIO);
-      setcookie('simple_bpm_location', base64_encode($uri_array[0]), 0, '/', HOST_SISTEMA_DOMINIO);
+      $this->load->helper('cookies_helper');
+      set_cookie('simple_bpm_query', base64_encode('frontend'), 0, '/', HOST_SISTEMA_DOMINIO);
+      set_cookie('simple_bpm_location', base64_encode($uri_array[0]), 0, '/', HOST_SISTEMA_DOMINIO);
     }
 }

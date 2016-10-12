@@ -28,14 +28,14 @@
                   <div class="row">
                     <label for="name">Usuario o Correo electrónico</label>
           					<span class="input-col">
-                      <input name="usuario" id="name" type="text" class="input-xlarge">
+                      <input name="usuario" id="name" type="text" class="input-xlarge" autofocus autocomplete="off" />
           					</span>
           				</div>
 
                   <div class="row">
                     <label for="password">Contraseña</label>
           					<span class="input-col">
-                      <input name="password" id="password" type="password" class="input-xlarge">
+                      <input name="password" id="password" type="password" class="input-xlarge" autocomplete="off" />
                       <input type="hidden" name="redirect" value="<?=$redirect?>" />
                       <!--
                       <div><a href="<?=site_url('autenticacion/olvido')?>">¿Olvidaste tu contraseña?</a></div>

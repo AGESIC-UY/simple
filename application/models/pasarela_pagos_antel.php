@@ -15,5 +15,9 @@ class PasarelaPagoAntel extends Doctrine_Record {
         $this->hasColumn('codigos_desglose');
         $this->hasColumn('montos_desglose');
         $this->hasColumn('clave_organismo');
+        $this->hasColumn('clave_tramite');
+        $this->hasColumn('certificado');
+        $this->hasColumn('clave_certificado');
+        $this->hasColumn('pass_clave_certificado');
     }
 }

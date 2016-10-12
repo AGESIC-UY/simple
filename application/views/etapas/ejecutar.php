@@ -25,7 +25,8 @@
     <input type="hidden" name="no_advance" id="no_advance" value="0" />
 	<div class="validacion validacion-error"></div>
 
-    <div class="aviso_campos_obligatorios">Los campos indicados con * son obligatorios.</div>
+    <div class="aviso_campos_obligatorios">Los campos indicados con * son obligatorios.</div><br />
+    
     <?=($paso->Formulario->contenedor == 1 ? '<fieldset>' : '<div>') ?>
         <?=($paso->Formulario->contenedor == 1 ? '<legend>'.$paso->Formulario->leyenda.'</legend>' : '') ?>
 

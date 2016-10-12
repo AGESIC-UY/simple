@@ -62,6 +62,8 @@ class Campo extends Doctrine_Record {
             $campo=new CampoAgenda();
         else if($tipo=='pagos')
             $campo=new CampoPagos();
+        else if($tipo=='estado_pago')
+            $campo=new CampoEstadoPago();
 
         $campo->assignInheritanceValues();
 
@@ -113,7 +115,8 @@ class Campo extends Doctrine_Record {
                 'CampoGrid'  => array('tipo' => 'grid'),
                 'CampoTablaResponsive'  => array('tipo' => 'tabla-responsive'),
                 'CampoAgenda'  => array('tipo' => 'agenda'),
-                'CampoPagos'  => array('tipo' => 'pagos')
+                'CampoPagos'  => array('tipo' => 'pagos'),
+                'CampoEstadoPago'  => array('tipo' => 'estado_pago'),
             ));
     }
 

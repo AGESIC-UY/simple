@@ -41,8 +41,8 @@ class Seguimiento extends MY_BackendController {
         }
 
         $query = $this->input->get('query');
-        $offset=$this->input->get('offset');
-        $order=$this->input->get('order')?$this->input->get('order'):'updated_at';
+        $offset = $this->input->get('offset');
+        $order = 'updated_at';
         $direction = $this->input->get('direction') == 'desc' ? 'desc' : 'asc';
         $created_at_desde=$this->input->get('created_at_desde');
         $created_at_hasta=$this->input->get('created_at_hasta');

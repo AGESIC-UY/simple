@@ -8,6 +8,8 @@ class Tramites extends MY_Controller {
     public function __construct() {
       parent::__construct();
 
+      $this->load->helper('cookies_helper');
+
       UsuarioSesion::limpiar_sesion();
     }
 
@@ -30,12 +32,12 @@ class Tramites extends MY_Controller {
       // -- Verifica si debe redireccionar
       if(isset($_COOKIE['redirect'])) {
         $redirect = $_COOKIE['redirect'];
-        setcookie('redirect', 0, time()-1, '/', HOST_SISTEMA_DOMINIO);
+        set_cookie('redirect', 0, time()-1, '/', HOST_SISTEMA_DOMINIO);
         redirect($redirect);
       }
 
-      $orderby = $this->input->get('orderby') ? str_replace("'", '', str_replace('"', '', $this->input->get('orderby'))) : 'nombre'; // -- Previniendo SQL Injection
-      $direction = $this->input->get('direction') == 'desc' ? 'desc' : 'asc'; // -- Previniendo SQL Injection
+      $orderby = 'nombre';
+      $direction = $this->input->get('direction') == 'desc' ? 'desc' : 'asc';
 
       $data['procesos']=Doctrine::getTable('Proceso')->findProcesosDisponiblesParaIniciar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio(),$orderby,$direction);
 

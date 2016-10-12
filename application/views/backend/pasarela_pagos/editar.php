@@ -87,6 +87,50 @@
           <input type="text" id="clave_organismo" name="pasarela_metodo_antel_clave_organismo" class="input-xlarge" value="<?=($pasarela->metodo == 'antel' ? $pasarela_metodo->clave_organismo : '')?>" />
         </div>
       </div>
+      <div class="control-group">
+        <label for="clave_tramite" class="control-label">Clave trámite</label>
+        <div class="controls">
+          <input type="text" id="clave_tramite" name="pasarela_metodo_antel_clave_tramite" class="input-xlarge" value="<?=($pasarela->metodo == 'antel' ? $pasarela_metodo->clave_tramite : '')?>" />
+        </div>
+      </div>
+      <div class="control-group">
+        <label for="pasarela_metodo_antel_certificado" class="control-label">Certificado SSL</label>
+        <div class="controls">
+          <div id="file-uploader-certificado"></div>
+          <input id="certificado" type="hidden" name="pasarela_metodo_antel_certificado" value="<?=($pdi->certificado != '' ? $pdi->certificado : '')?>" />
+          <script>
+              var uploader = new qq.FileUploader({
+                  element: document.getElementById('file-uploader-certificado'),
+                  action: site_url+'backend/uploader/credenciales_pasarela_pago',
+                  onComplete: function(id,filename,respuesta){
+                      $("input[name=pasarela_metodo_antel_certificado]").val(respuesta.file_name);
+                  }
+              });
+          </script>
+        </div>
+      </div>
+      <div class="control-group">
+        <label for="pasarela_metodo_antel_clave_certificado" class="control-label">Clave privada</label>
+        <div class="controls">
+          <div id="file-uploader-clave"></div>
+          <input id="clave_certificado" type="hidden" name="pasarela_metodo_antel_clave_certificado" value="<?=($pdi->clave_certificado != '' ? $pdi->clave_certificado : '')?>" />
+          <script>
+              var uploader = new qq.FileUploader({
+                  element: document.getElementById('file-uploader-clave'),
+                  action: site_url+'backend/uploader/credenciales_pasarela_pago',
+                  onComplete: function(id,filename,respuesta){
+                      $("input[name=pasarela_metodo_antel_clave_certificado]").val(respuesta.file_name);
+                  }
+              });
+          </script>
+        </div>
+      </div>
+      <div class="control-group">
+        <label for="pasarela_metodo_antel_pass_clave_certificado" class="control-label">Contraseña de la clave privada</label>
+        <div class="controls">
+          <input type="text" id="pass_clave_certificado" name="pasarela_metodo_antel_pass_clave_certificado" class="input-xlarge" value="<?=($pasarela->metodo == 'antel' ? $pasarela_metodo->pass_clave_certificado : '')?>" />
+        </div>
+      </div>
     </div>
   </fieldset>
   <ul class="form-action-buttons">

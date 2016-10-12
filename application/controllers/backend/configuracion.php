@@ -458,9 +458,10 @@ class Configuracion extends MY_BackendController {
 
             $respuesta->validacion = TRUE;
             $respuesta->redirect = site_url('backend/configuracion/pdi');
-        }else {
-            $respuesta->validacion = FALSE;
-            $respuesta->errores = validation_errors();
+        }
+        else {
+          $respuesta->validacion = FALSE;
+          $respuesta->errores = validation_errors();
         }
 
         echo json_encode($respuesta);

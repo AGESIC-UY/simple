@@ -121,7 +121,16 @@
         });
 
         //$("#modalEditarTarea form input[name=socket_id_emisor]").val(socketId);
-        //$("#modalEditarTarea .botonEliminar").attr("href",function(i,href){return href+"?socket_id_emisor="+socketId;})
+        //$("#modalEditarTarea .botonEliminar").attr("href",function(i,href){return href+"?socket_id_emisor="+socketId;});
+
+        $('#trazabilidad').click(function() {
+          if($(this).is(':checked')) {
+            $('#trazabilidad_id_oficina_box').removeClass('hidden').show();
+          }
+          else {
+            $('#trazabilidad_id_oficina_box').hide();
+          }
+        });
     });
 </script>
 
@@ -202,8 +211,19 @@
                             <label class="radio" for="Tdesactivada"><input id="Tdesactivada" name="activacion" value="no" type="radio" <?= $tarea->activacion == 'no' ? 'checked' : '' ?>>Tarea desactivada</label>
                         </div>
                     </div>
-                    <label class="checkbox" for="trazabilidad"><strong><input type="checkbox" id="trazabilidad" name="trazabilidad" value="1" <?= ($tarea->trazabilidad ? 'checked' : '') ?> /> Trazabilidad</strong></label>
-					          <br/>
+                    <br/>
+                    <div class="row-fluid">
+                      <div class="span6">
+                        <label class="checkbox" for="trazabilidad"><strong><input type="checkbox" id="trazabilidad" name="trazabilidad" value="1" <?= ($tarea->trazabilidad ? 'checked' : '') ?> /> Trazabilidad</strong></label>
+                      </div>
+                      <div class="span6">
+                        <div id="trazabilidad_id_oficina_box" class="<?= ($tarea->trazabilidad ? '' : 'hidden') ?>">
+                          <label for="trazabilidad_id_oficina"><strong>ID de oficina</strong></label>
+                          <input type="text" id="trazabilidad_id_oficina" name="trazabilidad_id_oficina" value="<?= $tarea->trazabilidad_id_oficina ?>" />
+                        </div>
+                      </div>
+                    </div>
+                    <br/>
                     <label for="previsualizacion"><strong>Información para previsualización</strong></label>
                     <textarea class="span12" rows="5" id="previsualizacion" name="previsualizacion"><?=$tarea->previsualizacion?></textarea>
                     <div class="help-block">Información que aparecera en la bandeja de entrada al pasar el cursor por encima.</div>
@@ -216,6 +236,15 @@
                                     $("#optionalAsignacionUsuario").removeClass("hide");
                                 else
                                     $("#optionalAsignacionUsuario").addClass("hide");
+                            });
+
+                            $('#notificarCorreo').click(function() {
+                              if($(this).is(":not(:checked)")) {
+                                $('#asignacion_notificar_mensaje').hide().addClass('hidden');
+                              }
+                              else {
+                                $('#asignacion_notificar_mensaje').show().removeClass('hidden');
+                              }
                             });
                         });
                     </script>
@@ -233,6 +262,7 @@
                     </div>
                     <br />
                     <label class="checkbox" for="notificarCorreo"><input type="checkbox" id="notificarCorreo" name="asignacion_notificar" value="1" <?= $tarea->asignacion_notificar ? 'checked' : '' ?> /> Notificar vía correo electrónico al usuario asignado.</label>
+                    <textarea id="asignacion_notificar_mensaje" name="asignacion_notificar_mensaje" class="input-xxlarge <?= $tarea->asignacion_notificar ? '' : 'hidden' ?>" placeholder="Mensaje a enviar (opcional)."><?= $tarea->asignacion_notificar_mensaje ?></textarea>
                 </div>
                 <div class="tab-pane" id="tab3">
                     <script type="text/javascript">

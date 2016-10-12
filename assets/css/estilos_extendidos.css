@@ -2059,7 +2059,7 @@ fieldset .fieldset-msg, fieldset .link-agregar {
 }
 .acciones_t {text-align: center;}
 .popover-title {font-weight: bold;}
-.btn-toolbar button.disabled {display:none;}
+.btn-toolbar:not(.botonera) button.disabled {display:none;}
 .dialogos_titulo {
   display: block;
   font-weight: normal;
@@ -2074,3 +2074,4 @@ fieldset .fieldset-msg, fieldset .link-agregar {
   color: #064D8E;
   word-wrap: break-word;
 }
+a.config:hover {text-decoration: none;}

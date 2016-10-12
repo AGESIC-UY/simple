@@ -109,7 +109,7 @@
     <footer class="row-fluid">
       <div class="area2">
         <div class="container-fluid">
-      	<span class="version">Versión 1.01</span>
+      	<span class="version">Versión 1.03</span>
           <div class="pull-right">
               <img src="<?= base_url() ?>assets/img/logoTramites.png" alt="tramites.gub.uy">
           </div>

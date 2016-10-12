@@ -62,8 +62,7 @@ class CampoDocumento extends Campo {
           log_error($error);
         }
 
-        //$display = '<div class="control-group"><div class="controls"><a class="btn-link" href="' . site_url('documentos/get/' . $file->filename) . '?id='.$file->id.'&amp;token='.$file->llave.'"><span class="icon-download-alt icon-white"></span> ' . $this->etiqueta . '</a></div></div>';
-        $display = '<div class="control-group"><div class="controls"><a class="btn-link" href="' . site_url('documentos/get/' . $file->filename) . '?id='.$file->id.'&amp;token='.$file->llave.'">' . $this->etiqueta . ' (.pdf '. $file_size .')</a></div></div>';
+        $display = '<div class="control-group"><div class="controls"><a class="btn-link" href="' . site_url('documentos/get/' . $file->id) . '?token='.$file->llave.'">' . $this->etiqueta . ' (.pdf '. $file_size .')</a></div></div>';
 
         return $display;
     }
@@ -96,7 +95,7 @@ class CampoDocumento extends Campo {
 
         $display = '<div class="control-group"><span class="control-label">'.$this->etiqueta.'</span>';
         $display .= '<div id="exito" class="alert alert-success" style="display: none;">Documento fue firmado con éxito.</div>';
-        $display .= '<div class="controls"><a class="btn btn-info" href="' . site_url('documentos/get/' . $dato->valor) .'?id='.$file->id.'&amp;token='.$file->llave. '"><span class="icon-search icon-white"></span> Previsualizar el documento</a></div>';
+        $display .= '<div class="controls"><a class="btn btn-info" href="' . site_url('documentos/get/' . $file->id) .'?token='.$file->llave. '"><span class="icon-search icon-white"></span> Previsualizar el documento</a></div>';
         $display .= '</div>';
         $display .= '
             <script>

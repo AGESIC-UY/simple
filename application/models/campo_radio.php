@@ -8,7 +8,7 @@ class CampoRadio extends Campo {
         $display.='<div class="controls" data-fieldset="'.$this->fieldset.'">';
         foreach ($this->datos as $d) {
             $display.='<label class="radio" for="'.$d->valor.'">';
-            $display.='<input id="'.$d->valor.'" ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' type="radio" name="' . $this->nombre . '" value="' . $d->valor . '" ' . ($dato && $d->valor == $dato->valor ? 'checked' : '') . ' />';
+            $display.='<input id="'.$this->id.'_'.$d->valor.'" ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' type="radio" name="' . $this->nombre . '" value="' . $d->valor . '" ' . ($dato && $d->valor == $dato->valor ? 'checked' : '') . ' />';
             $display.=$d->etiqueta . '</label>';
         }
         if($this->ayuda)

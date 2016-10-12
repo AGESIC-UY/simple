@@ -12,7 +12,7 @@ class CertificadoPDF extends TCPDF {
     public $id='123456789';
     public $key='abcdefghijkl';
     public $servicio='Servicio';
-    public $servicio_url='http://www.ejemplo.com';
+    public $servicio_url='https://ejemplo.gub.uy';
     public $logo='assets/img/certificados/logo-tramites.png';
     public $titulo='Título';
     public $subtitulo='Subtítulo';

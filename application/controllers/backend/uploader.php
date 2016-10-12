@@ -47,7 +47,18 @@ class Uploader extends MY_BackendController {
         echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
     }
 
-    function firma_get($filename){
+    function credenciales_pasarela_pago() {
+        $allowedExtensions = array('crt', 'key');
+        // max file size in bytes
+        $sizeLimit = 20 * 1024 * 1024;
+
+        $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
+        $result = $uploader->handleUpload('uploads/pasarela/');
+
+        echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+    }
+
+    function firma_get($filename) {
       readfile('uploads/firmas/'.$filename);
     }
 

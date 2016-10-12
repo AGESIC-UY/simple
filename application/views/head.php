@@ -26,7 +26,7 @@
 <script src="<?= base_url() ?>assets/js/bootstrap.min.js"></script>
 <!--<script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>-->
 <!--<script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>-->
-<!--<script src="<?= base_url() ?>assets/js/handsontable/dist/handsontable.full.min.js" type="text/javascript"></script>-->
+<script src="<?= base_url() ?>assets/js/handsontable/dist/handsontable.full.min.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/jquery.chosen/chosen.jquery.min.js"></script>
 <script src="<?= base_url() ?>assets/js/file-uploader/fileuploader.js"></script>
 <script src="<?= base_url() ?>assets/js/jquery.base64/jquery.base64.min.js" type="text/javascript"></script>

@@ -23,7 +23,6 @@ class Uploader extends MY_Controller {
             exit;
         }
 
-
         // list of valid extensions, ex. array("jpeg", "xml", "bmp")
         $allowedExtensions = array('gif', 'jpg', 'png', 'pdf', 'doc', 'docx','zip','rar','ppt','pptx','xls','xlsx','mpp','vsd');
         if(isset($campo->extra->filetypes))
@@ -50,8 +49,8 @@ class Uploader extends MY_Controller {
         echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
     }
 
-    function datos_get($filename) {
-        $id=$this->input->get('id');
+    function datos_get($id) {
+        // $id=$this->input->get('id');
         $token=$this->input->get('token');
 
         //Chequeamos los permisos en el frontend

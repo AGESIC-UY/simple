@@ -200,8 +200,8 @@ class Documentos extends MY_Controller {
         }
     }
 
-    function get($filename) {
-        $id=$this->input->get('id');
+    function get($id) {
+        // $id=$this->input->get('id');
         $token=$this->input->get('token');
 
         //Chequeamos permisos del frontend

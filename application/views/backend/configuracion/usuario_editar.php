@@ -14,7 +14,6 @@
             <li class="active"><?= isset($usuario) ?$usuario->usuario:'Crear' ?></li>
         </ul>
         <h2><?= isset($usuario) ?$usuario->usuario:'Crear' ?></h2>
-
         <form class="ajaxForm" method="post" action="<?= site_url('backend/configuracion/usuario_editar_form/' . (isset($usuario)?$usuario->id:'')) ?>">
             <fieldset>
                 <legend>Editar usuario</legend>
@@ -24,6 +23,9 @@
                     <label for="nombre" class="control-label">Usuario</label>
                     <div class="controls">
                       <input type="text" id="nombre" name="usuario" value="<?=isset($usuario)?$usuario->usuario:''?>" />
+                      <?php if(!isset($usuario)) { ?>
+                        <a href="#" class="btn btn-primary" id="verificar_existe_usuario">Verificar</a>
+                      <?php } ?>
                     </div>
                   </div>
                   <div class="control-group">
@@ -66,6 +68,12 @@
                     <span class="control-label"></span>
                     <div class="controls">
                       <label class="checkbox" for="oficina"><input type="checkbox" id="oficina" name="vacaciones" value="1" <?=isset($usuario) && $usuario->vacaciones?'checked':''?> /> ¿Fuera de oficina?</label>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <span class="control-label"></span>
+                    <div class="controls">
+                      <label class="checkbox" for="acceso_reportes"><input type="checkbox" id="acceso_reportes" name="acceso_reportes" value="1" <?=isset($usuario) && $usuario->acceso_reportes?'checked':''?> /> ¿Acceso a reportes?</label>
                     </div>
                   </div>
                   <div class="control-group">

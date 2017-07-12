@@ -35,12 +35,16 @@ function editarPosicionCampos(){
 }
 
 function editarCampo(campoId){
-    $("#modal").load(site_url+"backend/formularios/ajax_editar_campo/"+campoId);
+    $("#modal").load(site_url+"backend/formularios/ajax_editar_campo/"+campoId+'?id='+ uniqueId());
     $("#modal").modal({backdrop: 'static', keyboard: false});
     return false;
 }
+
 function agregarCampo(formularioId,tipo){
     $("#modal").load(site_url+"backend/formularios/ajax_agregar_campo/"+formularioId+"/"+tipo);
     $("#modal").modal({backdrop: 'static', keyboard: false});
     return false;
 }
+
+
+function uniqueId() { return new Date().getTime(); }

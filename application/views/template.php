@@ -17,8 +17,8 @@
                           <a href="<?= site_url() ?>">
                             <img src="<?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->logoADesplegar : base_url('assets/img/logo.svg') ?>" alt="<?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->nombre_largo : 'Simple' ?>" />
                           </a>
-                          <h1><?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->nombre_largo : '' ?></h1>
-                          <p><?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->mensaje : '' ?></p>
+                          <span class="nombre-app"><?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->nombre_largo : '' ?></span>
+                          <!-- p><?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->mensaje : '' ?></p -->
                         </div>
                     </div>
                     <div class="span7">
@@ -38,7 +38,7 @@
                       </div>
                       <div id="userMenu" class="pull-right userMenu">
                         <?php if (!UsuarioSesion::usuario()->registrado): ?>
-                            <a class="btn btn-small btn-link" href="<?= site_url('autenticacion/login_saml') ?>">Iniciar la sesión</a>
+                            <a class="btn btn-small btn-link" href="<?= site_url('autenticacion/login') ?>">Iniciar la sesión</a>
                         <?php else: ?>
                           <?php if (UsuarioSesion::registrado_saml()): ?>
                             <span class="btn-small">Bienvenido,</span>
@@ -47,6 +47,15 @@
                               <ul class="dropdown-menu pull-right">
                                   <li><a href="<?= site_url('cuentas/editar') ?>"><span class="icon-user"></span> Mi cuenta</a></li>
                                   <li><a href="<?= site_url('autenticacion/logout_saml') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                              </ul>
+                            </div>
+                          <?php elseif(UsuarioSesion::registrado_ldap()): ?>
+                            <span class="btn-small">Bienvenido,</span>
+                            <div class="btn-group">
+                              <a class="btn btn-small btn-link dropdown-toggle" data-toggle="dropdown" href="#"><span><?= UsuarioSesion::usuario()->displayName() ?></span> <span class="caret"></span></a>
+                              <ul class="dropdown-menu pull-right">
+                                  <li><a href="<?= site_url('cuentas/editar') ?>"><span class="icon-user"></span> Mi cuenta</a></li>
+                                  <li><a href="<?= site_url('autenticacion/logout') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
                               </ul>
                             </div>
                           <?php else: ?>
@@ -70,16 +79,22 @@
                 <div class="row-fluid">
                     <div class="span3">
                         <ul id="sideMenu" class="nav nav-list" tabindex="-1">
-                            <li class="iniciar <?= isset($sidebar) && $sidebar == 'disponibles' ? 'active' : '' ?>"><a href="<?= site_url('tramites/disponibles') ?>">Iniciar trámite</a></li>
+                            <li class="iniciar <?= isset($sidebar) && $sidebar == 'disponibles' ? 'active' : '' ?>"><a href="<?= site_url('tramites/disponibles') ?>">Listado de trámites</a></li>
                             <?php if (UsuarioSesion::usuario()->registrado): ?>
                                 <?php
-                                $npendientes=Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio())->count();
-                                $nsinasignar=Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio())->count();
-                                $nparticipados=Doctrine::getTable('Tramite')->findParticipados(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio())->count();
+                                $npendientes=Doctrine::getTable('Etapa')->cantidadPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
+                                $nsinasignar=Doctrine::getTable('Etapa')->cantidadSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
+                                $nparticipados=Doctrine::getTable('Tramite')->cantidadParticipados(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
                                 ?>
-                                <li class="<?= isset($sidebar) && $sidebar == 'inbox' ? 'active' : '' ?>"><a href="<?= site_url('etapas/inbox') ?>">Bandeja de Entrada (<?= $npendientes ?>)</a></li>
-                                <?php if($nsinasignar): ?><li class="<?= isset($sidebar) && $sidebar == 'sinasignar' ? 'active' : '' ?>"><a href="<?= site_url('etapas/sinasignar') ?>">Sin asignar  (<?=$nsinasignar  ?>)</a></li><?php endif ?>
-                                <li class="<?= isset($sidebar) && $sidebar == 'participados' ? 'active' : '' ?>"><a href="<?= site_url('tramites/participados') ?>">Participados  (<?= $nparticipados ?>)</a></li>
+                                <li class="<?= isset($sidebar) && $sidebar == 'inbox' ? 'active' : '' ?>"><a href="<?= site_url('etapas/inbox?orderby=updated_at&direction=desc') ?>">Bandeja de entrada (<?= $npendientes ?>)</a></li>
+                                <li class="<?= isset($sidebar) && $sidebar == 'sinasignar' ? 'active' : '' ?>"><a href="<?= site_url('etapas/sinasignar') ?>">Sin asignar (<?= $nsinasignar ?>)</a></li>
+                                <li class="<?= isset($sidebar) && $sidebar == 'participados' ? 'active' : '' ?>"><a href="<?= site_url('tramites/participados?orderby=updated_at&direction=desc') ?>">Mis trámites  (<?= $nparticipados ?>)</a></li>
+                                <?php if(UsuarioSesion::usuario()->acceso_reportes && UsuarioSesion::usuario()->cuenta_id): ?>
+                                  <li class="<?= isset($sidebar) && $sidebar == 'reportes' ? 'active' : '' ?>"><a href="<?= site_url('tramites/reportes_procesos') ?>">Reportes de trámites</a></li>
+                                <?php endif; ?>
+                                <?php if(UsuarioSesion::usuarioMesaDeEntrada()): ?>
+                                  <li class="<?= isset($sidebar) && $sidebar == 'busqueda_ciudadano' ? 'active' : '' ?>"><a href="<?= site_url('etapas/busqueda_ciudadano') ?>">Trámites de Ciudadano</a></li>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </ul>
                     </div>

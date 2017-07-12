@@ -8,12 +8,12 @@
             <li>
                 <a href="<?= site_url('backend/configuracion') ?>">Configuración</a> <span class="divider">/</span>
             </li>
-            <li class="active">Mi Sitio</li>
+            <li class="active">Cuenta</li>
         </ul>
-        <h2>General: Mi Sitio</h2>
+        <h2>General: Cuenta</h2>
         <form class="ajaxForm" method="post" action="<?= site_url('backend/configuracion/misitio_form/') ?>">
             <fieldset>
-                <legend>Editar información de mi sitio</legend>
+                <legend>Editar información de la cuenta</legend>
                 <div class="validacion validacion-error"></div>
                 <div class="form-horizontal">
                   <div class="control-group">
@@ -28,10 +28,16 @@
                       <input class="input-xxlarge" id="nombreL" type="text" name="nombre_largo" value="<?=$cuenta->nombre_largo?>"/>
                     </div>
                   </div>
-                  <div class="control-group">
+                  <!-- div class="control-group">
                     <label for="mensaje" class="control-label">Mensaje de bienvenida (Puede contener HTML)</label>
                     <div class="controls">
                       <textarea name="mensaje" id="mensaje" class="input-xxlarge"><?=$cuenta->mensaje?></textarea>
+                    </div>
+                  </div -->
+                  <div class="control-group">
+                    <label for="codigo_analytics" class="control-label">Código Google Analytics</label>
+                    <div class="controls">
+                      <textarea name="codigo_analytics" id="codigo_analytics" class="input-xxlarge"><?=json_decode($cuenta->codigo_analytics)?></textarea>
                     </div>
                   </div>
                   <div class="control-group">

@@ -74,37 +74,46 @@ class Bloques extends MY_BackendController {
     }
 
     public function editar_form($bloque_id) {
-        $bloque=Doctrine::getTable('Bloque')->find($bloque_id);
+      $bloque = Doctrine::getTable('Bloque')->find($bloque_id);
 
-        $this->form_validation->set_rules('nombre_bloque', 'Nombre_bloque', 'required');
+      $this->form_validation->set_rules('nombre_bloque', 'Nombre', 'required');
+
+      $respuesta=new stdClass();
+      if ($this->form_validation->run() == TRUE) {
+          $bloque->nombre=$this->input->post('nombre_bloque');
+          $bloque->save();
+
+          $respuesta->validacion=TRUE;
+          $respuesta->redirect=site_url('backend/bloques/editar/'.$bloque_id);
+      }
+      else {
+          $respuesta->validacion=FALSE;
+          $respuesta->errores=validation_errors();
+      }
+
+      echo json_encode($respuesta);
+    }
+
+    public function ajax_editar($bloque_id){
+        $bloque=Doctrine::getTable('Bloque')->find($bloque_id);
+        $this->form_validation->set_rules('nombre_bloque', 'Nombre', 'required');
 
         if ($this->form_validation->run() == TRUE) {
             $bloque->nombre=$this->input->post('nombre_bloque');
             $bloque->save();
 
-            redirect('backend/bloques/index/');
+            $data['bloque']=$bloque;
+
+            $this->load->view('backend/bloques/ajax_editar', $data);
         }
         else {
             $respuesta->validacion=FALSE;
             $respuesta->errores=validation_errors();
 
-            redirect('backend/bloques/editar/' . $bloque->id);
+            $data['bloque']=$bloque;
+
+            $this->load->view('backend/bloques/ajax_editar', $data);
         }
-    }
-
-    public function ajax_editar($formulario_id){
-        $formulario=Doctrine::getTable('Formulario')->find($formulario_id);
-        $bloque=Doctrine::getTable('Bloque')->find($this->input->get('bloque_id'));
-
-        if($formulario->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
-            echo 'Usuario no tiene permisos para editar este formulario.';
-            exit;
-        }
-
-        $data['formulario']=$formulario;
-        $data['bloque']=$bloque;
-
-        $this->load->view('backend/bloques/ajax_editar',$data);
     }
 
     public function editar_posicion_campos($formulario_id){

@@ -9,7 +9,7 @@
                 .replace(/'/g, "&#039;");
         }
 
-        $("#selectGruposUsuarios").select2();
+        $("#selectGruposUsuarios").select2({tags: true});
 
         $("[rel=tooltip]").tooltip();
 
@@ -39,6 +39,7 @@
             var formularioId=$form.find(".pasoFormulario option:selected").val();
             var formularioNombre=$form.find(".pasoFormulario option:selected").text();
             var modo=$form.find(".pasoModo option:selected").val();
+            var generar_pdf=$form.find(".pasoGenerar_pdf option:selected").val();
             var regla=$form.find(".pasoRegla").val();
             if($form.find(".pasoNombre").val().length) {
               var nombre = $form.find(".pasoNombre").val();
@@ -47,18 +48,28 @@
                 var nombre = formularioNombre;
             }
 
+            var texto_generar_pdf = '';
+            if(generar_pdf == 1){
+              texto_generar_pdf = 'Si';
+            }
+            else{
+              texto_generar_pdf = 'No';
+            }
+
             var html="<tr>";
             html+="<td>"+pos+"</td>";
             html+='<td><a title="Editar" target="_blank" href="'+site_url+'backend/formularios/editar/'+formularioId+'">'+formularioNombre+'</td>';
             html+="<td>"+nombre+"</td>";
             html+="<td>"+regla+"</td>";
             html+="<td>"+modo+"</td>";
+            html+="<td>"+texto_generar_pdf+"</td>";
             html+='<td>';
             html+='<input type="hidden" name="pasos['+pos+'][id]" value="" />';
             html+='<input type="hidden" name="pasos['+pos+'][formulario_id]" value="'+formularioId+'" />';
             html+='<input type="hidden" name="pasos['+pos+'][regla]" value="'+escapeHtml(regla)+'" />';
             html+='<input type="hidden" name="pasos['+pos+'][nombre]" value="'+escapeHtml(nombre)+'" />';
             html+='<input type="hidden" name="pasos['+pos+'][modo]" value="'+modo+'" />';
+            html+='<input type="hidden" name="pasos['+pos+'][generar_pdf]" value="'+generar_pdf+'" />';
             html+='<a class="delete" title="Eliminar" href="#"><span class="icon-trash"></span></a>';
             html+='</td>';
             html+="</tr>";
@@ -75,8 +86,10 @@
                 $(this).find("tr").each(function(i,e){
                     $(e).find("td:nth-child(1)").text(i+1);
                     $(e).find("input[name*=formulario_id]").attr("name","pasos["+(i+1)+"][formulario_id]");
+                    $(e).find("input[name*=nombre]").attr("name","pasos["+(i+1)+"][nombre]");
                     $(e).find("input[name*=regla]").attr("name","pasos["+(i+1)+"][regla]");
                     $(e).find("input[name*=modo]").attr("name","pasos["+(i+1)+"][modo]");
+                    $(e).find("input[name*=generar_pdf]").attr("name","pasos["+(i+1)+"][generar_pdf]");
                 });
             }
         });
@@ -120,7 +133,20 @@
         });
 
         //$("#modalEditarTarea form input[name=socket_id_emisor]").val(socketId);
-        //$("#modalEditarTarea .botonEliminar").attr("href",function(i,href){return href+"?socket_id_emisor="+socketId;})
+        //$("#modalEditarTarea .botonEliminar").attr("href",function(i,href){return href+"?socket_id_emisor="+socketId;});
+
+        $('#trazabilidad').click(function() {
+          if($(this).is(':checked')) {
+            $('#trazabilidad_id_oficina_box').removeClass('hidden').show();
+            $('#trazabilidad_cabezal').parent().removeClass('hidden').show();
+            $('#trazabilidad_estado').removeClass('hidden').show();
+          }
+          else {
+            $('#trazabilidad_id_oficina_box').hide();
+            $('#trazabilidad_cabezal').parent().hide();
+            $('#trazabilidad_estado').hide();
+          }
+        });
     });
 </script>
 
@@ -141,6 +167,7 @@
                 <li><a href="#tab4">Pasos</a></li>
                 <li><a href="#tab5">Eventos</a></li>
                 <li><a href="#tab6">Vencimiento</a></li>
+                <li><a href="#tab8">Trazabilidad</a></li>
                 <li><a href="#tab7">Otros</a></li>
             </ul>
             <div class="tab-content">
@@ -153,6 +180,7 @@
                         <div class="span6">
                             <label class="checkbox" for="Tinicial"><input id="Tinicial" name="inicial" value="1" type="checkbox" <?= $tarea->inicial ? 'checked' : '' ?>> Tarea Inicial</label>
                             <label class="checkbox" for="Tfinal"><input id="Tfinal" name="final" value="1" type="checkbox" <?= $tarea->final ? 'checked' : '' ?>> Tarea Final</label>
+                            <label class="checkbox" for="TAutomatica"><input id="TAutomatica" name="automatica" value="1" type="checkbox" <?= $tarea->automatica ? 'checked' : '' ?>> Tarea Automática</label>
                         </div>
                         <div class="span6">
                             <script>
@@ -201,8 +229,6 @@
                             <label class="radio" for="Tdesactivada"><input id="Tdesactivada" name="activacion" value="no" type="radio" <?= $tarea->activacion == 'no' ? 'checked' : '' ?>>Tarea desactivada</label>
                         </div>
                     </div>
-                    <label class="checkbox" for="trazabilidad"><strong><input type="checkbox" id="trazabilidad" name="trazabilidad" value="1" <?= ($tarea->trazabilidad ? 'checked' : '') ?> /> Trazabilidad</strong></label>
-					          <br/>
                     <label for="previsualizacion"><strong>Información para previsualización</strong></label>
                     <textarea class="span12" rows="5" id="previsualizacion" name="previsualizacion"><?=$tarea->previsualizacion?></textarea>
                     <div class="help-block">Información que aparecera en la bandeja de entrada al pasar el cursor por encima.</div>
@@ -215,6 +241,15 @@
                                     $("#optionalAsignacionUsuario").removeClass("hide");
                                 else
                                     $("#optionalAsignacionUsuario").addClass("hide");
+                            });
+
+                            $('#notificarCorreo').click(function() {
+                              if($(this).is(":not(:checked)")) {
+                                $('#asignacion_notificar_mensaje').hide().addClass('hidden');
+                              }
+                              else {
+                                $('#asignacion_notificar_mensaje').show().removeClass('hidden');
+                              }
                             });
                         });
                     </script>
@@ -232,6 +267,7 @@
                     </div>
                     <br />
                     <label class="checkbox" for="notificarCorreo"><input type="checkbox" id="notificarCorreo" name="asignacion_notificar" value="1" <?= $tarea->asignacion_notificar ? 'checked' : '' ?> /> Notificar vía correo electrónico al usuario asignado.</label>
+                    <textarea id="asignacion_notificar_mensaje" name="asignacion_notificar_mensaje" class="input-xxlarge <?= $tarea->asignacion_notificar ? '' : 'hidden' ?>" placeholder="Mensaje a enviar (opcional)."><?= $tarea->asignacion_notificar_mensaje ?></textarea>
                 </div>
                 <div class="tab-pane" id="tab3">
                     <script type="text/javascript">
@@ -246,6 +282,14 @@
                     </script>
                     <label class='radio' for="cualquierPersona"><input id="cualquierPersona" type="radio" name="acceso_modo" value="publico" <?= $tarea->acceso_modo == 'publico' ? 'checked' : '' ?> /> Cualquier persona puede acceder.</label>
                     <label class='radio' for="soloRegistrados"><input id="soloRegistrados" type="radio" name="acceso_modo" value="registrados" <?= $tarea->acceso_modo == 'registrados' ? 'checked' : '' ?> /> Sólo los usuarios registrados.</label>
+                    <label class="radio" for="confianza_id">Nivel de Confianza
+                      <select class="tipo" id="confianza_id" name="nivel_confianza">
+                        <option <?=$tarea->nivel_confianza==NIVEL_CONFIANZA_AG ?'selected':''?> value='<?=NIVEL_CONFIANZA_AG?>'>Autogestionado</option>
+                        <option <?=$tarea->nivel_confianza==NIVEL_CONFIANZA_VP ?'selected':''?> value='<?=NIVEL_CONFIANZA_VP?>'>Verificado Presencial</option>
+                        <option <?=$tarea->nivel_confianza==NIVEL_CONFIANZA_VCI ?'selected':''?> value='<?=NIVEL_CONFIANZA_VCI?>'>Verificado Firma Electrónica</option>
+                        <option <?=$tarea->nivel_confianza==NIVEL_CONFIANZA_CI ?'selected':''?> value='<?=NIVEL_CONFIANZA_CI?>'>Cédula Identidad</option>
+                      </select>
+                    </label>
                     <!--<label class='radio' for="soloClaveunica"><input id="soloClaveunica" type="radio" name="acceso_modo" value="claveunica" <?= $tarea->acceso_modo == 'claveunica' ? 'checked' : '' ?> /> Sólo los usuarios registrados con ClaveUnica.</label>-->
                     <label class='radio' for="soloGrupo"><input id="soloGrupo" type="radio" name="acceso_modo" value="grupos_usuarios" <?= $tarea->acceso_modo == 'grupos_usuarios' ? 'checked' : '' ?> /> Sólo los siguientes grupos de usuarios pueden acceder.</label>
                     <div id="optionalGruposUsuarios" style="height: 300px;" class="<?= $tarea->acceso_modo == 'grupos_usuarios' ? '' : 'hide' ?>">
@@ -284,7 +328,7 @@
                                 </td>
                                 <td>
                                   <label class="hidden-accessible" for="regla">Condición</label>
-                                  <input class="pasoRegla" type="text" id="regla" placeholder="Escribir regla condición aquí" />
+                                  <input class="pasoRegla input-medium" type="text" id="regla" placeholder="Escribir regla condición aquí" />
                                 </td>
                                 <td>
                                   <label class="hidden-accessible" for="modo">Modo</label>
@@ -293,6 +337,15 @@
                                       <option value="visualizacion">Visualización</option>
                                   </select>
                                 </td>
+
+                                <td>
+                                  <label class="hidden-accessible" for="generar_pdf">Generar PDF</label>
+                                  <select class="pasoGenerar_pdf input-small" id="generar_pdf">
+                                      <option value="1" selected>Si</option>
+                                      <option value="0">No</option>
+                                  </select>
+                                </td>
+
                                 <td>
                                   <button type="button" class="btn" title="Agregar"><span class="icon-plus"></span></button>
                                 </td>
@@ -303,6 +356,7 @@
                                 <th>Título del paso</th>
                                 <th>Condición</th>
                                 <th>Modo</th>
+                                <th>Generar PDF</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -314,12 +368,14 @@
                                     <td><?= $p->nombre ?></td>
                                     <td><?= $p->regla ?></td>
                                     <td><?= $p->modo ?></td>
+                                    <td><? if($p->generar_pdf == 1) echo 'Si'; else echo 'No'; ?></td>
                                     <td>
                                         <input type="hidden" name="pasos[<?= $key + 1 ?>][id]" value="<?= $p->id ?>" />
                                         <input type="hidden" name="pasos[<?= $key + 1 ?>][formulario_id]" value="<?= $p->formulario_id ?>" />
                                         <input type="hidden" name="pasos[<?= $key + 1 ?>][nombre]" value="<?= $p->nombre ?>" />
                                         <input type="hidden" name="pasos[<?= $key + 1 ?>][regla]" value="<?= $p->regla ?>" />
                                         <input type="hidden" name="pasos[<?= $key + 1 ?>][modo]" value="<?= $p->modo ?>" />
+                                        <input type="hidden" name="pasos[<?= $key + 1 ?>][generar_pdf]" value="<?= $p->generar_pdf ?>" />
                                         <a class="delete" title="Eliminar paso" href="#"><span class="icon-trash"></span></a>
                                     </td>
                                 </tr>
@@ -459,6 +515,55 @@
                             <span class="add-on">@@</span><input type="text" name="almacenar_usuario_variable" id="almacenar_usuario_variable" value="<?= $tarea->almacenar_usuario_variable ?>" />
                         </div>
                     </div>
+
+                    <label for="nombre"><strong>Texto Paso final Pendiente</strong></label>
+                    <input class="span12" id="paso_final_pendiente" name="paso_final_pendiente" type="text" value="<?= $tarea->paso_final_pendiente ?>" />
+                    <br/>
+                    <label for="nombre"><strong>Texto Paso final StandBy</strong></label>
+                    <input class="span12" id="paso_final_standby" name="paso_final_standby" type="text" value="<?= $tarea->paso_final_standby ?>" />
+                    <br/>
+                    <label for="nombre"><strong>Texto Paso final Compĺetado</strong></label>
+                    <input class="span12" id="paso_final_completado" name="paso_final_completado" type="text" value="<?= $tarea->paso_final_completado ?>" />
+                    <br/>
+                    <label for="nombre"><strong>Texto Paso final Sin Continuación</strong></label>
+                    <input class="span12" id="paso_final_sincontinuacion" name="paso_final_sincontinuacion" type="text" value="<?= $tarea->paso_final_sincontinuacion ?>" />
+                    <br/>
+                    <label for="texto_boton_paso_final"><strong>Texto Botón Paso Final</strong></label>
+                    <input class="span12" id="texto_boton_paso_final" name="texto_boton_paso_final" type="text" value="<?= $tarea->texto_boton_paso_final ?>" />
+                    <br/>
+                    <label for="texto_boton_generar_pdf"><strong>Texto Botón Generar PDF</strong></label>
+                    <input class="span12" id="texto_boton_generar_pdf" name="texto_boton_generar_pdf" type="text" value="<?= $tarea->texto_boton_generar_pdf ?>" />
+
+                </div>
+                <div class="tab-pane" id="tab8">
+                  <div class="row-fluid">
+                    <div class="span6">
+                      <label class="checkbox" for="trazabilidad"><input type="checkbox" id="trazabilidad" name="trazabilidad" value="1" <?= ($tarea->trazabilidad ? 'checked' : '') ?> /> Activar trazabilidad</label>
+                    </div>
+                    <div class="span6">
+                      <div id="trazabilidad_id_oficina_box" class="<?= ($tarea->trazabilidad ? '' : 'hidden') ?>">
+                        <label for="trazabilidad_id_oficina">Oficina</label>
+                        <input type="text" id="trazabilidad_id_oficina" name="trazabilidad_id_oficina" autocomplete="on" value="<?= $tarea->trazabilidad_id_oficina ?>" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row-fluid">
+                    <div class="span6">
+                      <label class="checkbox <?= ($tarea->trazabilidad ? '' : 'hidden') ?>" for="trazabilidad_cabezal"><input type="checkbox" id="trazabilidad_cabezal" name="trazabilidad_cabezal" value="1" <?= ($tarea->trazabilidad_cabezal ? 'checked' : '') ?> /> Traza cabezal</label>
+                    </div>
+                    <div class="span6">
+                      <div id="trazabilidad_estado" class="<?= ($tarea->trazabilidad ? '' : 'hidden') ?>">
+                        <label for="trazabilidad_estado">Estado de la traza</label>
+                        <select id="trazabilidad_estado" name="trazabilidad_estado">
+                          <?php $estados_posibles = unserialize(ID_ESTADOS_POSIBLES_TRAZABILIDAD); ?>
+                          <?php foreach($estados_posibles as $estado_k => $estado_v) { ?>
+                            <option value="<?=$estado_k?>" <?= ($tarea->trazabilidad_estado ==  $estado_k ? 'selected' : '') ?>><?=$estado_v?></option>
+                          <?php } ?> 
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                 </div>
             </div>
         </div>

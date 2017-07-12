@@ -6,8 +6,14 @@ class Autenticacion extends CI_Controller {
     }
 
     public function login() {
-      if((!UsuarioManagerSesion::usuario()) && (LOGIN_ADMIN_COESYS)) {
+      UsuarioManagerSesion::registrar_acceso();
+
+      if((!UsuarioManagerSesion::usuario()) && (strtoupper(TIPO_DE_AUTENTICACION) == 'CDA')) {
         redirect(site_url('autenticacion/login_saml'));
+      }
+      elseif((!UsuarioManagerSesion::usuario()) && (strtoupper(TIPO_DE_AUTENTICACION) == 'LDAP')) {
+        $data['redirect']=$this->session->flashdata('redirect');
+        $this->load->view('manager/autenticacion/login_ldap', $data);
       }
       else {
         $data['redirect']=$this->session->flashdata('redirect');
@@ -20,26 +26,41 @@ class Autenticacion extends CI_Controller {
         $this->form_validation->set_rules('password', 'Password', 'required|callback_check_password');
 
         $respuesta=new stdClass();
-        if ($this->form_validation->run() == TRUE) {
-            UsuarioManagerSesion::login($this->input->post('usuario'),$this->input->post('password'));
+        if(strtoupper(TIPO_DE_AUTENTICACION) == 'LDAP') {
+          if(UsuarioManagerSesion::login_ldap($this->input->post('usuario'),$this->input->post('password'))) {
             $respuesta->validacion=TRUE;
             $respuesta->redirect=$this->input->post('redirect')?$this->input->post('redirect'):site_url('manager');
-
-        }else{
+          }
+          else {
             $respuesta->validacion=FALSE;
-            $respuesta->errores=validation_errors();
+            $respuesta->errores=['Usuario y/o contraseña incorrecta.'];
+          }
+        }
+        else {
+          if ($this->form_validation->run() == TRUE) {
+            if(UsuarioManagerSesion::login($this->input->post('usuario'),$this->input->post('password'))) {
+              $respuesta->validacion=TRUE;
+              $respuesta->redirect=$this->input->post('redirect')?$this->input->post('redirect'):site_url('manager');
+            }
+          }
+          else {
+              $respuesta->validacion=FALSE;
+              $respuesta->errores=validation_errors();
+          }
         }
 
         echo json_encode($respuesta);
-
     }
-
 
     function logout() {
         UsuarioManagerSesion::logout();
         redirect($this->input->server('HTTP_REFERER'));
     }
 
+    public function logout_ldap() {
+        UsuarioManagerSesion::logout_ldap();
+        redirect($this->input->server('HTTP_REFERER'));
+     }
 
     function check_password($password){
         $autorizacion=UsuarioManagerSesion::validar_acceso($this->input->post('usuario'),$this->input->post('password'));
@@ -52,6 +73,3 @@ class Autenticacion extends CI_Controller {
 
     }
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

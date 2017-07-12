@@ -12,23 +12,21 @@ class File extends Doctrine_Record {
         $this->hasColumn('validez');
         $this->hasColumn('validez_habiles');
         $this->hasColumn('tramite_id');
+        $this->hasColumn('firmado');
+        $this->hasColumn('etapa_id');
     }
 
     function setUp() {
         parent::setUp();
-        
+
         $this->actAs('Timestampable');
 
         $this->hasOne('Tramite',array(
             'local'=>'tramite_id',
             'foreign'=>'id'
         ));
-
-      
-        
-
     }
-    
+
     public function postDelete($event) {
         parent::postDelete($event);
         if($this->tipo=='documento'){

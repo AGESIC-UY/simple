@@ -29,36 +29,40 @@
 
     <div class="btn-toolbar toolbar-formulario">
         <div class="btn-group">
-            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'title')">Título</button>
+            <!--button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'title')">Título</button-->
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'subtitle')">Subtítulo</button>
-            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'paragraph')">Parrafo</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'paragraph')">Párrafo</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'documento')">Documento</button>
         </div>
         <div class="btn-group">
             <button class="btn btn-inverse campo_no_requerido" onclick="return agregarCampo(<?= $formulario->id ?>,'error')">Mensaje de error</button>
-            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'fieldset')">Fieldset</button>
-            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'text')">Textbox</button>
-            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'textarea')">Textarea</button>
-            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'select')">Select</button>
-            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'radio')">Radio</button>
-            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'checkbox')">Checkbox</button>
-            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'file')">File</button>
-            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'date')">Date</button>
-            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'grid')">Grilla</button>
+            <button class="btn btn-inverse campo_no_requerido" onclick="return agregarCampo(<?= $formulario->id ?>,'dialogo')">Diálogo</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'fieldset')" title="Grupo de campos" >Fieldset</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'text')" title="Línea de texto">Textbox</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'textarea')" title="Texto largo">Textarea</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'select')" title="Lista desplegable">Select</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'radio')" title="Lista de selección única">Radio</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'checkbox')" title="Lista de selección múltiple">Checkbox</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'file')" title="Archivo adjunto">Archivo</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'date')">Fecha</button>
+            <!--<button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'grid')">Tabla</button>-->
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'tabla-responsive')">Tabla</button>
         </div>
         <div class="btn-group">
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'bloque')">Bloques</button>
-            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'paises')">Paises</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'paises')">País</button>
             <button class="btn btn-inverse hidden" onclick="return agregarCampo(<?= $formulario->id ?>,'comunas')">Comunas</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'moneda')">Moneda</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'agenda')">Agenda</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'pagos')">Pagos</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'estado_pago')">Estado de pago</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'javascript')">Javascript</button>
         </div>
     </div>
 
     <form id="formEditarFormulario" class="form-horizontal dynaForm debugForm" onsubmit="return false">
-      <fieldset>
-        <legend><?= $formulario->nombre ?></legend>
+      <?=($formulario->contenedor == 1 ? '<fieldset>' : '<div>') ?>
+        <?=($formulario->contenedor == 1 ? '<legend>'.$formulario->leyenda.'</legend>' : '') ?>
         <div class="edicionFormulario">
             <?php foreach ($formulario->Campos as $c): ?>
                 <div class="arrastrable">
@@ -78,7 +82,7 @@
               </div>
           <?php endforeach; ?>
         </div>
-      </fieldset>
+      <?= ($formulario->contenedor == 1 ? '</fieldset>' : '</div>') ?>
       <button type="submit" class="hidden-accessible" value="enviar"/>
     </form>
 

@@ -43,7 +43,7 @@
         </div>
       </div>
   </fieldset>
-  <fieldset><!-- TODO que no aparezca si no tiene otros datos (por ejemplo en pasarela de pagos) -->
+  <fieldset>
       <legend>Otros datos</legend>
         <?php if(isset($operacion)): ?>
             <?=$accion->displayForm($operacion)?>

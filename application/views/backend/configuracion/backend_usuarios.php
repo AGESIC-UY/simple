@@ -20,7 +20,8 @@
           <caption class="hide-text">Usuarios</caption>
           <thead>
             <tr>
-                <th>E-Mail</th>
+                <th>Usuario</th>
+                <th>Correo electrónico</th>
                 <th>Nombre</th>
                 <th>Apellidos</th>
                 <th>Rol</th>
@@ -30,6 +31,7 @@
           <tbody>
             <?php foreach($usuarios as $u): ?>
             <tr>
+                <td><?=$u->usuario?></td>
                 <td><?=$u->email?></td>
                 <td><?=$u->nombre?></td>
                 <td><?=$u->apellidos?></td>

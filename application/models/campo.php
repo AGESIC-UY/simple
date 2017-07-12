@@ -6,12 +6,18 @@ class Campo extends Doctrine_Record {
     public $estatico=false; //Indica si es un campo estatico, es decir que no es un input con informacion. Ej: Parrafos, titulos, etc.
     public $etiqueta_tamano='large'; //Indica el tamaño default que tendra el campo de etiqueta. Puede ser large o xxlarge.
     public $requiere_nombre=true;    //Indica si requiere que se le ingrese un nombre (Es decir, no generarlo aleatoriamente)
+    public $requiere_validacion = true; // Indica si se requiere validacion para el campo.
+    public $sin_etiqueta=false; // Indica que no se debe mostrar la etiqueta.
+    public $valor_default_tamano='small'; // Indica si el campo valor_default debe ser mas grande y se debe quitar el campo etiqueta. Se utilza en dialogos.
+    public $dialogo=false; // Indica si el campo es de tipo DIALOGO.
 
     public static function factory($tipo){
         if($tipo=='text')
             $campo=new CampoText();
+        if($tipo=='dialogo')
+            $campo=new CampoDialogo();
         if($tipo=='error')
-            $campo=new CampoError();
+            $campo=new CampoError(); // -- Deprecado
         if($tipo=='fieldset')
             $campo=new CampoFieldset();
         if($tipo=='encuesta')
@@ -50,8 +56,14 @@ class Campo extends Doctrine_Record {
             $campo=new CampoJavascript();
         else if($tipo=='grid')
             $campo=new CampoGrid();
+        else if($tipo=='tabla-responsive')
+            $campo=new CampoTablaResponsive();
         else if($tipo=='agenda')
             $campo=new CampoAgenda();
+        else if($tipo=='pagos')
+            $campo=new CampoPagos();
+        else if($tipo=='estado_pago')
+            $campo=new CampoEstadoPago();
 
         $campo->assignInheritanceValues();
 
@@ -77,10 +89,17 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('documento_id');
         $this->hasColumn('fieldset');
         $this->hasColumn('extra');
+        $this->hasColumn('ayuda_ampliada');
+        $this->hasColumn('documento_tramite');
+        $this->hasColumn('email_tramite');
+        $this->hasColumn('pago_online');
+        $this->hasColumn('requiere_agendar');
+        $this->hasColumn('firma_electronica');
 
         $this->setSubclasses(array(
                 'CampoText'  => array('tipo' => 'text'),
                 'CampoError'  => array('tipo' => 'error'),
+                'CampoDialogo'  => array('tipo' => 'dialogo'),
                 'CampoFieldset'  => array('tipo' => 'fieldset'),
                 'CampoEncuesta'  => array('tipo' => 'encuesta'),
                 'CampoTextArea'  => array('tipo' => 'textarea'),
@@ -100,7 +119,10 @@ class Campo extends Doctrine_Record {
                 'CampoDocumento'  => array('tipo' => 'documento'),
                 'CampoJavascript'  => array('tipo' => 'javascript'),
                 'CampoGrid'  => array('tipo' => 'grid'),
-                'CampoAgenda'  => array('tipo' => 'agenda')
+                'CampoTablaResponsive'  => array('tipo' => 'tabla-responsive'),
+                'CampoAgenda'  => array('tipo' => 'agenda'),
+                'CampoPagos'  => array('tipo' => 'pagos'),
+                'CampoEstadoPago'  => array('tipo' => 'estado_pago'),
             ));
     }
 
@@ -134,7 +156,7 @@ class Campo extends Doctrine_Record {
         return $this->display($modo,$dato,$etapa_id);
     }
 
-    public function displaySinDato($modo = 'edicion'){
+    public function displaySinDato($modo = 'edicion') {
         if($this->readonly)$modo='visualizacion';
         return $this->display($modo,NULL,NULL);
     }
@@ -167,19 +189,67 @@ class Campo extends Doctrine_Record {
                     if($this->dependiente_tipo=='regex'){
                         foreach($variable as $x){
                             if(!preg_match('/'.$this->dependiente_valor.'/', $x))
-                                $resultado= false;
+                                $resultado = false;
                         }
                     }else{
                         if(!in_array($this->dependiente_valor, $variable))
-                            $resultado= false;
+                            $resultado = false;
                     }
                 }else{
                     if($this->dependiente_tipo=='regex'){
                         if(!preg_match('/'.$this->dependiente_valor.'/', $variable))
-                            $resultado= false;
+                            $resultado = false;
                     }else{
                         if($variable!=$this->dependiente_valor)
-                            $resultado= false;
+                            $resultado = false;
+                    }
+
+                }
+
+                if($this->dependiente_relacion=='!=')
+                    $resultado=!$resultado;
+            }
+        }
+
+        return $resultado;
+    }
+
+      public function esVisibleParaLaEtapaActual($etapa_id){
+        $CI=& get_instance();
+
+        $resultado=true;
+
+        if($this->readonly){
+           $resultado=false;
+        }else if($this->dependiente_campo){
+            $nombre_campo=preg_replace('/\[\w*\]$/', '', $this->dependiente_campo);
+            $campo_datos_seguimiento = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($nombre_campo, $etapa_id);
+            $variable= $campo_datos_seguimiento->valor;
+
+            //Parche para el caso de campos dependientes con accesores. Ej: ubicacion[comuna]!='Las Condes|Santiago'
+            if(preg_match('/\[(\w+)\]$/',$this->dependiente_campo,$matches))
+                $variable=$variable[$matches[1]];
+
+            if($variable===false){    //Si la variable dependiente no existe
+                $resultado=false;
+            }else{
+                if(is_array($variable)){ //Es un arreglo
+                    if($this->dependiente_tipo=='regex'){
+                        foreach($variable as $x){
+                            if(!preg_match('/'.$this->dependiente_valor.'/', $x))
+                                $resultado = false;
+                        }
+                    }else{
+                        if(!in_array($this->dependiente_valor, $variable))
+                            $resultado = false;
+                    }
+                }else{
+                    if($this->dependiente_tipo=='regex'){
+                        if(!preg_match('/'.$this->dependiente_valor.'/', $variable))
+                            $resultado = false;
+                    }else{
+                        if($variable!=$this->dependiente_valor)
+                            $resultado = false;
                     }
 
                 }
@@ -201,8 +271,7 @@ class Campo extends Doctrine_Record {
             $validacion = $regla->getExpresionParaOutput($etapa_id);
         }
 
-
-        $CI->form_validation->set_rules($this->nombre, ucfirst($this->nombre), implode('|', $validacion));
+        $CI->form_validation->set_rules($this->nombre, ucfirst($this->etiqueta), implode('|', $validacion));
     }
 
 
@@ -262,5 +331,4 @@ class Campo extends Doctrine_Record {
     public function getExtra(){
         return json_decode($this->_get('extra'));
     }
-
 }

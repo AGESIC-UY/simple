@@ -487,17 +487,17 @@ qq.FileUploader = function(o){
         template: '<div class="qq-uploader">' +
                 '<div class="qq-upload-drop-area"><span>Arrastre hasta acá los archivos que desea subir</span></div>' +
                 '<div class="qq-upload-button btn"><span class="icon-upload"></span> Subir archivo</div>' +
-                '<ul class="qq-upload-list"></ul>' +
+                '<div class="qq-upload-list"></div>' +
              '</div>',
 
         // template for one item in file list
-        fileTemplate: '<li>' +
+        fileTemplate: '<div>' +
                 '<span class="qq-upload-file"></span>' +
                 '<span class="qq-upload-spinner"></span>' +
                 '<span class="qq-upload-size"></span>' +
                 '<a class="qq-upload-cancel" href="#">Cancelar</a>' +
                 '<span class="qq-upload-failed-text">Error</span>' +
-            '</li>',
+            '</div>',
 
         classes: {
             // used to get elements from templates
@@ -800,6 +800,7 @@ qq.UploadButton.prototype = {
         }
 
         input.setAttribute("type", "file");
+        input.setAttribute("title", "Subir archivo");
         input.setAttribute("name", this._options.name);
 
         qq.css(input, {
@@ -811,7 +812,7 @@ qq.UploadButton.prototype = {
             top: 0,
             fontFamily: 'Arial',
             // 4 persons reported this, the max values that worked for them were 243, 236, 236, 118
-            fontSize: '118px',
+            //fontSize: '118px',
             margin: 0,
             padding: 0,
             cursor: 'pointer',

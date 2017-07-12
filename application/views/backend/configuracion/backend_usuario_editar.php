@@ -1,5 +1,30 @@
-<div class="row-fluid">
+<script>
+      $(document).ready(function(){
+        $( "#rol" ).change(function() {
+              if ($( this ).val()  == 'seguimiento'){
+                $('#seguimiento').show();
+              }else{
+                $('#seguimiento').hide();
+              }
+        });
 
+        $( "#seg_alc_control_total" ).change(function() {
+              if ($(this).is(":checked")){
+                $('#grupos').hide();
+              }else{
+                $('#grupos').show();
+              }
+        });
+
+        $(function () {
+            $("#rol").change();
+        });
+        $(function () {
+            $("#seg_alc_control_total").change();
+        });
+      });
+</script>
+<div class="row-fluid">
     <div class="span3">
         <?php $this->load->view('backend/configuracion/sidebar') ?>
     </div>
@@ -26,7 +51,7 @@
                     </div>
                   </div>
                   <div class="control-group">
-                    <label for="email" class="control-label">E-Mail</label>
+                    <label for="email" class="control-label">Correo electrónico</label>
                     <div class="controls">
                       <input id="email" type="text" name="email" value="<?=isset($usuario)?$usuario->email:''?>" <?=  isset($usuario)?'disabled':''?>/>
                     </div>
@@ -63,21 +88,43 @@
                           <option value="super" <?=  isset($usuario) && $usuario->rol=='super'?'selected':''?>>super</option>
                           <option value="modelamiento" <?=  isset($usuario) && $usuario->rol=='modelamiento'?'selected':''?>>modelamiento</option>
                           <option value="seguimiento" <?=  isset($usuario) && $usuario->rol=='seguimiento'?'selected':''?>>seguimiento</option>
-                          <option value="operacion" <?=  isset($usuario) && $usuario->rol=='operacion'?'selected':''?>>operación</option>
                           <option value="gestion" <?=  isset($usuario) && $usuario->rol=='gestion'?'selected':''?>>gestión</option>
                           <option value="desarrollo" <?=  isset($usuario) && $usuario->rol=='desarrollo'?'selected':''?>>desarrollo</option>
                           <option value="configuracion" <?=  isset($usuario) && $usuario->rol=='configuracion'?'selected':''?>>configuración</option>
                       </select>
-                      <div class="help-block">
-                        <ul>
-                          <li>super: Tiene todos los privilegios del sistema.</li>
-                          <li>modelamiento: Permite modelar y diseñar el funcionamiento del trámite.</li>
-                          <li>seguimiento: Permite hacer seguimiento de los trámites.</li>
-                          <li>operación: Permite hacer seguimiento y operaciones sobre los trámites como eliminación y edición.</li>
-                          <li>gestión: Permite acceder a reportes de gestión y uso de la plataforma.</li>
-                          <li>desarrollo: Permite acceder a la API de desarrollo, para la integración con plataformas externas.</li>
-                          <li>configuración: Permite configurar los usuarios y grupos de usuarios que tienen acceso al sistema.</li>
-                        </ul>
+                      <div id="seguimiento">
+                        <div>
+                          <label class="checkbox" for="seg_alc_control_total"><input type="checkbox" id="seg_alc_control_total" name="seg_alc_control_total" value="1" <?=isset($usuario) && $usuario->seg_alc_control_total?'checked':''?> /> Control Total</label>
+                        </div>
+                        <div id='grupos'>
+                          <select  id="seg_alc_grupos_usuarios" name="seg_alc_grupos_usuarios[]" multiple>
+                            <?php if(count($grupos_usuarios) >= 1): ?>
+                             <option value="todos" <?=isset($usuario) && in_array('todos',$usuario->seg_alc_grupos_usuarios)?'selected':''?>>Todos</option>
+                           <?php endif; ?>
+                              <?php foreach($grupos_usuarios as $g): ?>
+                                <option value="<?=$g->id?>" <?=isset($usuario) && in_array($g->id,$usuario->seg_alc_grupos_usuarios)?'selected':''?>><?=$g->nombre?></option>
+                              <?php endforeach; ?>
+                          </select>
+                        </div>
+                        <div>
+                          <label class="checkbox" for="seg_reasginar"><input type="checkbox" id="seg_reasginar" name="seg_reasginar" value="1" <?=isset($usuario) && $usuario->seg_reasginar?'checked':''?> /> Reasignar</label>
+                        </div>
+                      </div>
+                      <div class="help-block lista_de_roles">
+                        <dl>
+                          <dt>super</dt>
+                          <dd>Tiene todos los privilegios del sistema.</dd>
+                          <dt>modelamiento</dt>
+                          <dd>Permite modelar y diseñar el funcionamiento del trámite.</dd>
+                          <dt>seguimiento</dt>
+                          <dd>Permite hacer seguimiento de los trámites.</dd>
+                          <dt>gestión</dt>
+                          <dd>Permite acceder a reportes de gestión y uso de la plataforma.</dd>
+                          <dt>desarrollo</dt>
+                          <dd>Permite acceder a la API de desarrollo, para la integración con plataformas externas.</dd>
+                          <dt>configuración</dt>
+                          <dd>Permite configurar los usuarios y grupos de usuarios que tienen acceso al sistema.</dd>
+                        </dl>
                       </div>
                     </div>
                   </div>

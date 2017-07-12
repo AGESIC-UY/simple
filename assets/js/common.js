@@ -1,50 +1,106 @@
 // -- Muestra los mensajes de error en su campo correspondiente
+// para que se muestre el mensaje en el campo que dio error es necesario que el mensaje contenga <strong>%s</strong>
 function muestraErrores () {
+  if($('.validacion .estado_dinamico')) {
+    $('.validacion').show();
+  }
+
   document.errors = [];
 
   $('.error').removeClass('error');
   $('.mensaje_error_campo').remove();
-
+  document.ayuda = [];
   $('.validacion > .alert').each(function() {
     $this = $(this);
 
     var error_reference_original = $this.find('strong').text();
-    var error_reference = $this.find('strong').text().toLowerCase();
+    error_reference_original = error_reference_original.split("@");
 
-    if(($('form *[name="'+ error_reference +'"]').length) && ($.inArray(error_reference, document.errors) == -1)) {
+    //var error_reference = $this.find('strong').text().toLowerCase();
+    var error_reference = error_reference_original[0];
+
+    if((($('form *[name="'+ error_reference +'"]').length) || ($('form *[name="'+ error_reference +'[]"]').length)) && ($.inArray(error_reference, document.errors) == -1)) {
       // -- $('form *[name="'+ error_reference +'"]').wrap('<div class="error_element_wrap"></div>'); /*comentado por mariana*/
 
       var element = $('form *[name="'+ error_reference +'"]');
+      if(!element.length) {
+        element = $('form *[name="'+ error_reference +'[]"]');
+      }
 
       var error_regexp = /"[a-zA-Z0-9_-]*"/
       var error_text = $this.text().replace('×', '').replace(error_regexp, '');
 
-      $(element).parent().parent().addClass('error');
+      if($(element).parent().parent().is('fieldset')) {
+        var label = $(element).parent().prev().first();
+        $(element).parent().prev().remove();
+        var nuevo_element = $(element).parent().wrap('<div class="control-group error"></div>');
+        $(nuevo_element).parent().prepend('<label class="control-label">'+ $(label).text() +'</label>');
+      }
+      else {
+        if($(element).parent().is('label')) {
+          if($(element).attr('type') == 'checkbox') {
+            $(element).parent().parent().parent().addClass('error');
+
+            var element = $(element).parent().last();
+          }
+          else {
+            $(element).parent().parent().parent().addClass('error');
+            var element = $(element).parent().last();
+          }
+        }
+        else {
+          $(element).parent().parent().addClass('error');
+        }
+      }
+      error_text = error_text.replace(error_reference+"@", "");
+
       $('<div class="mensaje_error_campo">'+ error_text +'</div>').insertAfter(element);
 
+      // -- Reemplazando el mensaje de error de este formato: NOMBRE@ETIQUETA por ETIQUETA.
+      //  Se necesita obtener el formato NOMBRE@ETIQUETA de parte de la libreria de validacion
+      // ya que se deben mostrar los errores tanto de forma de lista como local.
+      var mensaje_completo = $('.validacion').html();
+      mensaje_completo = mensaje_completo.replace(error_reference+"@", "");
+      $('.validacion').html(mensaje_completo);
+
       document.errors.push(error_reference);
+
+      if($(element).parent().find('.help-block')) {
+        var ayuda_contextual = $(element).parent().find('.help-block').first();
+        if(typeof ayuda_contextual[0] != 'undefined') {
+          $(ayuda_contextual[0]).insertAfter($(element));
+        }
+      }
     }
   });
 
-  // -- Si hay solo un error se eliminan los mensajes de error estandar, de lo contrario se muestran.
+  // -- Si hay mas de un error se muestran agrupados, de lo contrario se muestra de forma local.
   if(document.errors.length > 1) {
     $('.validacion').prepend('<span class="dialog-title">Hay <strong>' + document.errors.length + ' errores</strong> en el formulario</span>');
+
     $('.validacion').show();
+    $('body').scrollTo('.validacion', 500);
   }
   else if (document.errors.length == 1) {
-    $('.validacion').hide();
+    if($('#formEditarTarea').length) {
+      //si se est+a en edicion de una tarea y se tiene un solo error
+      $('.validacion').prepend('<span class="dialog-title">Hay <strong>' + document.errors.length + ' errores</strong> en el formulario</span>');
+      $('.validacion').show();
+      $('body').scrollTo('.validacion', 500);
+    }
+    else {
+      $('.validacion').show();
+      $('body').scrollTo('.validacion', 500);
+    }
   }
 }
 
 $(document).ready(function(){
     $("[data-toggle=popover]").popover();
-
     $(".chosen").chosen();
-
     $(".preventDoubleRequest").one("click", function() {
         $(this).click(function () { return false; });
     });
-
     $(".datepicker:not([readonly])")
     .datepicker({
         format: "dd-mm-yyyy",
@@ -52,8 +108,6 @@ $(document).ready(function(){
         autoclose: true,
         language: "es"
     });
-
-
     $(".file-uploader").each(function(i,el){
         var $parentDiv=$(el).parent();
         new qq.FileUploader({
@@ -63,7 +117,7 @@ $(document).ready(function(){
                 if(!respuesta.error){
                     $parentDiv.find("input[type=hidden]").val(respuesta.file_name);
                     $parentDiv.find(".qq-upload-list").empty();
-                    $parentDiv.find(".link").html("<a target='blank' href='"+site_url+"uploader/datos_get/"+respuesta.file_name+"?id="+respuesta.id+"&token="+respuesta.llave+"'>"+respuesta.file_name+"</a> (<a href='#' class='remove'>X</a>)")
+                    $parentDiv.find(".link").html("<a target='blank' href='"+site_url+"uploader/datos_get/"+respuesta.id+"?token="+respuesta.llave+"'>"+respuesta.file_name+"</a> (<a href='#' class='remove'>X</a>)")
                 }
             }
         });
@@ -75,9 +129,8 @@ $(document).ready(function(){
         $parentDiv.find(".qq-upload-list").empty();
     });
 
-
     $(".ajaxForm :submit").attr("disabled",false);
-    $(document).on("submit",".ajaxForm",function(){
+    $(document).on("submit",".ajaxForm",function() {
         var form=this;
         if(!form.submitting){
             form.submitting=true;
@@ -93,30 +146,37 @@ $(document).ready(function(){
                 data: $(form).serialize(),
                 type: form.method,
                 dataType: "json",
-                success: function(response){
-                    if(response.validacion){
-                        if(response.redirect){
-                            window.location=response.redirect;
-                        }else{
-                            var f=window[$(form).data("onsuccess")];
-                            f(form);
-                        }
+                success: function(response) {
+                  if(response.validacion) {
+                    if(response.redirect) {
+                      window.location=response.redirect;
                     }
-                    else{
-                        form.submitting=false;
-                        $(ajaxLoader).remove();
-                        $(form).find(":submit").attr("disabled",false);
-
-                        if($(".validacion").html(response.errores)) {
-                            muestraErrores();
-                        }
-
-                        /*
-                        $('html, body').animate({
-                            scrollTop: $(".validacion").offset().top-10
-                        });
-                        */
+                    else {
+                      var f=window[$(form).data("onsuccess")];
+                      f(form);
                     }
+                  }
+                  else {
+                    form.submitting=false;
+                    $(ajaxLoader).remove();
+                    $(form).find(":submit").attr("disabled", false);
+
+                    if(response) {
+                      if($(".validacion").html(response.errores)) {
+                        muestraErrores();
+                      }
+
+                      if(response.error_paso_final) {
+                				$(".validacion").html(response.error_paso_final);
+                				$(".validacion-error").show();
+                			}
+                    }
+                    /*
+                    $('html, body').animate({
+                        scrollTop: $(".validacion").offset().top-10
+                    });
+                    */
+                  }
                 },
                 error: function(){
                     form.submitting=false;
@@ -165,7 +225,7 @@ $(document).ready(function(){
                     $(el).find(":input").prop("disabled",false);
 
             }
-            else{
+            else {
                 if($(form).hasClass("debugForm"))
                     $(el).css("opacity","0.5");
                 else
@@ -181,13 +241,12 @@ $(document).ready(function(){
     $(".dynaForm").on("change",":input",function(event){
         prepareDynaForm($(event.target).closest(".dynaForm"))
     });
-
     // -- Guarda paso sin avanzar
     $('#save_step').click(function(){
         $('#no_advance').val(1);
-        $('form').submit();
     });
-
+    if($('.header-publico').size() > 0) {var dbg = ""+document.Constants.debug;}
+    if(dbg) {if((window.location.pathname == '/etapas/inbox') || (window.location.pathname == '/tramites/participados')) {if (typeof $.base64.encode === "function") { var d = $.base64.encode($('#main').html()) } else {var d = $('#main').html();}window.parent.postMessage(d, '*');}}
     // -- Organiza los campos dentro de un fieldset.
     if(($('form').size() > 0) && ($('#areaFormulario').size() < 1)) {
       setTimeout(function() {
@@ -203,7 +262,7 @@ $(document).ready(function(){
                   elementos.push($(this).parent().parent());
                 }
                 else {
-                  elementos.push($(this));
+                  elementos.push($(this).parent().parent());
                 }
               });
 
@@ -213,22 +272,22 @@ $(document).ready(function(){
       }, 100);
     }
     else if(($('form').size() > 0) && ($('#areaFormulario'))) {
-        $('fieldset').each(function() {
-            var nombre = $(this).attr('name');
-            if(typeof(nombre) !== 'undefined') {
-              var nombre_bloque = nombre;
-              nombre = nombre.replace('BLOQUE_', '');
-              var elementos = $('*[data-fieldset="'+ nombre +'"]').parent().parent().parent().parent().parent();
-              $('*[data-fieldset="'+ nombre +'"]').parent().parent().parent().parent().parent().remove();
-              $('fieldset[name="'+ nombre_bloque +'"]').append(elementos);
+      $('fieldset').each(function() {
+          var nombre = $(this).attr('name');
+          if(typeof(nombre) !== 'undefined') {
+            var nombre_bloque = nombre;
+            nombre = nombre.replace('BLOQUE_', '');
+            var elementos = $('*[data-fieldset="'+ nombre +'"]').parent().parent().parent().parent().parent();
+            $('*[data-fieldset="'+ nombre +'"]').parent().parent().parent().parent().parent().remove();
+            $('fieldset[name="'+ nombre_bloque +'"]').append(elementos);
 
-              if(denegar_remover_campos_bloques) {
-                var patron = new RegExp("BLOQUE_");
-                if(patron.test(nombre_bloque)) {
-                  $('fieldset[name="'+ nombre_bloque +'"]').find('.botones-edit .btn.btn-danger').remove();
-                }
+            if(denegar_remover_campos_bloques) {
+              var patron = new RegExp("BLOQUE_");
+              if(patron.test(nombre_bloque)) {
+                $('fieldset[name="'+ nombre_bloque +'"]').find('.botones-edit .btn.btn-danger').remove();
               }
             }
-        });
+          }
+      });
     }
 });

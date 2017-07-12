@@ -5,13 +5,14 @@ class Regla {
     private $regla;
 
     function __construct($regla) {
-        $this->regla = $regla;
+      $this->regla = $regla;
     }
 
     //Evalua la regla de acuerdo a los datos capturados en el tramite tramite_id
     public function evaluar($etapa_id) {
-        if (!$this->regla)
-            return TRUE;
+        if (!$this->regla) {
+          return TRUE;
+        }
 
         $new_regla = $this->getExpresionParaEvaluar($etapa_id);
         $new_regla = 'return ' . $new_regla . ';';
@@ -19,15 +20,16 @@ class Regla {
         $CI->load->library('SaferEval');
         $resultado = FALSE;
 
-        if (!$errores = $CI->safereval->checkScript($new_regla, FALSE))
-            $resultado = @eval($new_regla);
+        if (!$errores = $CI->safereval->checkScript($new_regla, FALSE)) {
+          $resultado = @eval($new_regla);
+        }
 
         return $resultado;
     }
 
     //Obtiene la expresion con los reemplazos de variables ya hechos de acuerdo a los datos capturados en el tramite tramite_id.
     //Esta expresion es la que se evalua finalmente en la regla
-    public function getExpresionParaEvaluar($etapa_id){
+    public function getExpresionParaEvaluar($etapa_id) {
         $new_regla=$this->regla;
         $new_regla=preg_replace_callback('/@@(\w+)((->\w+|\[\w+\])*)/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
@@ -46,8 +48,8 @@ class Regla {
                     return $valor_dato;
                 }, $new_regla);
 
-         //Variables globales
-         $new_regla=preg_replace_callback('/@#(\w+)/', function($match) use ($etapa_id) {
+                    //Variables globales
+                    $new_regla=preg_replace_callback('/@#(\w+)/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
 
                     $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
@@ -57,7 +59,7 @@ class Regla {
                     return $valor_dato;
                 }, $new_regla);
 
-         $new_regla=preg_replace_callback('/@!(\w+)/', function($match) use ($etapa_id) {
+                    $new_regla=preg_replace_callback('/@!(\w+)/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
 
                     $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
@@ -77,8 +79,14 @@ class Regla {
                         return "'".$usuario->apellido_materno."'";
                     else if($nombre_dato=='email')
                         return "'".$usuario->email."'";
+                    else if($nombre_dato=='documento') {
+                        return "'".$usuario->usuario."'";
+                    }
                     else if($nombre_dato=='tramite_id'){
                         return "'".Doctrine::getTable('Etapa')->find($etapa_id)->tramite_id."'";
+                    }else if($nombre_dato=='nivel_confianza'){
+                        return "'".UsuarioSesion::getNivel_confianza()."'";
+
                     }
                 }, $new_regla);
 
@@ -92,8 +100,6 @@ class Regla {
     //Obtiene la expresion con los reemplazos de variables ya hechos de acuerdo a los datos capturados en el tramite tramite_id.
     //Esta es una representacion con las variables reemplazadas. No es una expresion evaluable. (Los arrays y strings no estan definidos como tal)
     public function getExpresionParaOutput($etapa_id){
-        //print_r( stdClass::__set_state(array( 'region' => 'Antofagasta', 'comuna' => 'San Pedro de Atacama' )));
-        //exit;
         $new_regla=$this->regla;
         $new_regla=preg_replace_callback('/@@(\w+)((->\w+|\[\w+\])*)/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
@@ -147,8 +153,16 @@ class Regla {
                         return $usuario->apellido_materno;
                     else if($nombre_dato=='email')
                         return $usuario->email;
+                    else if($nombre_dato=='documento') {
+                      if(preg_match("/^([a-z]{2})-([a-z]{2})-([0-9]{8})$/", $usuario->usuario, $documento) || preg_match("/^([a-zA-Z]*)-([0-9]*)$/", $usuario->usuario, $documento)) {
+                        return $usuario->usuario;
+                      }
+                    }
                     else if($nombre_dato=='tramite_id'){
                         return Doctrine::getTable('Etapa')->find($etapa_id)->tramite_id;
+                    } else if($nombre_dato=='nivel_confianza'){
+                        return UsuarioSesion::getNivel_confianza();
+
                     }
                 }, $new_regla);
 

@@ -106,6 +106,7 @@
             <th><a href="<?= current_url() . '?query=' . $query . '&pendiente=' . $pendiente . '&created_at_desde=' . $created_at_desde . '&created_at_hasta=' . $created_at_hasta . '&updated_at_desde=' . $updated_at_desde . '&updated_at_hasta=' . $updated_at_hasta . '&order=id&direction=' . ($direction == 'asc' ? 'desc' : 'asc') ?>">Id <?= $order == 'id' ? $direction == 'asc' ? '<span class="icon-chevron-down"></span>' : '<span class="icon-chevron-up"></span>'  : '' ?></a></th>
             <th><a href="<?= current_url() . '?query=' . $query . '&pendiente=' . $pendiente . '&created_at_desde=' . $created_at_desde . '&created_at_hasta=' . $created_at_hasta . '&updated_at_desde=' . $updated_at_desde . '&updated_at_hasta=' . $updated_at_hasta . '&order=pendiente&direction=' . ($direction == 'asc' ? 'desc' : 'asc') ?>">Estado <?= $order == 'pendiente' ? $direction == 'asc' ? '<span class="icon-chevron-down"></span>' : '<span class="icon-chevron-up"></span>'  : '' ?></a></th>
             <th>Etapa actual</th>
+            <th>Documento</th>
             <th><a href="<?= current_url() . '?query=' . $query . '&pendiente=' . $pendiente . '&created_at_desde=' . $created_at_desde . '&created_at_hasta=' . $created_at_hasta . '&updated_at_desde=' . $updated_at_desde . '&updated_at_hasta=' . $updated_at_hasta . '&order=created_at&direction=' . ($direction == 'asc' ? 'desc' : 'asc') ?>">Fecha de creación <?= $order == 'created_at' ? $direction == 'asc' ? '<span class="icon-chevron-down"></span>' : '<span class="icon-chevron-up"></span>'  : '' ?></th>
             <th><a href="<?= current_url() . '?query=' . $query . '&pendiente=' . $pendiente . '&created_at_desde=' . $created_at_desde . '&created_at_hasta=' . $created_at_hasta . '&updated_at_desde=' . $updated_at_desde . '&updated_at_hasta=' . $updated_at_hasta . '&order=updated_at&direction=' . ($direction == 'asc' ? 'desc' : 'asc') ?>">Fecha de Último cambio <?= $order == 'updated_at' ? $direction == 'asc' ? '<span class="icon-chevron-down"></span>' : '<span class="icon-chevron-up"></span>'  : '' ?></a></th>
             <th>Acciones</th>
@@ -117,13 +118,24 @@
                 <td><?= $t->id ?></td>
                 <td><?= $t->pendiente ? 'En curso' : 'Completado' ?></td>
                 <td>
-                    <?php
+                  <?php
                     $etapas_array = array();
-                    foreach ($t->getEtapasActuales() as $e)
-                        $etapas_array[] = $e->Tarea->nombre . ($e->vencimiento_at ? ' <a href="#" onclick="return editarVencimiento(' . $e->id . ')" title="Cambiar fecha de vencimiento">(' . $e->getFechaVencimientoAsString() . ')</a>' : '');
+                    $c=1;
+                    $documento = null;
+                    foreach ($t->getEtapasActuales() as $e) {
+                      if($c == 1) {
+                        $documento = $e->getUsuarioInicial();
+                      }
+
+                      $c++;
+
+                      $etapas_array[] = $e->Tarea->nombre . ($e->vencimiento_at ? ' <a href="#" onclick="return editarVencimiento(' . $e->id . ')" title="Cambiar fecha de vencimiento">(' . $e->getFechaVencimientoAsString() . ')</a>' : '');
+                    }
+
                     echo implode(', ', $etapas_array);
-                    ?>
+                  ?>
                 </td>
+                <td><?= $documento; ?></td>
                 <td><?= strftime('%c', mysql_to_unix($t->created_at)) ?></td>
                 <td><?= strftime('%c', mysql_to_unix($t->updated_at)) ?></td>
                 <td class="actions">

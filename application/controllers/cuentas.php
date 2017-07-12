@@ -31,8 +31,8 @@ class Cuentas extends MY_Controller {
 
     public function editar_form(){
         $this->form_validation->set_rules('nombres','Nombres','required');
-        $this->form_validation->set_rules('apellido_paterno','Apellido_Paterno','required|alpha');
-        $this->form_validation->set_rules('apellido_materno','Apellido_Materno','required|alpha');
+        $this->form_validation->set_rules('apellido_paterno','Apellido_Paterno','required');
+        $this->form_validation->set_rules('apellido_materno','Apellido_Materno','required');
         $this->form_validation->set_rules('email','Email','required|valid_email|callback_check_email');
 
         $respuesta=new stdClass();
@@ -101,7 +101,6 @@ class Cuentas extends MY_Controller {
 
         $this->form_validation->set_message('check_password','Usuario y/o contraseña incorrecta.');
         return FALSE;
-
     }
 
     function check_email($email) {
@@ -113,5 +112,4 @@ class Cuentas extends MY_Controller {
         $this->form_validation->set_message('check_email', 'Correo electrónico ya esta en uso por otro usuario.');
         return FALSE;
     }
-
 }

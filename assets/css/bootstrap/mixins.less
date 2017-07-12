@@ -10,7 +10,7 @@
 // --------
 // For clearing floats like a boss h5bp.com/q
 .clearfix {
-  *zoom: 1;
+  //*zoom: 1;
   &:before,
   &:after {
     display: table;
@@ -46,7 +46,7 @@
 // ----------------
 .ie7-inline-block() {
   *display: inline; /* IE7 inline-block hack */
-  *zoom: 1;
+  //*zoom: 1;
 }
 
 // IE7 likes to collapse whitespace on either side of the inline-block elements.
@@ -104,7 +104,8 @@
 // -------------------------
 // Source: https://github.com/h5bp/html5-boilerplate/commit/aa0396eae757
 .hide-text {
-  font: 0/0 a;
+  font-size: 0;
+  line-height: 0;
   color: transparent;
   text-shadow: none;
   background-color: transparent;

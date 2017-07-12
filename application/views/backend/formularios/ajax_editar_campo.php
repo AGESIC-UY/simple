@@ -3,7 +3,7 @@
         $('.validacion').typeahead({
             mode: "multiple",
             delimiter: "|",
-            source: ["required","rut","min_length[num]","max_length[num]","exact_length[num]","greater_than[num]","less_than[num]","alpha","alpha_numeric","alpha_dash","alpha_space","numeric","integer","decimal","is_natural","is_natural_no_zero","valid_email","valid_emails","valid_ip","valid_base64","trim","is_unique[exp]"]
+            source: ["required","rut","ci","alpha_numeric_ext","not_empty_table","consulta_pago_completo_generico","min_length_table[num]","max_length_table[num]","min_length[num]","max_length[num]","exact_length[num]","greater_than[num]","less_than[num]","alpha","alpha_numeric","alpha_dash","alpha_space","numeric","integer","decimal","is_natural","is_natural_no_zero","valid_email","valid_emails","valid_ip","valid_base64","trim","is_unique[exp]"]
         });
 
         //Funcionalidad del llenado de nombre usando el boton de asistencia
@@ -99,16 +99,20 @@
             <input type="hidden" name="formulario_id" value="<?= $formulario->id ?>" />
             <input type="hidden" name="tipo" value="<?= $campo->tipo ?>" />
         <?php endif; ?>
-        <label for="etiqueta">Etiqueta</label>
-        <?php if($campo->etiqueta_tamano=='xxlarge'):?>
-          <?php if($campo->tipo == 'javascript'):?>
-            <textarea id="etiqueta" class="input-xxlarge campo_javascript_codigo" rows="15" name="etiqueta"><?= htmlspecialchars($campo->etiqueta) ?></textarea>
+        <?php if (!$campo->sin_etiqueta): ?>
+          <label for="etiqueta">Etiqueta</label>
+          <?php if($campo->etiqueta_tamano=='xxlarge'):?>
+            <?php if($campo->tipo == 'javascript'):?>
+              <textarea id="etiqueta" class="input-xxlarge campo_javascript_codigo" rows="15" name="etiqueta"><?= htmlspecialchars($campo->etiqueta) ?></textarea>
+            <?php else: ?>
+              <textarea id="etiqueta" class="input-xxlarge" rows="5" name="etiqueta"><?= htmlspecialchars($campo->etiqueta) ?></textarea>
+            <?php endif; ?>
           <?php else: ?>
-            <textarea id="etiqueta" class="input-xxlarge" rows="5" name="etiqueta"><?= htmlspecialchars($campo->etiqueta) ?></textarea>
-          <?php endif; ?>
+            <input type="text" id="etiqueta" name="etiqueta" value="<?= htmlspecialchars($campo->etiqueta) ?>" />
+          <?php endif ?>
         <?php else: ?>
-        <input type="text" id="etiqueta" name="etiqueta" value="<?= htmlspecialchars($campo->etiqueta) ?>" />
-        <?php endif ?>
+          <input type="hidden" id="etiqueta" name="etiqueta" value="etiqueta" />
+        <?php endif; ?>
         <?php if($campo->requiere_nombre):?>
         <label for="nombre">Nombre</label>
         <input type="text" id="nombre" name="nombre" value="<?= $campo->nombre ?>" />
@@ -127,22 +131,62 @@
         <input type="hidden" name="nombre" value="<?=$campo->nombre?$campo->nombre:uniqid();?>" />
         <?php endif; ?>
 
-        <?php if(!$campo->estatico):?>
-        <label for="ayuda">Ayuda contextual (Opcional)</label>
-        <input type="text" class="input-xxlarge" id="ayuda" name="ayuda" value="<?=$campo->ayuda?>" />
+        <?php if (!$campo->sin_etiqueta): ?>
+          <?php if(!$campo->estatico):?>
+          <label for="ayuda">Ayuda contextual (Opcional)</label>
+          <input type="text" class="input-xxlarge" id="ayuda" name="ayuda" value="<?=$campo->ayuda?>" />
+
+          <label for="ayuda_ampliada">Texto de ayuda ampliada (Opcional)</label>
+          <input type="text" class="input-xxlarge" id="ayuda_ampliada" name="ayuda_ampliada" value="<?= strip_tags($campo->ayuda_ampliada); ?>" />
+          <?php endif ?>
         <?php endif ?>
 
-        <?php if (!$campo->estatico): ?>
-            <label class="checkbox" for="soloLectura"><input type="checkbox" id="soloLectura" name="readonly" value="1" <?=$campo->readonly?'checked':''?> /> Solo lectura</label>
+        <?php if (!$campo->sin_etiqueta): ?>
+          <?php if (!$campo->estatico): ?>
+              <label class="checkbox" for="soloLectura"><input type="checkbox" id="soloLectura" name="readonly" value="1" <?=$campo->readonly?'checked':''?> /> Solo lectura</label>
+              <?php if ($campo->tipo == 'text'): ?>
+                <label for="documento_tramite"><input class='checkbox' id="documento_tramite" type="checkbox" name="documento_tramite" value="1" <?=$campo->documento_tramite?'checked':''?> /> Número de documento del trámite</label>
+                <label for="email_tramite"><input class='checkbox' id="email_tramite" type="checkbox" name="email_tramite" value="1" <?=$campo->email_tramite?'checked':''?> /> Correo electrónico del trámite</label>
+              <?php endif ?>
+          <?php endif; ?>
         <?php endif; ?>
-        <?php if (!$campo->estatico): ?>
+        <?php if ((!$campo->estatico) && ($campo->requiere_validacion)): ?>
             <label for="validacion">Reglas de validación</label>
             <input class='validacion' id="validacion" type="text" name="validacion" value="<?= $edit ? implode('|', $campo->validacion) : 'required' ?>"/>
         <?php endif; ?>
             <?php if(!$campo->estatico):?>
-            <label for="valor_default">Valor por defecto</label>
-            <input type="text" id="valor_default" name="valor_default" value="<?=htmlspecialchars($campo->valor_default)?>" />
+              <?php if($campo->valor_default_tamano == 'large'): ?>
+                <?php if($campo->dialogo):?>
+                  <label for="campo_dialogo_titulo">Título</label>
+                  <input type="text" id="campo_dialogo_titulo" class="input-xxlarge" />
+                  <label for="campo_dialogo_contenido">Contenido</label>
+                  <textarea id="campo_dialogo_contenido" class="input-xxlarge"></textarea>
+                  <label for="campo_dialogo_titulo_enlace">Título del enlace</label>
+                  <input type="text" id="campo_dialogo_titulo_enlace" class="input-xxlarge" />
+                  <label for="campo_dialogo_enlace">Enlace</label>
+                  <input type="text" id="campo_dialogo_enlace" class="input-xxlarge" />
+
+                  <div class="hidden" id="valor_default_html"><?=htmlspecialchars($campo->valor_default)?></div>
+                  <textarea id="valor_default" name="valor_default" class="input-xxlarge hidden"><?=htmlspecialchars($campo->valor_default)?></textarea>
+                <?php else: ?>
+                  <label for="valor_default">Contenido del diálogo</label>
+                  <textarea id="valor_default" name="valor_default" class="input-xxlarge"><?=htmlspecialchars($campo->valor_default)?></textarea>
+                <?php endif; ?>
+              <?php else: ?>
+                <?php if($campo->tipo == 'error'): ?>
+                  <label for="valor_default">Variable</label>
+                <?php else: ?>
+                  <label for="valor_default">Valor por defecto</label>
+                <?php endif; ?>
+                <input type="text" id="valor_default" name="valor_default" value="<?=htmlspecialchars($campo->valor_default)?>" />
+              <?php endif; ?>
             <?php endif ?>
+
+            <?php if($campo->tipo == 'estado_pago'): ?>
+              <label for="valor_default">Variable de ID de solicitud</label>
+              <input type="text" id="valor_default" name="valor_default" value="<?=htmlspecialchars($campo->valor_default)?>" />
+            <?php endif ?>
+
             <?php if(($campo->tipo != 'fieldset') && ($campo->tipo != 'bloque')):?>
             <label for="lista_de_fieldsets">Fieldset al que pertenece</label>
             <input type="text" id="fieldset" name="fieldset" value="<?=htmlspecialchars($campo->fieldset)?>" />
@@ -157,6 +201,19 @@
             </select>
             <?php echo form_error('valor_default'); ?>
             <?php endif ?>
+            <?php if($campo->tipo == 'pagos'):?>
+              <label for="validacion">Reglas de validación</label>
+              <input class='validacion' id="validacion" type="text" name="validacion" value="<?= $edit ? implode('|', $campo->validacion) : '' ?>"/>
+            <label for="selector_pagos">Método de pago</label>
+            <select name="valor_default" id="selector_pagos">
+                <option value="" <?= $campo->valor_default == '' ? 'selected' : '' ?>>-- Seleccionar método de pago --</option>
+                <?php foreach($pagos as $pago) { ?>
+                    <option value="<?= $pago->id ?>" <?= $campo->valor_default == $pago->id ? 'selected' : '' ?>><?= $pago->nombre ?></option>
+                <?php } ?>
+            </select>
+            <?php echo form_error('valor_default'); ?>
+        <?php endif ?>
+
             <div class="campoDependientes">
                 <label for="dependiente_campo">Visible solo si</label>
                 <select class="input-medium" id="dependiente_campo" name="dependiente_campo">
@@ -223,10 +280,56 @@
         <?php endif; ?>
 
         <?=$campo->backendExtraFields()?>
+
+      <?php if($campo->tipo == 'pagos'):?>
+        <label for="check_pago_online"><?=TEXTO_CONFIG_PAGO_ONLINE?></label>
+        <select id="check_pago_online" name="check_pago_online">
+
+          <?php if($campo->pago_online == 1):?>
+            <option value="1" selected>Si</option>
+            <option value="0">No</option>
+          <?php else: ?>
+            <option value="0" selected>No</option>
+            <option value="1">Si</option>
+          <?php endif; ?>
+
+          </select>
+      <?php endif; ?>
+
+      <?php if($campo->tipo == 'agenda'):?>
+        <label for="check_requiere_agendar"><?=TEXTO_CONFIG_AGENDAR?></label>
+        <select id="check_requiere_agendar" name="check_requiere_agendar">
+
+          <?php if($campo->requiere_agendar == 1):?>
+            <option value="1" selected>Si</option>
+            <option value="0">No</option>
+          <?php else: ?>
+            <option value="0" selected>No</option>
+            <option value="1">Si</option>
+          <?php endif; ?>
+
+          </select>
+      <?php endif; ?>
+
+      <?php if($campo->tipo == 'documento'):?>
+        <label for="check_firma_electronica"><?=TEXTO_CONFIG_FIRMA_DOCUMENTO?></label>
+        <select id="check_firma_electronica" name="check_firma_electronica">
+
+          <?php if($campo->firma_electronica == 1):?>
+            <option value="1" selected>Si</option>
+            <option value="0">No</option>
+          <?php else: ?>
+            <option value="0" selected>No</option>
+            <option value="1">Si</option>
+          <?php endif; ?>
+
+          </select>
+      <?php endif; ?>
+
+
   </div>
   <div class="modal-footer">
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <!-- a href="#" onclick="javascript:$('#formEditarCampo').submit();return false;" class="btn btn-primary">Guardar</a -->
     <a href="#" data-dismiss="modal" class="btn btn-link">Cerrar</a>
+    <button type="submit" class="btn btn-primary">Guardar</button>
   </div>
 </form>

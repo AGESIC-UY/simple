@@ -8,8 +8,8 @@
  */
 
 // -- METADADA DEL IDP
-$metadata['https://test-eid.portal.gub.uy/idp'] = array (
-  'entityid' => 'https://test-eid.portal.gub.uy/idp',
+$metadata['idp'] = array (
+  'entityid' => 'http://simple.sofis.com.uy/sp',
   'metadata-set' => 'saml20-idp-remote',
   'redirect.sign' => true,
   'SingleSignOnService' =>
@@ -17,22 +17,22 @@ $metadata['https://test-eid.portal.gub.uy/idp'] = array (
     0 =>
     array (
       'Binding' => 'urn:mace:shibboleth:1.0:profiles:AuthnRequest',
-      'Location' => 'https://test-eid.portal.gub.uy/idp/profile/Shibboleth/SSO',
+      'Location' => 'https://test-eid.portal.gub.uy/v1.1/idp/profile/Shibboleth/SSO',
     ),
     1 =>
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
-      'Location' => 'https://test-eid.portal.gub.uy/idp/profile/SAML2/POST/SSO',
+      'Location' => 'https://test-eid.portal.gub.uy/v1.1/idp/profile/SAML2/POST/SSO',
     ),
     2 =>
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign',
-      'Location' => 'https://test-eid.portal.gub.uy/idp/profile/SAML2/POST-SimpleSign/SSO',
+      'Location' => 'https://test-eid.portal.gub.uy/v1.1/idp/profile/SAML2/POST-SimpleSign/SSO',
     ),
     3 =>
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
-      'Location' => 'https://test-eid.portal.gub.uy/idp/profile/SAML2/Redirect/SSO',
+      'Location' => 'https://test-eid.portal.gub.uy/v1.1/idp/profile/SAML2/Redirect/SSO',
     ),
   ),
   'SingleLogoutService' =>
@@ -40,7 +40,7 @@ $metadata['https://test-eid.portal.gub.uy/idp'] = array (
     0 =>
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
-      'Location' => 'https://test-eid.portal.gub.uy/idp/profile/SAML2/Redirect/SLO',
+      'Location' => 'https://test-eid.portal.gub.uy/v1.1/idp/profile/SAML2/Redirect/SLO',
     ),
   ),
   'ArtifactResolutionService' =>
@@ -48,13 +48,13 @@ $metadata['https://test-eid.portal.gub.uy/idp'] = array (
     0 =>
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding',
-      'Location' => 'https://test-eid.portal.gub.uy/idp/profile/SAML1/SOAP/ArtifactResolution',
+      'Location' => 'https://test-eid.portal.gub.uy/v1.1/idp/profile/SAML1/SOAP/ArtifactResolution',
       'index' => 1,
     ),
     1 =>
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:SOAP',
-      'Location' => 'https://test-eid.portal.gub.uy/idp/profile/SAML2/SOAP/ArtifactResolution',
+      'Location' => 'https://test-eid.portal.gub.uy/v1.1/idp/profile/SAML2/SOAP/ArtifactResolution',
       'index' => 2,
     ),
   ),
@@ -62,7 +62,7 @@ $metadata['https://test-eid.portal.gub.uy/idp'] = array (
   array (
     0 => '2ea7eb54952c8112ede3749a14009066d49ddae2',
   ),
-  'certData' => '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',
+  'certData' =>'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',
   'scopes' =>
   array (
     0 => 'localhost',

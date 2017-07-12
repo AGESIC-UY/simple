@@ -1,7 +1,7 @@
 <div class="front">
     <div class="cabecera">
         <h3><?=$widget->nombre?></h3>
-        <a class="config" href="#" onclick="return widgetConfig(this)"><span class="icon-wrench"></span></a>
+        <a class="config" href="#" onclick="return widgetConfig(this)"><span class="icon-cog"></span></a>
     </div>
     <div class="contenido">
         <?=$widget->display()?>
@@ -11,7 +11,7 @@
     <form class="ajaxForm" method="POST" action="<?= site_url('backend/gestion/widget_config_form/'.$widget->id) ?>" data-onsuccess="widgetConfigOk">
         <div class="cabecera">
             <h3>Configuración</h3>
-            <button type="submit" class="volver btn btn-mini">ok</button>
+            <button type="submit" class="volver btn btn-mini">Guardar</button>
         </div>
         <div class="contenido">
             <div class="validacion validacion-error"></div>

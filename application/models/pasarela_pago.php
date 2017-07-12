@@ -7,6 +7,7 @@ class PasarelaPago extends Doctrine_Record {
         $this->hasColumn('nombre');
         $this->hasColumn('metodo');
         $this->hasColumn('activo');
+        $this->hasColumn('cuenta_id');
     }
 
     function setUp() {
@@ -16,5 +17,10 @@ class PasarelaPago extends Doctrine_Record {
             'local' => 'id',
             'foreign' => 'pasarela_pago_id'
         ));
-    } 
+
+        $this->hasOne('PasarelaPagoGenerica as PasarelaPagoGenerica', array(
+            'local' => 'id',
+            'foreign' => 'pasarela_pago_id'
+        ));
+    }
 }

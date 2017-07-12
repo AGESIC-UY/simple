@@ -158,7 +158,6 @@ class Documentos extends MY_BackendController {
         redirect('backend/documentos/listar/'.$proceso->id);
 
     }
-
 }
 
 /* End of file welcome.php */

@@ -20,17 +20,23 @@
                     });
                 });
             </script>
-            <p>Asignado a: <?=!$etapa->usuario_id?'Ninguno':!$etapa->Usuario->registrado?'No registrado':'<abbr class="tt" title="'.$etapa->Usuario->displayInfo().'">'.$etapa->Usuario->displayUsername().'</abbr>'?> <?php if($etapa->pendiente):?>(<a id="reasignarLink" href="<?=site_url('seguimiento/reasignar')?>">Reasignar</a>)<?php endif?></p>
+            <p>Asignado a : <?=!$etapa->usuario_id?'Ninguno':!$etapa->Usuario->registrado?'No registrado':'<abbr class="tt" title="'.$etapa->Usuario->displayInfo().'">'.$etapa->Usuario->displayUsername().'</abbr>'?> <?php if($etapa->pendiente && $etapa->canUsuarioReasignar(UsuarioBackendSesion::usuario())):?>(<a id="reasignarLink" href="<?=site_url('seguimiento/reasignar')?>">Reasignar</a>)<?php endif?></p>
             <form id="reasignarForm" method="POST" action="<?=site_url('backend/seguimiento/reasignar_form/'.$etapa->id)?>" class="ajaxForm hide">
                 <div class="validacion validacion-error"></div>
                 <label for="usuario_id">¿A quien deseas asignarle esta etapa?</label>
                 <select name="usuario_id" id="usuario_id">
                     <?php foreach($etapa->getUsuariosFromGruposDeUsuarioDeCuenta() as $u):?>
-                    <option value="<?=$u->id?>" <?=$u->id==$etapa->usuario_id?'selected':''?>><?=$u->open_id?$u->nombres.' '.$u->apellido_paterno:$u->usuario?></option>
+                    <option value="<?=$u->id?>" <?=$u->id==$etapa->usuario_id?'selected':''?>><?=$u->open_id?$u->nombres.' '.$u->apellido_paterno:$u->usuario.' '.$u->nombres.' '.$u->apellido_paterno?></option>
                     <?php endforeach?>
                 </select>
                 <button class="btn btn-primary" type="submit">Reasignar</button>
             </form>
+
+            <?php $dato_funcionario = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId('funcionario_actuando_como_ciudadano', $etapa->id); ?>
+            <?php if($dato_funcionario) :?>
+              <?php $funcionario = Doctrine::getTable('Usuario')->findOneById($dato_funcionario->valor); ?>
+              <p>Funcionario actuante: <?php echo $funcionario->nombres.' '.$funcionario->apellido_paterno?></p>
+            <?php endif?>
         </div>
     </div>
     <div class="span9">

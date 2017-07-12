@@ -41,8 +41,13 @@ class Seguimiento extends MY_BackendController {
         }
 
         $query = $this->input->get('query');
-        $offset=$this->input->get('offset');
-        $order=$this->input->get('order')?$this->input->get('order'):'updated_at';
+        $offset = $this->input->get('offset');
+        if (!$this->input->get('order')){
+          $order = 'updated_at';
+        }else{
+          $order = $this->input->get('order');
+        }
+
         $direction = $this->input->get('direction') == 'desc' ? 'desc' : 'asc';
         $created_at_desde=$this->input->get('created_at_desde');
         $created_at_hasta=$this->input->get('created_at_hasta');
@@ -157,6 +162,11 @@ class Seguimiento extends MY_BackendController {
             exit;
         }
 
+        if(!$etapa->canUsuarioRevisarDetalle(UsuarioBackendSesion::usuario())){
+          echo 'No tiene permisos para hacer seguimiento a esta etapa.';
+          exit;
+        }
+
         $data['etapa'] = $etapa;
         $data['paso']=$paso;
         $data['secuencia'] = $secuencia;
@@ -167,28 +177,30 @@ class Seguimiento extends MY_BackendController {
     }
 
     public function reasignar_form($etapa_id) {
-        $this->form_validation->set_rules('usuario_id', 'Usuario', 'required');
+            $this->form_validation->set_rules('usuario_id', 'Usuario', 'required');
+            $respuesta=new stdClass();
+            if ($this->form_validation->run() == TRUE) {
+                $usuario=Doctrine::getTable('Usuario')->find($this->input->post('usuario_id'));
 
-        $respuesta=new stdClass();
-        if ($this->form_validation->run() == TRUE) {
-            $usuario=Doctrine::getTable('Usuario')->find($this->input->post('usuario_id'));
+                $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
+                $etapa->Usuario = $usuario;
+                $etapa->save();
 
-            $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
-            $etapa->Usuario = $usuario;
-            $etapa->save();
+                $this->email->from('simple@'.$this->config->item('main_domain'), 'Simple');
+                $this->email->to($usuario->email);
+                $this->email->subject('Tarea reasignada');
+                $this->email->message('<p>Atención. Se le ha reasignado una tarea "'.$etapa->Tarea->nombre.'" del proceso "'.$etapa->Tramite->Proceso->nombre.'".</p>');
+                if (!$this->email->send()){
+                    log_message('ERROR', "send email reasignar_form: ".$this->email->print_debugger());
+                }
 
-            $this->email->from('simple@'.$this->config->item('main_domain'), 'Simple');
-            $this->email->to($usuario->email);
-            $this->email->subject('Tarea reasignada');
-            $this->email->message('<p>Atención. Se le ha reasignado una tarea "'.$etapa->Tarea->nombre.'" del proceso "'.$etapa->Tramite->Proceso->nombre.'".</p>');
-            $this->email->send();
+                $respuesta->validacion = TRUE;
+                $respuesta->redirect = site_url('backend/seguimiento/ver_etapa/' . $etapa->id);
+            } else {
+                $respuesta->validacion = FALSE;
+                $respuesta->errores = validation_errors();
+            }
 
-            $respuesta->validacion = TRUE;
-            $respuesta->redirect = site_url('backend/seguimiento/ver_etapa/' . $etapa->id);
-        } else {
-            $respuesta->validacion = FALSE;
-            $respuesta->errores = validation_errors();
-        }
 
         echo json_encode($respuesta);
     }
@@ -251,7 +263,28 @@ class Seguimiento extends MY_BackendController {
         echo json_encode($respuesta);
     }
 
-}
+    public function pagos() {
+        $data['registros'] = Doctrine_Query::create()
+            ->from('Pago p')
+            ->execute();
 
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
+        $data['title'] = 'Seguimiento de pagos';
+        $data['content'] = 'backend/seguimiento/pagos';
+        $this->load->view('backend/template', $data);
+    }
+
+    public function ver_pago($id_pago) {
+        $registro = Doctrine_Query::create()
+            ->from('Pago p')
+            ->where('p.id = ?', $id_pago)
+            ->fetchOne();
+
+        $pasarela = Doctrine::getTable('PasarelaPago')->find($registro->pasarela);
+
+        $data['pasarela_nombre'] = $pasarela->nombre;
+        $data['registro'] = $registro;
+        $data['title'] = 'Seguimiento de pagos';
+        $data['content'] = 'backend/seguimiento/ver_pago';
+        $this->load->view('backend/template', $data);
+    }
+}

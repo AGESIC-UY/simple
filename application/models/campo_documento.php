@@ -31,7 +31,8 @@ class CampoDocumento extends Campo {
 
     private function displayDescarga($modo, $dato, $etapa_id) {
         if (!$etapa_id) {
-            return '<div class="control-group"><div class="controls"><a class="btn btn-success" href="#"><span class="icon-download-alt icon-white"></span> ' . $this->etiqueta . '</a></div></div>';
+            //return '<div class="control-group"><div class="controls"><a class="btn-link" href="#"><span class="icon-download-alt icon-white"></span> ' . $this->etiqueta . '</a></div></div>';
+            return '<div class="control-group"><div class="controls" data-fieldset="'.$this->fieldset.'"><a class="btn-link" href="#">' . $this->etiqueta . ' (.pdf)</a></div></div>';
         }
 
         $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
@@ -54,7 +55,14 @@ class CampoDocumento extends Campo {
             }
         }
 
-        $display = '<div class="control-group"><div class="controls"><a class="btn btn-success" href="' . site_url('documentos/get/' . $file->filename) . '?id='.$file->id.'&amp;token='.$file->llave.'"><span class="icon-download-alt icon-white"></span> ' . $this->etiqueta . '</a></div></div>';
+        try {
+          $file_size = number_format(filesize(DIRECTORIO_SUBIDA_DOCUMENTOS . $file->filename) / 1024, 2) . 'KB';
+        }
+        catch(Exception $error) {
+          log_error($error);
+        }
+
+        $display = '<div class="control-group"><div class="controls" data-fieldset="'.$this->fieldset.'"><a class="btn-link" href="' . site_url('documentos/get/' . $file->id) . '?token='.$file->llave.'">' . $this->etiqueta . ' (.pdf '. $file_size .')</a></div></div>';
 
         return $display;
     }
@@ -85,17 +93,26 @@ class CampoDocumento extends Campo {
             }
         }
 
-        $display = '<p>'.$this->etiqueta.'</p>';
+        $display = '<div class="control-group">';
+        $error_no_firmado = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($file->filename.'__error', $etapa->id);
+        if($error_no_firmado) {
+          $display  .= '<div class="control-group">';
+          $display .= '<div class="campo_error validacion-error">';
+          $display .= '<span class="alert alert-error">' . $error_no_firmado->valor . '</span>';
+          $display .= '</div>';
+          $display .= '</div>';
+        }
+        $display .= '<span class="control-label">'.$this->etiqueta.'</span>';
         $display .= '<div id="exito" class="alert alert-success" style="display: none;">Documento fue firmado con éxito.</div>';
-        $display .= '<p><a class="btn btn-info" href="' . site_url('documentos/get/' . $dato->valor) .'?id='.$file->id.'&amp;token='.$file->llave. '"><span class="icon-search icon-white"></span> Previsualizar el documento</a></p>';
-
+        $display .= '<div class="controls"><a class="btn btn-info" href="' . site_url('documentos/get/' . $file->id) .'?token='.$file->llave. '"><span class="icon-search icon-white"></span> Previsualizar el documento</a></div>';
+        $display .= '</div>';
         $display .= '
             <script>
                 $(document).ready(function() {
                     $("#firmar_documento_ext").click(function() {
                         $.ajax({
                           type: "post",
-                          url: "'. HOST_SISTEMA .'/etapas/firmar_documento",
+                          url: "'. HOST_SISTEMA_COMPLETO .'/etapas/firmar_documento",
                           data: {filename: "'. $file->filename .'", campo: '. $this->id .'},
                           cache: false
                         })
@@ -104,19 +121,63 @@ class CampoDocumento extends Campo {
                             a.style = "display:none;";
                             a.download = "FirmaDocumento.jnlp";
                             var blob = new Blob([msg]);
-                            var url = window.URL.createObjectURL(blob, {type: "application/x-java-jnlp-file"});
-                            a.href = url;
-                            document.body.appendChild(a);
-                            a.click();
+                            if (navigator.appVersion.toString().indexOf(".NET") > 0){
+                              window.navigator.msSaveBlob(blob, "'.  $file->filename .'.jnlp");
+                            }
+                            else {
+                              var url =  window.URL.createObjectURL(blob, {type: "application/x-java-jnlp-file"});
+                              a.href = url;
+                              document.body.appendChild(a);
+                              a.click();
+                            }
                         });
                     });
                 });
             </script>
-            <div id="firmaDiv">
-                <label>Seleccione la firma</label>
-                <div style="float: left;"></div>
-                <div><button type="button" class="btn btn-success" id="firmar_documento_ext"><span class="icon-pencil icon-white"></span> Firmar Documento</button></div>
-            </div>';
+            <div id="firmaDiv" class="control-group">';
+
+            $CI = &get_instance();
+
+            $nombre_documento = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($this->nombre, $etapa->id);
+            $file = Doctrine::getTable('File')->findOneByTipoAndFilename('documento', $nombre_documento->valor);
+
+            /*$documento = Doctrine_Query::create()
+                        ->from('documento d')
+                        ->where('d.id_etapa = ?', $etapa_id)
+                        ->andWhere('p.estado = ?', 'firmada_funcionario')
+                        ->fetchOne();*/
+
+            if($this->firma_electronica == 0 && UsuarioSesion::usuarioMesaDeEntrada() && $CI->session->userdata('id_usuario_ciudadano') && $CI->uri->segment(1) != 'backend') {
+              if(!$file->firmado){
+                $display .= '<div class="controls"><input type="checkbox" name="check_firma_electronica" id="check_firma_electronica" value="1">'.MENSAJE_FIRMA_DOCUMENTO_FUNCIONARIO.'</div>';
+              }
+              else {
+                $display .= '<div class="controls"><strong style="color:green">'.MENSAJE_FIRMA_CONFIRMADO_DOCUMENTO_FUNCIONARIO.'</strong>
+                <input type="checkbox" name="check_cancelar_firma" id="check_cancelar_firma" value="1"><b style="color:red"> Cancelar</b></div>';
+              }
+            }
+            else if($file->firmado && !UsuarioSesion::usuarioMesaDeEntrada() && !$CI->session->userdata('id_usuario_ciudadano') && $CI->uri->segment(1) != 'backend'){
+                $display .= '<div class="controls"><strong style="color:green">'.MENSAJE_FIRMA_CONFIRMADO_DOCUMENTO_FUNCIONARIO.'</strong></div>';
+            }
+            else if ($CI->uri->segment(3) == 'ver_etapa'){
+              if(!$file->firmado){
+                $display .= '<div class="controls"><strong style="color:green">'.MENSAJE_FIRMA_NO_CONFIRMADO_DOCUMENTO_FUNCIONARIO.'</strong></div>';
+              }
+              else {
+                $display .= '<div class="controls"><strong style="color:green">'.MENSAJE_FIRMA_CONFIRMADO_DOCUMENTO_FUNCIONARIO.'</strong></div>';
+              }
+            }
+            else {
+              if ($this->extra->requerido) {
+                $display .= '<span class="control-label">Seleccione la firma *</span>';
+              }
+              else {
+                $display .= '<span class="control-label">Seleccione la firma</span>';
+              }
+
+              $display .= '<div class="controls"><button type="button" class="btn btn-success" id="firmar_documento_ext"><span class="icon-pencil icon-white"></span> Firmar Documento</button></div>
+              </div>';
+            }
 
         return $display;
     }
@@ -127,6 +188,8 @@ class CampoDocumento extends Campo {
         $firmar_servidor=isset($this->extra->firmar_servidor)?$this->extra->firmar_servidor:null;
         $firmar_servidor_keystores=isset($this->extra->firmar_servidor_keystores)?$this->extra->firmar_servidor_keystores:null;
         $firmar_servidor_momento=isset($this->extra->firmar_servidor_momento)?$this->extra->firmar_servidor_momento:null;
+        $firmado=0;
+        $requerido=isset($this->extra->requerido)?$this->extra->requerido:null;
 
         $html='<label for="documento_id">Documento</label>';
         $html.='<select name="documento_id" id="documento_id">';
@@ -140,6 +203,7 @@ class CampoDocumento extends Campo {
           $html.='<label class="radio" for="cada_'.$d->id.'"><input id="cada_'.$d->id.'" type="radio" name="extra[regenerar]" value="1" '.($regenerar?'checked':'').' /> El documento se regenera cada vez que se visualiza este campo.</label>';
           $html.='<br /><label class="checkbox" for="firmar"><input type="checkbox" name="extra[firmar]" '.($firmar?'checked':'').' id="firmar" /> Deseo firmar con token en este paso.</label>';
           $html.='<label class="checkbox" for="firmar_servidor"><input type="checkbox" name="extra[firmar_servidor]" '.($firmar_servidor?'checked':'').' id="firmar_servidor" /> Deseo firmar el documento en servidor.</label>';
+          $html.='<label class="checkbox" for="firma_requerida"><input type="checkbox" name="extra[requerido]" '.($requerido?'checked':'').' id="firma_requerida" /> Firma requerida.</label>';
           $html.='<br /><div class="well form-horizontal" '.(!$firmar_servidor ? 'style="display:none;"' : '').' class="input" id="firmar_servidor_keystores">';
           $html.='<div class="control-group">';
           $html.='<label class="control-label" for="keystores">Keystores para la firma:</label>';

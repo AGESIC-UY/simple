@@ -42,6 +42,9 @@ class CampoAgenda extends Campo{
           $url = parse_url($this->extra->url);
           $nueva_url = $this->extra->url;
 
+          // -- Obtiene el ID de transaccion almacenado en una variable para pasarsela a Agenda.
+          $id_transaccion_traza = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId('id_transaccion_traza', $etapa->id);
+
           if(isset($url['query'])) {
             // -- Obtiene los datos correspondientes de acuerdo a las variables de formulario en el caso de que tenga.
             preg_match_all('/(@@[a-zA-Z]*)/', $nueva_url, $variables);
@@ -55,23 +58,38 @@ class CampoAgenda extends Campo{
               }
             }
 
-            $url = $nueva_url . '&u='. site_url('etapas/ejecutar/' . $etapa->id . '/' . $secuencia);
+            $url = $nueva_url . '&t=' . $id_transaccion_traza->valor . '&u='. site_url('etapas/ejecutar/' . $etapa->id . '/' . $secuencia);
           }
           else {
-            $url = $nueva_url . '?u='. site_url('etapas/ejecutar/' . $etapa->id . '/' . $secuencia);
+            $url = $nueva_url . '&t=' . $id_transaccion_traza->valor . '?u='. site_url('etapas/ejecutar/' . $etapa->id . '/' . $secuencia);
           }
         }
         else {
           $url = '';
         }
 
-        $display = '<script>$(document).ready(function() {$(".form-action-buttons").find(".btn-primary").remove();});</script>';
-        // $display .= '<div class="controls">';
+        $CI = &get_instance();
+        if(!UsuarioSesion::usuarioMesaDeEntrada() && !$CI->session->userdata('id_usuario_ciudadano')) { //si el funcionario NO esta actuando como ciudadano
+          $display = '<script>$(document).ready(function() {$(".form-action-buttons").find(".btn-primary").attr("disabled", true).addClass("hidden");});</script>';
+        }
+
+        if($this->requiere_agendar && UsuarioSesion::usuarioMesaDeEntrada() && $CI->session->userdata('id_usuario_ciudadano')){
+          $display = '<script>$(document).ready(function() {$(".form-action-buttons").find(".btn-primary").attr("disabled", true).addClass("hidden");});</script>';
+        }
+
+        else if (!$this->requiere_agendar && $CI->uri->segment(3) == 'ver_etapa'){
+            return '<div class="controls"><strong style="color:green">'.MENSAJE_AGENDA_CONFIRMADA_FUNCIONARIO.'</strong></div>';
+        }
+
+        $display .= '<div class="no-margin-box">';
+        $display .= '<div class="controls" data-fieldset="'.$this->fieldset.'">';
         $display .= '<div class="well text-center box-agenda" id="'.$this->id.'" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display .= '<p>'. $this->etiqueta .'</p>';
-        $display .= '<a class="btn btn-primary" href="'. $url . '">Continuar</a>';
-        // $display .= '</div>';
+        $display .= '<a class="btn btn-primary" href="'. $url . '">Ir a Agenda</a>';
         $display .= '</div>';
+        $display .= '</div>';
+        $display .= '</div>';
+
 
         return $display;
     }

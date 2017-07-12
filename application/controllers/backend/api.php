@@ -6,8 +6,6 @@ class API extends MY_BackendController {
         UsuarioBackendSesion::force_login();
 
         if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='desarrollo'){
-            //echo 'No tiene permisos para acceder a esta seccion.';
-            //exit;
             redirect('backend');
         }
     }
@@ -86,6 +84,15 @@ class API extends MY_BackendController {
 
         $data['title']='Tramites: listar por proceso';
         $data['content']='backend/api/tramites_listarporproceso';
+        $this->load->view('backend/template',$data);
+    }
+
+
+    public function tramites_ejecutar(){
+        $this->_auth();
+
+        $data['title']='Tramites: ejecutar';
+        $data['content']='backend/api/tramites_ejecutar';
         $this->load->view('backend/template',$data);
     }
 
@@ -236,6 +243,58 @@ class API extends MY_BackendController {
             $respuesta->procesos->items = null;
             foreach ($procesos as $t)
                 $respuesta->procesos->items[] = $t->toPublicArray();
+        }
+
+        header('Content-type: application/json');
+        echo json_indent(json_encode($respuesta));
+    }
+
+    //avanzar Tarea - 2017 v 1.1
+    public function ejecutar_tarea($tramite_id = null) {
+        $api_token=$this->input->get('token');
+
+        $cuenta = Cuenta::cuentaSegunDominio();
+
+        if(!$cuenta->api_token)
+            show_404 ();
+
+        if($cuenta->api_token!=$api_token)
+            show_error ('No tiene permisos para acceder a este recurso.', 401);
+
+        $respuesta = new stdClass();
+        if ($tramite_id) {
+            $tramite = Doctrine::getTable('Tramite')->find($tramite_id);
+
+            if (!$tramite)
+                show_404();
+
+            if ($tramite->Proceso->Cuenta != $cuenta)
+                show_error('No tiene permisos para acceder a este recurso.', 401);
+
+
+            $respuesta = array(
+                    "resultado" => "ERROR",
+                    "mensaje" => "Sin etapa pendiente o automatica"
+            );
+
+
+            foreach($tramite->getEtapasActuales() as $etapa){
+                $etapa_automatica = $etapa->Tarea->automatica;
+                //$resultado = $resultado.' ' .$etapa->id  .' ' . $etapa_automatica . ' ' .$etapa->pendiente;
+                if ($etapa_automatica){
+                  //$resultado = $resultado.' ' .' es automatica ';
+                  if ($etapa->pendiente){
+                    //$resultado = $resultado.' ' .' es pendiente ';
+                    //la etapa esta pendiente y es automatica se avanza
+                    $etapa->avanzar();
+                    $respuesta = array(
+                            "resultado" => "OK",
+                            "mensaje" => "Se avanzó la etapa con id ". $etapa->id
+                    );
+                  //break;, solo obtiene las etapas aactuales no es necesario el break
+                  }
+                }
+            }
         }
 
         header('Content-type: application/json');

@@ -36,6 +36,10 @@
         <input type="text" name="pasarela_metodo_antel_codigos_desglose" class="input-xlarge" placeholder="Códigos de desglose" value="<?=($pasarela->metodo == 'antel' ? $pasarela_metodo->codigos_desglose : '')?>" /><br />
         <label>Montos de desglose</label>
         <input type="text" name="pasarela_metodo_antel_montos_desglose" class="input-xlarge" placeholder="Montos de desglose" value="<?=($pasarela->metodo == 'antel' ? $pasarela_metodo->montos_desglose : '')?>" />
+        <label>Clave de organismo</label>
+        <input type="text" name="pasarela_metodo_antel_clave_organismo" class="input-xlarge" placeholder="Clave de organismo" value="<?=($pasarela->metodo == 'antel' ? $pasarela_metodo->clave_organismo : '')?>" />
+        <label>Clave del trámite</label>
+        <input type="text" name="pasarela_metodo_antel_clave_tramite" class="input-xlarge" placeholder="Clave del trámite" value="<?=($pasarela->metodo == 'antel' ? $pasarela_metodo->clave_tramite : '')?>" />
     </div>
 
     <input class="btn btn-primary" type="submit" value="Guardar" />

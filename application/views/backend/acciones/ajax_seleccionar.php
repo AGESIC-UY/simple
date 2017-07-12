@@ -30,10 +30,21 @@
         <div class="controls">
           <select name="tipo" id="services_action_selector">
               <option value="" disabled selected>-- Seleccione servicio --</option>
-              <optgroup label="Servicios principales">
+              <optgroup label="Servicios PDI">
 
                   <?php foreach($servicios as $s) { ?>
-                      <option value="<?=$s->id?>"><?=$s->nombre?></option>
+                      <?php if($s->tipo == 'pdi') { ?>
+                        <option value="<?=$s->id?>"><?=$s->nombre?></option>
+                      <?php } ?>
+                  <?php } ?>
+              </optgroup>
+
+              <optgroup label="Servicios SOAP">
+
+                  <?php foreach($servicios as $s) { ?>
+                      <?php if($s->tipo == 'soap') { ?>
+                        <option value="<?=$s->id?>"><?=$s->nombre?></option>
+                      <?php } ?>
                   <?php } ?>
               </optgroup>
 
@@ -56,10 +67,13 @@
         <label class="control-label" for="operations_action_selector">Operación</label>
         <div class="controls">
           <select name="tipo" id="operations_action_selector">
+
               <option value="" disabled selected>-- Seleccione operación --</option>
               <?php foreach($operaciones as $o) { ?>
-                  <optgroup label="Operaciones disponibles" class="hidden servicios_operaciones" id="servicios_operacion_<?=$o->catalogo_id?>">
-                      <option value="webservice_extended" data-operacion-id="<?=$o->id?>" class="elemento_operacion"><?=$o->nombre?></option>
+                  <optgroup label="Operaciones disponibles" class="hidden servicios_operaciones" id="servicios_operacion_<?=$o[0]->catalogo_id?>">
+                      <?php foreach($o as $oo) { ?>
+                        <option value="webservice_extended" data-operacion-id="<?=$oo->id?>" class="elemento_operacion"><?=$oo->nombre?></option>
+                      <?php } ?>
                   </optgroup>
               <?php } ?>
           </select>
@@ -77,10 +91,13 @@
       <div class="control-group">
         <label class="control-label" for="pasarela_pagos_action_selector">Pasarela de pago</label>
         <div class="controls">
-          <select name="tipo" id="pasarela_pagos_action_selector">
+          <input type="hidden" name="tipo" value="pasarela_pago" />
+          <select name="operacion" id="pasarela_pagos_action_selector">
               <option value="" disabled selected>-- Seleccione la pasarela --</option>
               <?php foreach($pasarela_pagos as $p) { ?>
-                  <option value="pasarela_pago" data-pasarela-id="<?=$p->id?>"><?=$p->nombre?></option>
+                <?php if($p->cuenta_id == UsuarioBackendSesion::usuario()->cuenta_id) { ?>
+                  <option value="<?=$p->id?>"><?=$p->nombre?></option>
+                <?php } ?>
               <?php } ?>
           </select>
         </div>

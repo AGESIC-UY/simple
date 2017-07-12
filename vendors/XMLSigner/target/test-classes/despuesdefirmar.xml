@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<saml1:Assertion xmlns:saml1="urn:oasis:names:tc:SAML:1.0:assertion" AssertionID="_779d82b2226f8cf3c4b533c715681c16" IssueInstant="2016-04-21T16:48:00.440Z" Issuer="SAE" MajorVersion="1" MinorVersion="0">
+  <saml1:Conditions NotBefore="2016-04-21T16:33:00.440Z" NotOnOrAfter="2016-04-21T17:03:00.441Z"/>
+  <saml1:AuthenticationStatement AuthenticationInstant="2016-04-21T16:48:00.415Z" AuthenticationMethod="urn:oasis:names:tc:SAML:1.0:am:password">
+    <saml1:Subject>
+      <saml1:NameIdentifier Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress">ou=sae,o=agesic</saml1:NameIdentifier>
+      <saml1:SubjectConfirmation>
+        <saml1:ConfirmationMethod>urn:oasis:names:tc:SAML:1.0:cm:bearer</saml1:ConfirmationMethod>
+      </saml1:SubjectConfirmation>
+    </saml1:Subject>
+  </saml1:AuthenticationStatement>
+  <saml1:AttributeStatement>
+    <saml1:Subject>
+      <saml1:NameIdentifier Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress">ou=sae,o=agesic</saml1:NameIdentifier>
+      <saml1:SubjectConfirmation>
+        <saml1:ConfirmationMethod>urn:oasis:names:tc:SAML:1.0:cm:bearer</saml1:ConfirmationMethod>
+      </saml1:SubjectConfirmation>
+    </saml1:Subject>
+    <saml1:Attribute AttributeName="User" AttributeNamespace="urn:tokensimple">
+      <saml1:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">SAE</saml1:AttributeValue>
+    </saml1:Attribute>
+  </saml1:AttributeStatement>
+  <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <ds:SignedInfo>
+      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+      <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+      <ds:Reference URI="#_779d82b2226f8cf3c4b533c715681c16">
+        <ds:Transforms>
+          <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+          <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+            <ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="ds saml1 xs xsi"/>
+          </ds:Transform>
+        </ds:Transforms>
+        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+        <ds:DigestValue>mevaZc+339pxhdhQH4KpQ2SeEcM=</ds:DigestValue>
+      </ds:Reference>
+    </ds:SignedInfo>
+    <ds:SignatureValue>ngRllTWbLB5y1+hkB5zSJkv1romnfnxY9BebcX3ATvw16JVoChyAPU//gZ2q4vqcbC5UI66pHT+1nECRBdJDTWr9MMbmxEQCOzqOJn/CZquz1FLIonj1SMZzaBHkSwQGPfeztD7zEiH+pvrcAJCqghd3ckvR90SLkJe3C4UvtV4=</ds:SignatureValue>
+    <ds:KeyInfo>
+      <ds:X509Data>
+        <ds:X509Certificate>MIIEDDCCAvSgAwIBAgIKWeuvVwADAAACbTANBgkqhkiG9w0BAQUFADAVMRMwEQYDVQQDEwpIR1Rp
+dm9saUNBMB4XDTE0MDgxMjE5NDUyMFoXDTE5MDMxMDE3MjgzMVowgacxCzAJBgNVBAYTAlVZMRMw
+EQYDVQQIEwpNb250ZXZpZGVvMRMwEQYDVQQHEwpNb250ZXZpZGVvMQ8wDQYDVQQKEwZBR0VTSUMx
+HjAcBgNVBAsTFUdlcmVuY2lhIGRlIFByb3llY3RvczEXMBUGA1UEAxMOQWdlc2ljIFRlc3Rpbmcx
+JDAiBgkqhkiG9w0BCQEWFXNvcG9ydGVAYWdlc2ljLmd1Yi51eTCBnzANBgkqhkiG9w0BAQEFAAOB
+jQAwgYkCgYEAubXxDpedxviNrWfBwBW5aBvclZjylHF9wfMmQUCTn90TD1bh5rTxPKzas1tnzIGk
+Xb2749kaGCqRjq0v6mJ5OvcmrCAXa0I3SYMljSLN4uIMVGF2zttn6uW14FzJoZ3yX1Ggov8UctdY
+KA/Cuie4XvtoHQbrRdmD1skFgKBPuncCAwEAAaOCAU0wggFJMB0GA1UdDgQWBBSUZSvaQUtb2ROb
+2z7VC5rR1kwDKDAfBgNVHSMEGDAWgBR3vUwkh3UtbfqnpBySXv90mp7oOjBEBgNVHR8EPTA7MDmg
+N6A1hjNodHRwOi8vdGVzdC1jYS5wZ2UucmVkLnV5L0NlcnRFbnJvbGwvSEdUaXZvbGlDQS5jcmww
+gcAGCCsGAQUFBwEBBIGzMIGwMFUGCCsGAQUFBzAChklodHRwOi8vdGVzdC1jYS5wZ2UucmVkLnV5
+L0NlcnRFbnJvbGwvdGVzdC1jYS5wZ2UucmVkLnV5X0hHVGl2b2xpQ0EoMykuY3J0MFcGCCsGAQUF
+BzAChktmaWxlOi8vXFx0ZXN0LWNhLnBnZS5yZWQudXlcQ2VydEVucm9sbFx0ZXN0LWNhLnBnZS5y
+ZWQudXlfSEdUaXZvbGlDQSgzKS5jcnQwDQYJKoZIhvcNAQEFBQADggEBAHxW1+jh3Y9y9/6oiYpD
+myNRbnJki9KeJYpBpPjgoa5yieYp2hk0igrUw3ct/9Qpj/eZXySIHDtkT+JkRPpIwgZte//eMDt6
+XoNVrIm+DainYYhZf23NmtRFjsTt1k/2R34CKkpv/P8hU7sJnecKLLUAvy7ar2LSJC/YTL+1si+G
++qj2moZIJ2kipbilpM8OwrFc9D99/0v0ZXpMwoMzMRdKZfAubrwAAWTAdr1uP2MZ57dP+U/Ttkl5
+qXrnOhgJfMRZyC5jjwBcOD+MXi58bnJjn5Jpl4i+v0LDB+sd7jYBPI7eFWaSSClE3ygVaC7o/95F
+QbQb6tN2I4uVXYmjLdg=</ds:X509Certificate>
+      </ds:X509Data>
+    </ds:KeyInfo>
+  </ds:Signature>
+</saml1:Assertion>

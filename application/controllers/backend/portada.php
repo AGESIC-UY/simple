@@ -7,7 +7,13 @@ class Portada extends MY_BackendController {
 
     public function __construct() {
         parent::__construct();
-        UsuarioBackendSesion::force_login();
+
+        if(UsuarioSesion::registrado_saml()) {
+          redirect(site_url());
+        }
+        else {
+          return UsuarioBackendSesion::force_login();
+        }
     }
 
     public function index() {
@@ -21,10 +27,7 @@ class Portada extends MY_BackendController {
             redirect('backend/seguimiento');
         else if($usuario->rol=='configuracion')
             redirect('backend/configuracion');
+        else if($usuario->rol=='desarrollo')
+            redirect('backend/api');
     }
-
-
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

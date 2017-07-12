@@ -1,4 +1,267 @@
 $(document).ready(function() {
+  // -- En en caso de que se este mostrando el componente de pago en el editor de formularios...
+  if($('.vista_componente_pago_generico').length && $('.edicionFormulario').length ) {
+    if(!$('#form_pago_submit_generico').length) {
+      $('.vista_componente_pago_generico').removeClass('hidden').show();
+    }
+  }
+
+  $('#generar_reporte_completo').click(function(e) {
+    e.preventDefault();
+
+    var grupo = $('#filtro_grupo').val();
+    var usuario = $('#filtro_usuario').val();
+    var desde = $('#filtro_desde').val();
+    var hasta = $('#filtro_hasta').val();
+    var reporte_id =  $('#filtro_reporte_id').val();
+
+    window.location.href = site_url + "backend/reportes/ver/" + reporte_id + "?filtro_grupo=" + grupo + "&filtro_usuario=" + usuario + "&filtro_desde=" + desde + "&filtro_hasta=" + hasta;
+  });
+
+  $('#generar_reporte_usuario').click(function(e) {
+    e.preventDefault();
+
+    var grupo = $('#filtro_grupo').val();
+    var usuario = $('#filtro_usuario').val();
+    var desde = $('#filtro_desde').val();
+    var hasta = $('#filtro_hasta').val();
+
+    window.location.href = site_url + "backend/reportes/ver_reporte_usuario?filtro_grupo=" + grupo + "&filtro_usuario=" + usuario + "&filtro_desde=" + desde + "&filtro_hasta=" + hasta;
+  });
+
+  $('.solicita_filtro').click(function(){
+    var reporte_id = $(this).attr('data-reporte');
+    $('form #filtro_reporte_id').val(reporte_id);
+    $('#modal_filtro').modal();
+  });
+
+  $('#add_parametro_configuracion').click(function() {
+    var num = parseInt($('#total_parametros').val()) + 1;
+    $('.lista_parametros.controls').append('<span class="campo_parametro"><input class="parametro_id" type="hidden" name="parametro['+num+'][id]" value="null" /> <input type="text" name="parametro['+num+'][clave]" class="input-large" placeholder="Clave" /> <input type="text" name="parametro['+num+'][valor]" class="input-medium" placeholder="Valor" /> <span class="remove_parametro_configuracion icon-minus btn"></span><br /><br /></span>');
+    $('#total_parametros').val(num);
+
+    $('.remove_parametro_configuracion').click(function() {
+      $(this).parent().remove();
+      var count = $('.campo_parametro').size();
+      count = (count - 1);
+      $('#total_parametros').val(count);
+
+      var param_id = $(this).parent().find('.parametro_id').first().val();
+      $.ajax({
+        type: 'post',
+        url: site_url+'/backend/configuracion/eliminar_parametro',
+        data: {parametro_id: param_id},
+        success: function(data) {
+        }
+      });
+    });
+  });
+
+  $('.remove_parametro_configuracion').click(function() {
+    $(this).parent().remove();
+    var count = $('.campo_parametro').size();
+    count = (count - 1);
+    $('#total_parametros').val(count);
+
+    var param_id = $(this).parent().find('.parametro_id').first().val();
+    $.ajax({
+      type: 'post',
+      url: site_url+'/backend/configuracion/eliminar_parametro',
+      data: {parametro_id: param_id},
+      success: function(data) {
+      }
+    });
+  });
+
+  $('#add_pasarela_metodo_generico_ticket_variables').click(function() {
+    var num = parseInt($('#total_ticket_variables').val()) + 1;
+    $('#pasarela_metodo_generico_ticket_variables .controls').append('<input type="text" name="pasarela_metodo_generico_ticket_variables['+num+'][nombre]" class="input-medium" placeholder="Nombre" /> <input type="text" name="pasarela_metodo_generico_ticket_variables['+num+'][valor]" class="input-medium" placeholder="Valor" /><br /><br />');
+    $('#total_ticket_variables').val(num);
+  });
+
+  $('#pasarela_metodo_generico_ticket_metodo').on('change', function() {
+    if(this.value == 'post') {
+      if(!$.trim($('#pasarela_metodo_generico_ticket_variables .controls').html())) {
+        $('#pasarela_metodo_generico_ticket_variables .controls').append('<input type="text" name="pasarela_metodo_generico_ticket_variables[1][nombre]" class="input-medium" placeholder="Nombre" /> <input type="text" name="pasarela_metodo_generico_ticket_variables[1][valor]" class="input-medium" placeholder="Valor" /> <input type="hidden" id="total_ticket_variables" value="1" /> <span id="add_pasarela_metodo_generico_ticket_variables" class="icon-plus btn"></span><br /><br />');
+        $('#add_pasarela_metodo_generico_ticket_variables').click(function() {
+          var num = parseInt($('#total_ticket_variables').val()) + 1;
+          $('#pasarela_metodo_generico_ticket_variables .controls').append('<input type="text" name="pasarela_metodo_generico_ticket_variables['+num+'][nombre]" class="input-medium" placeholder="Nombre" /> <input type="text" name="pasarela_metodo_generico_ticket_variables['+num+'][valor]" class="input-medium" placeholder="Valor" /><br /><br />');
+          $('#total_ticket_variables').val(num);
+        });
+      }
+
+      $('#pasarela_metodo_generico_ticket_variables').removeClass('hidden').show();
+    }
+    else {
+      $('#pasarela_metodo_generico_ticket_variables').hide();
+    }
+  });
+
+  $('#add_pasarela_metodo_generico_metodo_http_variable').click(function() {
+    var num = parseInt($('#total_variables').val()) + 1;
+    $('#pasarela_metodo_generico_variables_post .controls').append('<input type="text" name="pasarela_metodo_generico_metodo_http_variable['+num+'][nombre]" class="input-medium" placeholder="Nombre" /> <input type="text" name="pasarela_metodo_generico_metodo_http_variable['+num+'][valor]" class="input-medium" placeholder="Valor" /><br /><br />');
+    $('#total_variables').val(num);
+  });
+
+  $('#pasarela_metodo_generico_metodo_http').on('change', function() {
+    if(this.value == 'post') {
+      if(!$.trim($('#pasarela_metodo_generico_variables_post .controls').html())) {
+        $('#pasarela_metodo_generico_variables_post .controls').append('<input type="text" name="pasarela_metodo_generico_metodo_http_variable[1][nombre]" class="input-medium" placeholder="Nombre" /> <input type="text" name="pasarela_metodo_generico_metodo_http_variable[1][valor]" class="input-medium" placeholder="Valor" /> <input type="hidden" id="total_variables" value="1" /> <span id="add_pasarela_metodo_generico_metodo_http_variable" class="icon-plus btn"></span><br /><br />');
+        $('#add_pasarela_metodo_generico_metodo_http_variable').click(function() {
+          var num = parseInt($('#total_variables').val()) + 1;
+          $('#pasarela_metodo_generico_variables_post .controls').append('<input type="text" name="pasarela_metodo_generico_metodo_http_variable['+num+'][nombre]" class="input-medium" placeholder="Nombre" /> <input type="text" name="pasarela_metodo_generico_metodo_http_variable['+num+'][valor]" class="input-medium" placeholder="Valor" /><br /><br />');
+          $('#total_variables').val(num);
+        });
+      }
+
+      $('#pasarela_metodo_generico_variables_post').removeClass('hidden').show();
+    }
+    else {
+      $('#pasarela_metodo_generico_variables_post').hide();
+    }
+  });
+
+  if($('.edicionFormulario').length && $('.mensaje_estado_pago').length) {
+    $('.mensaje_estado_pago').parent().html('<div class="well text-left"><i class="icon-tasks" / > Componente de pago</div>');
+  }
+
+  $('input[name="requiere_autenticacion_tipo"]').click(function() {
+    switch($(this).val()) {
+      case 'autenticacion_basica':
+        $('.tipo_autenticacion_mutua').addClass('hidden').hide();
+        $('.tipo_autenticacion_token').addClass('hidden').hide();
+        $('.tipo_autenticacion_basica').removeClass('hidden').show();
+        break;
+      case 'autenticacion_mutua':
+        $('.tipo_autenticacion_basica').addClass('hidden').hide();
+        $('.tipo_autenticacion_token').addClass('hidden').hide();
+        $('.tipo_autenticacion_mutua').removeClass('hidden').show();
+        break;
+      case 'autenticacion_token':
+        $('.tipo_autenticacion_basica').addClass('hidden').hide();
+        $('.tipo_autenticacion_mutua').addClass('hidden').hide();
+        $('.tipo_autenticacion_token').removeClass('hidden').show();
+        break;
+    }
+  });
+
+  $('#requiere_autenticacion').click(function() {
+    $('input[name="requiere_aut_tipo"]').prop('checked', false);
+
+    if($(this).prop('checked')) {
+      $('.tipo_autenticacion').removeClass('hidden').show();
+
+      $('input[name="requiere_autenticacion_tipo"]').click(function() {
+        switch($(this).val()) {
+          case 'autenticacion_basica':
+            $('.tipo_autenticacion_mutua').addClass('hidden').hide();
+            $('.tipo_autenticacion_token').addClass('hidden').hide();
+            $('.tipo_autenticacion_basica').removeClass('hidden').show();
+            break;
+          case 'autenticacion_mutua':
+            $('.tipo_autenticacion_basica').addClass('hidden').hide();
+            $('.tipo_autenticacion_token').addClass('hidden').hide();
+            $('.tipo_autenticacion_mutua').removeClass('hidden').show();
+            break;
+          case 'autenticacion_token':
+            $('.tipo_autenticacion_basica').addClass('hidden').hide();
+            $('.tipo_autenticacion_mutua').addClass('hidden').hide();
+            $('.tipo_autenticacion_token').removeClass('hidden').show();
+            break;
+        }
+      });
+    }
+    else {
+      $('.tipo_autenticacion').addClass('hidden').hide();
+      $('.autenticacion_soap').addClass('hidden').hide();
+    }
+  });
+
+  $(".toolbar-formulario .btn, .botones-edit .btn-primary").click(function() {
+    setTimeout(function() {
+      if($(".dialogos_titulo").size()) {
+        var contenido_default = $('#valor_default_html').html($("#valor_default").val());
+
+        document.content = $('#valor_default_html');
+
+        $("#campo_dialogo_titulo").val($('#valor_default_html').find('.dialogos_titulo').text());
+        $("#campo_dialogo_contenido").val($('#valor_default_html').find('.dialogos_contenido').html());
+        $("#campo_dialogo_titulo_enlace").val($('#valor_default_html').find('.dialogos_enlace').text());
+        $("#campo_dialogo_enlace").val($('#valor_default_html').find('.dialogos_enlace').attr('href'));
+      }
+
+      $("#campo_dialogo_titulo, #campo_dialogo_contenido, #campo_dialogo_enlace, #campo_dialogo_titulo_enlace").on("change", function() {
+        var titulo = "<h3 class='dialogos_titulo'>" + $("#campo_dialogo_titulo").val() + "</h3>";
+        var contenido = "<div class='dialogos_contenido'>" + $("#campo_dialogo_contenido").val() + "</div>";
+        var enlace = "<a class='dialogos_enlace' href='"+ $("#campo_dialogo_enlace").val() +"' target='_blank'>" + $("#campo_dialogo_titulo_enlace").val() + "</a>";
+        $("#valor_default").html(titulo + contenido + enlace);
+      });
+    }, 400);
+  });
+
+
+  $('#verificar_existe_usuario').click(function() {
+    var usuario = $('input[name="usuario"]').val();
+
+    // -- Consulta si existe el usuario
+    $.ajax({
+      type: 'post',
+      url: 'usuario_existe',
+      data: {usuario: usuario},
+      success: function(data) {
+        $('.validacion').html('').hide();
+
+        if(data) {
+          var usuario = JSON.parse(data);
+
+          if(usuario.error) {
+            $('.validacion').html('<div class="alert alert-error">'+usuario.error+'</div>').show();
+          }
+          else {
+            $('input[name="password"]').parent().parent().remove();
+            $('input[name="password_confirm"]').parent().parent().remove();
+            $('input[name="nombres"]').val(usuario.nombres).attr({'readonly':'readonly'});
+            $('input[name="apellido_paterno"]').val(usuario.apellido_paterno).attr({'readonly':'readonly'});
+            $('input[name="apellido_materno"]').val(usuario.apellido_materno).attr({'readonly':'readonly'});
+            $('input[name="email"]').val(usuario.email);
+
+            var form_action = $('form').attr('action');
+            $('form').attr({'action': form_action + '/' + usuario.usuario_id});
+          }
+        }
+      }
+    });
+
+    var existe_usuario = true;
+    if(existe_usuario) {
+
+    }
+    else {
+
+    }
+  });
+
+  if($('#servicio_tipo_pdi:checked').length) {
+    $('#form_soap').hide();
+    $('#form_pdi').show();
+  }
+  else {
+    $('#form_soap').show();
+    $('#form_pdi').hide();
+  }
+
+  $('#servicio_tipo_pdi').click(function() {
+    $('#form_soap').hide();
+    $('#form_pdi').show();
+  });
+
+  $('#servicio_tipo_soap').click(function() {
+    $('#form_pdi').hide();
+    $('#form_soap').show().removeClass('hidden');
+  });
+
+  setTimeout(function() {$(".controls").find(".ht_master.handsontable").not(':first').hide();}, 200);
+
   // -- Muestra campo Error si se esta visualizando desde el modelador de formularios
   $('#areaFormulario .campo_error').show().removeClass('hidden');
 
@@ -43,7 +306,7 @@ $(document).ready(function() {
           $('#formAgregarAccion_button_services').hide();
           $('#formAgregarAccion_button_pasarela_pagos').show().removeClass('hidden');
 
-          $('#pasarela_pagos_action_selector').live('change', function(){
+          $('#pasarela_pagos_action_selector').live('change', function() {
               $('#formAgregarAccion_button').hide();
               $('#formAgregarAccion_button_operations').hide();
               $('#formAgregarAccion_button_services').hide();
@@ -92,6 +355,7 @@ $(document).ready(function() {
   // -- Manejador de fieldsets para editor de formulario
   $('#formEditarFormulario .btn').on('click', function() {
       setTimeout(function() {
+        try {
           document.lista_de_fieldsets = $('.custom-fieldset');
 
           var lista_de_fieldsets = '<select id="lista_de_fieldsets" name="fieldset">';
@@ -111,11 +375,16 @@ $(document).ready(function() {
           lista_de_fieldsets += '</select>';
 
           $('#formEditarCampo input[name="fieldset"]').replaceWith(lista_de_fieldsets);
-      }, 200);
+        }
+        catch(error) {
+          console.log(error);
+        }
+      }, 500);
   });
 
   $('.btn-group .btn').on('click', function() {
       setTimeout(function() {
+        try {
           document.lista_de_fieldsets = $('.custom-fieldset');
 
           var lista_de_fieldsets = '<select id="lista_de_fieldsets" name="fieldset">';
@@ -133,6 +402,10 @@ $(document).ready(function() {
           lista_de_fieldsets += '</select>';
 
           $('#formEditarCampo input[name="fieldset"]').replaceWith(lista_de_fieldsets);
+        }
+        catch(error) {
+          console.log(error);
+        }
       }, 500);
   });
 
@@ -152,7 +425,7 @@ $(document).ready(function() {
       var posibles = 'abcdefghijklmnopqrstuvwxyz0123456789';
       for(var i = 0; i < 6; i++) {id += posibles.charAt(Math.floor(Math.random() * posibles.length));}
 
-      $('#respuestas_visual').append('<div class="well respuestas_visual_hijos"><input type="hidden" class="respuesta_id" value="'+ id +'" /><div class="row-fluid"><div class="span3"><label for="nombreResp'+ id +'">Nombre</label><input id="nombreResp'+ id +'" type="text" class="respuestas_campos_key" /></div><div class="span5"><label for="XPath'+ id +'">XPath</label><input id="XPath'+ id +'" type="text" class="input-xxlarge respuestas_campos_xpath" /></div><div class="span3"><label for="tipo'+ id +'">Tipo</label><select id="tipo'+ id +'" class="respuestas_campos_tipo"><option value="texto">Texto</option><option value="lista">Lista</option></select></div><div class="span1"><div class="btn btn-danger respuestas_campos_eliminar"><span class="icon-trash icon-white" /></div></div></div></div>');
+      $('#respuestas_visual').append('<div class="well respuestas_visual_hijos"><input type="hidden" class="respuesta_id" value="'+ id +'" /><div class="row-fluid"><div class="span3"><label for="nombreResp'+ id +'">Nombre</label><input id="nombreResp'+ id +'" type="text" class="respuestas_campos_key" /></div><div class="span5"><label for="XPath'+ id +'">XPath</label><input id="XPath'+ id +'" type="text" class="input-xxlarge respuestas_campos_xpath" /></div><div class="span3"><label for="tipo'+ id +'">Tipo</label><select id="tipo'+ id +'" class="respuestas_campos_tipo"><option value="texto">Texto</option><option value="lista">Lista</option><option value="xslt">XSLT</option></select></div><div class="span1"><div class="btn btn-danger respuestas_campos_eliminar"><span class="icon-trash icon-white" /></div></div></div></div>');
 
       $('.respuesta_id[value="'+ id +'"]').parent().find('.respuestas_campos_key').focus();
 
@@ -161,7 +434,16 @@ $(document).ready(function() {
       $('.respuestas_campos_tipo').on('change', function() {
           if(this.value == 'lista') {
               if(!$(this).parent().parent().parent().find('.respuestas_campos_xslt').length) {
-                  $(this).parent().parent().parent().append('<div class="margen"><label for="xsl'+ document.operacion_id +'">XSL</label><textarea id="xsl'+ document.operacion_id +'" name="xslt['+ document.operacion_id +']['+$(this).parent().parent().parent().find('.respuesta_id').val() +']" spellcheck="false" class="large-textarea respuestas_campos_xslt" placeholder="Ingrese el XSL...">'+ $('#xsl_example').val() +'</textarea></div>');
+                  $(this).parent().parent().parent().append('<div class="margen"><label for="xsl'+ document.operacion_id +'">XSL</label><textarea id="xsl'+ document.operacion_id +'" name="xslt['+ document.operacion_id +']['+$(this).parent().parent().parent().find('.respuesta_id').val() +']" spellcheck="false" class="large-textarea respuestas_campos_xslt" placeholder="Ingrese el XSLT...">'+ $('#xsl_example').val() +'</textarea></div>');
+              }
+              else {
+                  $(this).parent().parent().parent().find('.margen').show();
+                  $(this).parent().parent().parent().find('.respuestas_campos_xslt').attr({'name': $(this).parent().parent().parent().find('.respuestas_campos_xslt').attr('name').replace('_xslt', 'xslt')});
+              }
+          }
+          else if(this.value == 'xslt') {
+              if(!$(this).parent().parent().parent().find('.respuestas_campos_xslt').length) {
+                  $(this).parent().parent().parent().append('<div class="margen"><label for="xsl'+ document.operacion_id +'">XSLT</label><textarea id="xsl'+ document.operacion_id +'" name="xslt['+ document.operacion_id +']['+$(this).parent().parent().parent().find('.respuesta_id').val() +']" spellcheck="false" class="large-textarea respuestas_campos_xslt" placeholder="Ingrese el XSLT..."></textarea></div>');
               }
               else {
                   $(this).parent().parent().parent().find('.margen').show();
@@ -192,13 +474,16 @@ $(document).ready(function() {
               var options = '';
 
               if($(respuestas.respuestas)[i].tipo == 'texto') {
-                  options = '<option value="texto" selected>Texto</option><option value="lista">Lista</option>';
+                  options = '<option value="texto" selected>Texto</option><option value="lista">Lista</option><option value="xslt">XSLT</option>';
               }
               else if($(respuestas.respuestas)[i].tipo == 'lista') {
-                  options = '<option value="texto">Texto</option><option value="lista" selected>Lista</option>';
+                  options = '<option value="texto">Texto</option><option value="lista" selected>Lista</option><option value="xslt">XSLT</option>';
+              }
+              else if($(respuestas.respuestas)[i].tipo == 'xslt') {
+                  options = '<option value="texto">Texto</option><option value="lista">Lista</option><option value="xslt" selected>XSLT</option>';
               }
               else {
-                  options = '<option value="texto" selected>Texto</option><option value="lista">Lista</option>';
+                  options = '<option value="texto" selected>Texto</option><option value="lista">Lista</option><option value="xslt">XSLT</option>';
               }
 
               $('#respuestas_visual').append('<div class="well respuestas_visual_hijos"><input type="hidden" class="respuesta_id" value="'+ $(respuestas.respuestas)[i].id +'" /><div class="row-fluid"><div class="span3"><label for="nombreResp'+ $(respuestas.respuestas)[i].id +'">Nombre</label><input id="nombreResp'+ $(respuestas.respuestas)[i].id +'" type="text" class="respuestas_campos_key" value="'+ $(respuestas.respuestas)[i].key +'" /></div><div class="span5"><label for="XPath'+ $(respuestas.respuestas)[i].id +'">XPath</label><input id="XPath'+ $(respuestas.respuestas)[i].id +'" type="text" class="input-xxlarge respuestas_campos_xpath" value="'+ $(respuestas.respuestas)[i].xpath +'" /></div><div class="span3"><label for="tipo'+ $(respuestas.respuestas)[i].id +'">Tipo</label><select id="tipo'+ $(respuestas.respuestas)[i].id +'" class="respuestas_campos_tipo">'+ options +'</select></div><div class="span1"><div class="btn btn-danger respuestas_campos_eliminar"><span class="icon-trash icon-white" /></div></div></div></div>');
@@ -210,10 +495,26 @@ $(document).ready(function() {
                   });
               }
 
+              if($(respuestas.respuestas)[i].tipo == 'xslt') {
+                  $('#respuestas_creadas .respuestas_campos_xslt').each(function() {
+                      document.campo_xslt = $(this);
+                      $('.respuesta_id').filter(function(){return this.value == $(document.campo_xslt).attr('data-respuesta-id')}).parent().append($(document.campo_xslt).parent());
+                  });
+              }
+
               $('.respuestas_campos_tipo').on('change', function() {
                   if(this.value == 'lista') {
                       if(!$(this).parent().parent().parent().find('.respuestas_campos_xslt').length) {
-                          $(this).parent().parent().parent().append('<div class="margen"><label for="xsl'+ document.operacion_id +'">XSL</label><textarea id="xsl'+ document.operacion_id +'" name="xslt['+ document.operacion_id +']['+$(this).parent().parent().parent().find('.respuesta_id').val() +']" spellcheck="false" class="large-textarea respuestas_campos_xslt" placeholder="Ingrese el XSL...">'+ $('#xsl_example').val() +'</textarea></div>');
+                          $(this).parent().parent().parent().append('<div class="margen"><label for="xsl'+ document.operacion_id +'">XSL</label><textarea id="xsl'+ document.operacion_id +'" name="xslt['+ document.operacion_id +']['+$(this).parent().parent().parent().find('.respuesta_id').val() +']" spellcheck="false" class="large-textarea respuestas_campos_xslt" placeholder="Ingrese el XSLT...">'+ $('#xsl_example').val() +'</textarea></div>');
+                      }
+                      else {
+                          $(this).parent().parent().parent().find('.margen').show();
+                          $(this).parent().parent().parent().find('.respuestas_campos_xslt').attr({'name': $(this).parent().parent().parent().find('.respuestas_campos_xslt').attr('name').replace('_xslt', 'xslt')});
+                      }
+                  }
+                  else if(this.value == 'xslt') {
+                      if(!$(this).parent().parent().parent().find('.respuestas_campos_xslt').length) {
+                          $(this).parent().parent().parent().append('<div class="margen"><label for="xsl'+ document.operacion_id +'">XSLT</label><textarea id="xsl'+ document.operacion_id +'" name="xslt['+ document.operacion_id +']['+$(this).parent().parent().parent().find('.respuesta_id').val() +']" spellcheck="false" class="large-textarea respuestas_campos_xslt" placeholder="Ingrese el XSLT..."></textarea></div>');
                       }
                       else {
                           $(this).parent().parent().parent().find('.margen').show();
@@ -275,10 +576,12 @@ $(document).ready(function() {
   });
 
   // -- Datepicker para vencimiento de método de pago de pasarela
-  if($('#pasarela_metodo').length) {
-      $('#pasarela_pago_vencimiento_button').datepicker({
-          format: 'yyyymmdd',
-          startDate: '1d'
+  if($('#pasarela_pago_vencimiento_muestra').length) {
+    $('#pasarela_pago_vencimiento_button').click(function() {
+      $('#pasarela_pago_vencimiento').datepicker('show');
+    });
+      $('#pasarela_pago_vencimiento').datepicker({
+          format: 'yymmdd'
       }).on('changeDate', function (e) {
           $(this).datepicker('hide');
 
@@ -287,9 +590,29 @@ $(document).ready(function() {
           $('#pasarela_pago_vencimiento_muestra_texto').text((e.date.getDate() < 10 ? '0' : '') + e.date.getDate() + '/' + (month < 10 ? '0' : '') + month + '/' + e.date.getFullYear() + ' 00:00');
       });
   }
+
+  $('#areaFormulario a').click(function() {
+    setTimeout(function() {
+      $('#contenedor').click(function() {
+        if($(this).is(':checked')) {
+          $(this).val(1);
+          $('#leyenda_contenedor').removeClass('hidden').show();
+        }
+        else {
+          $('#leyenda_contenedor').addClass('hidden').hide();
+        }
+      });
+    }, 400);
+  });
 });
 
 // -- Revuelve un color aleatorio en hexadecimal
 function getRandomColor() {
-  return randomColor({hue: 'blue', luminosity: 'light', count: 1});
+  return randomColor({hue: 'blue'});
+}
+
+function editarBloque(bloqueId){
+    $("#modal").load(site_url+"backend/bloques/ajax_editar/"+bloqueId);
+    $("#modal").modal({backdrop: 'static', keyboard: false});
+    return false;
 }

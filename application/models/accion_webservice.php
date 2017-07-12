@@ -45,6 +45,14 @@ class AccionWebservice extends Accion {
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        if (!empty(PROXY_WS)){
+          curl_setopt($ch, CURLOPT_PROXY, PROXY_WS);
+        }
+
+        $curl_errno = curl_errno($ch); // -- Codigo de error
+        $curl_error = curl_error($ch); // -- Descripcion del error
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE); // -- Codigo respuesta HTTP
         $result = curl_exec($ch);
 
         $json=json_decode($result);

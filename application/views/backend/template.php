@@ -2,8 +2,15 @@
 <html lang="es">
     <head>
         <?php $this->load->view('backend/head') ?>
+
+        
     </head>
+    <!--[if lt IE 9]>
+    <body class="ie_support">
+    <![endif]-->
+    <!--[if (gte IE 9)|!(IE)] -->
     <body>
+    <!--<![endif]-->
       <ul id="skip">
         <li><a href="#main">Ir al contenido</a></li>
         <li><a href="#menu">Ir al menú de navegación</a></li>
@@ -41,9 +48,15 @@
                           <div class="btn-group">
                             <a class="btn btn-small btn-link dropdown-toggle" data-toggle="dropdown" href="#"><span><?= UsuarioBackendSesion::usuario()->email ?></span> <span class="caret"></span></a>
                             <ul class="dropdown-menu pull-right">
-                              <li><a href="<?= site_url('backend/cuentas') ?>"><span class="icon-user"></span> Mi Cuenta</a></li>
-                              <li><a href="<?= site_url('autenticacion/logout_saml') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
-                            </ul>
+                                <li><a href="<?= site_url('backend/cuentas') ?>"><span class="icon-user"></span> Mi Cuenta</a></li>
+                                <?php if (strtoupper(TIPO_DE_AUTENTICACION) == 'CDA'): ?>
+                                  <li><a href="<?= site_url('autenticacion/logout_saml') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                                <?php elseif (strtoupper(TIPO_DE_AUTENTICACION) == 'LDAP'): ?>
+                                  <li><a href="<?= site_url('backend/autenticacion/logout_ldap') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                                <?php else: ?>
+                                  <li><a href="<?= site_url('backend/autenticacion/logout') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                                <?php endif; ?>
+                              </ul>
                           </div>
                         </div>
                       <?php else: ?>
@@ -80,11 +93,17 @@
                       <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'pasarela_pagos'): ?>
                           <li <?= $this->uri->segment(2) == 'pasarela_pagos' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/pasarela_pagos') ?>">Pasarela de Pagos</a></li>
                       <?php endif ?>
-                      <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'operacion'): ?>
+                      <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'operacion' || UsuarioBackendSesion::usuario()->rol == 'seguimiento'): ?>
                           <li <?= $this->uri->segment(2) == 'seguimiento' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/seguimiento') ?>">Seguimiento</a></li>
                       <?php endif ?>
                       <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'gestion'): ?>
-                          <li <?= $this->uri->segment(2) == 'reportes' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/reportes') ?>">Gestión</a></li>
+                          <li <?= $this->uri->segment(2) == 'reportes' || !$this->uri->segment(2) ? 'class="active"' : '' ?>>
+                            <a href="#">Reportes</a>
+                            <ul>
+                              <li><a href="<?= site_url('backend/reportes') ?>">Reportes por procesos</a></li>
+                              <li><a href="<?= site_url('backend/reportes/reporte_usuario') ?>">Reporte de Usuario</a></li>
+                            </ul>
+                          </li>
                       <?php endif ?>
                       <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'desarrollo'): ?>
                           <li <?= $this->uri->segment(2) == 'api' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/api') ?>">API</a></li>
@@ -104,5 +123,21 @@
       <footer>
           <?php $this->load->view('backend/foot') ?>
       </footer>
+
+      <script type="text/javascript">
+        $(document).ready(function() {
+           // Muestra y oculta los menús
+           $('#menu li:has(ul)').hover(
+              function(e)
+              {
+                 $(this).find('ul').slideDown('fast');
+              },
+              function(e)
+              {
+                 $(this).find('ul').slideUp('fast');
+              }
+           );
+        });
+      </script>
     </body>
 </html>

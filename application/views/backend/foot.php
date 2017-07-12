@@ -1,16 +1,21 @@
 <div class="area2">
   <div class="container-fluid">
+	<span class="version"><?=SIMPLE_VERSION?></span>
     <div class="pull-right">
         <img src="<?= base_url() ?>assets/img/logoTramites.png" alt="tramites.gub.uy">
     </div>
   </div>
 </div>
 
+<!-- Google Analytics -->
+<?php get_instance()->load->helper('analytics_helper'); echo display_codigo_analytics(); ?>
+
+<!--[if lt IE 9]>
+<script src="<?= base_url() ?>assets/js/chartjs/excanvas.js" type="text/javascript"></script>
+<![endif]-->
 <script src="<?= base_url() ?>assets/js/chartjs/chartjs.min.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/randomColors/randomColors.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-<script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
 <script src="<?= base_url() ?>assets/js/bootstrap-typeahead-multiple/bootstrap-typeahead-multiple.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/handsontable/dist/handsontable.full.min.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/jquery.chosen/chosen.jquery.min.js"></script>
@@ -22,6 +27,8 @@
 <script src="<?= base_url() ?>assets/js/jquery.doubletap/jquery.doubletap.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/json-js/json2.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/jquery.base64/jquery.base64.min.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>assets/js/bootstrap-tour/bootstrap-tour.min.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/common.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/backend.js" type="text/javascript"></script>
 <script src="<?= base_url() ?>assets/js/backend_extendido.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>assets/js/backend_ayuda_contextual.js" type="text/javascript"></script>

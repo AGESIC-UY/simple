@@ -67,7 +67,7 @@ class Documentos extends MY_Controller {
                             </security>
                             <resources>
                                 <j2se version="1.6+"/>
-                                <jar href="AgesicFirmaApplet-3.4.jar" main="true"/>
+                                <jar href="AgesicFirmaApplet-AgesicFirmaApplet-4.3.jar" main="true"/>
                                 <jar href="activation-1.1.jar" main="false"/>
                                 <jar href="aerogear-crypto-0.1.5.jar" main="false"/>
                                 <jar href="avalon-framework-4.1.3.jar" main="false"/>
@@ -182,12 +182,16 @@ class Documentos extends MY_Controller {
         else {
             $resultado->status=0;
             file_put_contents($uploadDirectory.$file->filename, $documento);
+
+            $file->firmado = true;
+            $file->save();
         }
 
         $campo_documento = Doctrine::getTable('Campo')->find($campo_id);
 
         if($campo_documento) {
             $campos_extra = $campo_documento->extra;
+
 
             if(isset($campos_extra->firmar_servidor)) {
                 if($campos_extra->firmar_servidor == 'on') {
@@ -200,14 +204,26 @@ class Documentos extends MY_Controller {
         }
     }
 
-    function get($filename) {
-        $id=$this->input->get('id');
+    function get($id) {
+        $CI = &get_instance();
+        //verifico si el usuario pertenece el grupo MesaDeEntrada y esta actuando como un ciudadano
+        if(UsuarioSesion::usuarioMesaDeEntrada() && $CI->session->userdata('id_usuario_ciudadano')) {
+          $usuario_sesion = Doctrine_Query::create()
+              ->from('Usuario u')
+              ->where('u.id = ?', $this->session->userdata('id_usuario_ciudadano'))
+              ->fetchOne();
+        }
+        else {
+          $usuario_sesion = UsuarioSesion::usuario();
+        }
+
+        // $id=$this->input->get('id');
         $token=$this->input->get('token');
 
         //Chequeamos permisos del frontend
         $file=Doctrine_Query::create()
                 ->from('File f, f.Tramite t, t.Etapas e, e.Usuario u')
-                ->where('f.id = ? AND f.llave = ? AND u.id = ?',array($id,$token,UsuarioSesion::usuario()->id))
+                ->where('f.id = ? AND f.llave = ? AND u.id = ?',array($id,$token,$usuario_sesion->id))
                 ->fetchOne();
 
         if(!$file){

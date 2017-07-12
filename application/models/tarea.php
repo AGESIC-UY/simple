@@ -31,6 +31,21 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('paso_confirmacion');              //Boolean que indica si se debe incorporar una ultima pantalla de confirmacion antes de avanzar la tarea
         $this->hasColumn('previsualizacion');               //Texto de previsualizacion de la tarea al aparecer en las bandejas de entrada.
         $this->hasColumn('trazabilidad');
+        $this->hasColumn('trazabilidad_id_oficina');
+        $this->hasColumn('trazabilidad_cabezal');
+        $this->hasColumn('trazabilidad_estado');
+        $this->hasColumn('asignacion_notificar_mensaje');   //Texto personalizado que se envia por correo si se debe notificar la asignacion de la tarea al usuario.
+        $this->hasColumn('automatica'); //Boolean que indica si es una tarea automatica o no
+        $this->hasColumn('nivel_confianza'); //Texto  que indica el nivel de confianza en el caso de acceso_modo registrado
+
+        //texto para los mensajes finales
+        $this->hasColumn('paso_final_pendiente');
+        $this->hasColumn('paso_final_standby');
+        $this->hasColumn('paso_final_completado');
+        $this->hasColumn('paso_final_sincontinuacion');
+        $this->hasColumn('texto_boton_paso_final');
+        $this->hasColumn('texto_boton_generar_pdf');
+
     }
 
     function setUp() {
@@ -82,7 +97,6 @@ class Tarea extends Doctrine_Record {
 
         return false;
     }
-
 
     //Obtiene el listado de usuarios que tienen acceso a esta tarea y que esten disponibles (no en vacaciones).
     //$etapa_id indica la etapa hasta la cual se debe calcular la variable para obtener el grupo de usuario.
@@ -150,8 +164,6 @@ class Tarea extends Doctrine_Record {
         return $query->execute();
     }
 
-
-
     //Obtiene el ultimo usuario que fue a asignado a esta tarea dentro del tramite tramite_id
     public function getUltimoUsuarioAsignado($proceso_id) {
         return Doctrine_Query::create()
@@ -200,6 +212,7 @@ class Tarea extends Doctrine_Record {
                     $paso->nombre = $p['nombre'];
                     $paso->regla = $p['regla'];
                     $paso->modo = $p['modo'];
+                    $paso->generar_pdf = $p['generar_pdf'];
                     $paso->formulario_id = $formulario_id;
                     $this->Pasos[] = $paso;
                 }
@@ -349,5 +362,4 @@ class Tarea extends Doctrine_Record {
 
         return $publicArray;
     }
-
 }

@@ -6,13 +6,18 @@ class CampoPaises extends Campo{
 
     protected function display($modo, $dato) {
         $display = '<div class="control-group">';
-        $display.= '<label class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ' (Opcional):') . '</label>';
+        $display.= '<label class="control-label" for="'.$this->id.'" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ':') . '</label>';
         $display.='<div class="controls" data-fieldset="'.$this->fieldset.'">';
-        $display.='<select class="paises" data-id="'.$this->id.'" name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
+        $display.='<select class="paises" id="'.$this->id.'" data-id="'.$this->id.'" name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display.='<option value="">Seleccione país</option>';
         $display.='</select>';
+
         if($this->ayuda)
             $display.='<span class="help-block">'.$this->ayuda.'</span>';
+
+        if($this->ayuda_ampliada)
+          $display .= '<button title="'. strip_tags($this->ayuda_ampliada) .'" class="tooltip_help" onclick="return false;"><span class="icn icn-circle-help"></span><span class="hide-read">Ayuda</span></button>';
+
         $display.='</div>';
         $display.='</div>';
 

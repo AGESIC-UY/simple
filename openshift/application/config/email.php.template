@@ -1,8 +1,0 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
-$config['mailtype']='html';
-$config['protocol'] = 'mail';   //mail, sendmail o smtp
-$config['smtp_host'] = '${SIMPLE_SMTP_HOST}';
-$config['smtp_user'] = '${SIMPLE_SMTP_USER}';
-$config['smtp_pass'] = '${SIMPLE_SMTP_PASSWORD}';
-$config['smtp_port'] = '${SIMPLE_SMTP_PORT}';

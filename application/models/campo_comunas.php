@@ -3,6 +3,7 @@ require_once('campo.php');
 class CampoComunas extends Campo{
 
     public $requiere_datos=false;
+    public $reporte = true;
 
     protected function display($modo, $dato) {
         $valor_default=json_decode($this->valor_default);
@@ -13,7 +14,7 @@ class CampoComunas extends Campo{
         }
 
         $display  = '<div class="control-group">';
-        $display.= '<label class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ' (Opcional):') . '</label>';
+        $display.= '<label class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ':') . '</label>';
         $display.='<div class="controls data-fieldset="'.$this->fieldset.'"">';
         $display.='<select class="regiones" data-id="'.$this->id.'" name="' . $this->nombre . '[region]" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display.='<option value="">Seleccione región</option>';
@@ -88,5 +89,4 @@ class CampoComunas extends Campo{
         $CI->form_validation->set_rules($this->nombre.'[region]', $this->etiqueta.' - Región', implode('|', $this->validacion));
         $CI->form_validation->set_rules($this->nombre.'[comuna]', $this->etiqueta.' - Comuna', implode('|', $this->validacion));
     }
-
 }

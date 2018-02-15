@@ -36,15 +36,6 @@ jQuery 1.7.2
 #### Carga de datos iniciales
 - Cargar los datos iniciales del archivo "sql/datos.sql"
 
-### Uso en OpenShift 3.x
-- La base de datos debe apuntar a: mysql.${OPENSHIFT_BUILD_NAMESPACE}.svc.cluster.local
-- Modificar el archivo .sti/bin/run agregando una linea del estilo:
-  envsubst < config/database.php.template > config/databse.php
-  Este comando reemplaza los placeholders del template con los valores de las variables de entorno de mismo nombre. 
-  Los placeholders deben ser de la forma: ${NOMBRE_DE_LA_VARIABLE}
-- Para poblar el template en OpenShift, se puede utilizar el template yaml ubicado en la carpeta openshift:
-  oc create -f ./openshift/simple-mysql-template.yaml
-
 ### Ejecución inicial
 - Acceder a http://nombrededominio/backend
     Usuario: admin@admin.com

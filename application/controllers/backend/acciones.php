@@ -10,9 +10,7 @@ class Acciones extends MY_BackendController {
 
         UsuarioBackendSesion::force_login();
 
-        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
-            //echo 'No tiene permisos para acceder a esta seccion.';
-            //exit;
+        if(!UsuarioBackendSesion::has_rol('super') && !UsuarioBackendSesion::has_rol('modelamiento')){
             redirect('backend');
         }
     }
@@ -43,10 +41,19 @@ class Acciones extends MY_BackendController {
             ->orderBy('c.nombre')
             ->execute();
 
-        $data['operaciones'] = Doctrine_Query::create()
-            ->from('WsOperacion o')
-            ->orderBy('o.nombre')
-            ->execute();
+        $data['operaciones'] = array();
+        foreach($data['servicios'] as $servicio) {
+          $data['operaciones'][$servicio->id] = array();
+
+          $ops = Doctrine_Query::create()
+              ->from('WsOperacion o')
+              ->where('o.catalogo_id = ?', $servicio->id)
+              ->execute();
+
+          foreach($ops as $op) {
+            array_push($data['operaciones'][$servicio->id], $op);
+          }
+        }
 
         $data['pasarela_pagos'] = Doctrine_Query::create()
             ->from('PasarelaPago p')
@@ -63,7 +70,7 @@ class Acciones extends MY_BackendController {
         $this->load->view('backend/acciones/ajax_seleccionar',$data);
     }
 
-    public function seleccionar_form($proceso_id, $operacion=null){
+    public function seleccionar_form($proceso_id, $operacion=null) {
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
 
         if ($proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
@@ -76,6 +83,9 @@ class Acciones extends MY_BackendController {
         $respuesta=new stdClass();
         if($this->form_validation->run()==TRUE){
             $tipo=$this->input->post('tipo');
+            if((!$operacion) && ($this->input->post('operacion') != '')) {
+              $operacion = $this->input->post('operacion');
+            }
             $respuesta->validacion=TRUE;
             $respuesta->redirect=site_url('backend/acciones/crear/'.$proceso_id.'/'.$tipo.'/'.$operacion);
         }else{
@@ -86,7 +96,7 @@ class Acciones extends MY_BackendController {
         echo json_encode($respuesta);
     }
 
-    public function crear($proceso_id,$tipo,$operacion=null){
+    public function crear($proceso_id,$tipo,$operacion=null) {
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
 
         if ($proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
@@ -107,6 +117,9 @@ class Acciones extends MY_BackendController {
 
         else if($tipo=='variable')
             $accion=new AccionVariable();
+
+        else if($tipo=='archivo')
+                $accion=new AccionArchivo();
 
         $data['edit']=FALSE;
         $data['proceso']=$proceso;
@@ -154,6 +167,10 @@ class Acciones extends MY_BackendController {
 
             else if($this->input->post('tipo')=='variable')
                 $accion=new AccionVariable();
+
+            else if($this->input->post('tipo')=='archivo')
+                    $accion=new AccionArchivo();
+
             $accion->proceso_id=$this->input->post('proceso_id');
             $accion->tipo=$this->input->post('tipo');
         }
@@ -202,8 +219,5 @@ class Acciones extends MY_BackendController {
         $accion->delete();
 
         redirect('backend/acciones/listar/'.$proceso->id);
-
     }
-
-
 }

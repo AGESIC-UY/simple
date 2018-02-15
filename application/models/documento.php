@@ -102,6 +102,80 @@ class Documento extends Doctrine_Record {
         $this->render('123456789', 'abcdefghijkl');
     }
 
+
+    private function renderTable($etapa_id,$contenido){
+
+      $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
+
+      //todos los campos de tipo tabla de la etapa.
+      $arrayCampos = array();
+      foreach ($etapa->Tramite->Proceso->Formularios as $formulario) {
+        foreach($formulario->Campos as $campo){
+          if ($campo->tipo == 'tabla-responsive'){
+             $arrayCampos['@@'.$campo->nombre] = $campo->id;
+          }
+        }
+      }
+      //buscamos todas las variables que contiene el documeto
+      preg_match_all ('/@@(\w+)((->\w+|\[\w+\])*)/', $contenido, $pat_array);
+      //para cada variable del contenido se busca si es de tipo tabla
+      $variable  = '';
+      for ($i=0; $i < count($pat_array[0]); $i++) {
+        $variable = $pat_array[0][$i];
+        if ($arrayCampos[$variable]){
+          $tal = '<table  border="1" cellpadding="2" ><tr>';
+          //El contenido contiene un campo de tipo tabla que se debe sustituir por la tabla con los datos
+          $campo = Doctrine::getTable('Campo')->find($arrayCampos[$variable]);
+
+          //las columnas
+          foreach ($campo->extra->columns as $column){
+            $tal = $tal . '<th style="font-weight: bold;text-align: center;background-color:#f4f4f5">' .  $column->header . '</th>';
+          }
+          $tal = $tal . '</tr>';
+
+          //las filas
+          $variableSin = str_replace('@@', '', $variable);
+          $dato = Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa($variableSin,$etapa_id);
+
+          foreach ($dato->valor as $fila) {
+            $cont = 0;
+            $tal = $tal . '<tr>';
+            foreach($fila as $td){
+
+              if($campo->extra->columns[$cont]->type === 'combo'){
+                $datos_extra_tabla = split(',',$campo->extra->columns[$cont]->data);
+
+                foreach ($datos_extra_tabla as $dato_tabla) {
+                  $dato_tabla_clave_valor = split(':',$dato_tabla);
+                  $dato_tabla_clave = $dato_tabla_clave_valor[0];
+                  $dato_tabla_valor = $dato_tabla_clave_valor[1];
+                  if($dato_tabla_clave === $td){
+                    $td = $dato_tabla_valor;
+                  }
+                }
+
+              }
+
+              $tal = $tal . '<td>' . $td . '</td>';
+              $cont++;
+            }
+            $tal = $tal . '</tr>';
+          }
+
+          if (count($dato->valor) == 0 || count($dato->valor[0]) == 0){
+            $tal = $tal. '<tr style="text-align:center"><td colspan="'. count($campo->extra->columns) .'">Sin datos disponibles</td></tr>';
+          }
+
+          $tal = $tal. '</table>';
+
+          $patt = '/'.$variable.'\b/';
+          $contenido = preg_replace($patt, $tal, $contenido);
+          //$contenido = str_replace($variable, $tal, $contenido);
+        }
+      }
+      return $contenido;
+    }
+
     private function render($identifier, $key, $etapa_id=null ,$filename = false, $copia = false) {
         $uploadDirectory = 'uploads/documentos/';
 
@@ -118,6 +192,10 @@ class Documento extends Doctrine_Record {
             $firmador_cargo = $this->firmador_cargo;
             $firmador_servicio = $this->firmador_servicio;
             if($etapa_id){
+
+                //renderiza el contenido para la variables de tipo tabla
+                $contenido= $this->renderTable($etapa_id, $contenido);
+                //lo normal
                 $regla = new Regla($contenido);
                 $contenido = $regla->getExpresionParaOutput($etapa_id);
                 $regla = new Regla($titulo);
@@ -158,6 +236,9 @@ class Documento extends Doctrine_Record {
 
             $contenido=$this->contenido;
             if($etapa_id){
+
+                //renderiza el contenido para la variables de tipo tabla
+                $contenido= $this->renderTable($etapa_id, $contenido);
                 $regla = new Regla($contenido);
                 $contenido = $regla->getExpresionParaOutput($etapa_id);
             }
@@ -254,5 +335,78 @@ class Documento extends Doctrine_Record {
                 }
             }
         }
+    }
+
+    function generar_pasos_pdf($etapa_actual, $proceso_nombre, $cuenta) {
+
+      $filename = uniqid();
+      //verifico que el nombre del archivo NO exista
+      while (file_exists('uploads/documentos/'. $filename.'.pdf')){
+        $filename = uniqid();
+      }
+
+      $file = Doctrine_Query::create()
+        ->from('file f')
+        ->where('f.etapa_id = ?', $etapa_actual->id)
+        ->fetchOne();
+
+      if($file) {
+        //Si la etapa ya tiene un archivo pdf lo borro de la carpeta porque se va a actualizar con uno nuevo
+        unlink('uploads/documentos/'.$file_encontrado->filename);
+        $file->filename = $filename.'.pdf';
+        $file->save();
+      }
+      else {
+        //Si es la primera vez que se genera el pdf para la etapa entonces cro uno nuevo
+          $file = new File();
+          $file->tramite_id = $etapa_actual->tramite_id;
+          $file->etapa_id = $etapa_actual->id;
+          $file->tipo = 'etapa_pdf';
+          $file->llave = strtolower(random_string('alnum', 12));
+          $file->llave_copia = null;
+          $file->llave_firma = strtolower(random_string('alnum', 12));
+          $file->filename = $filename.'.pdf';
+          $file->save();
+      }
+
+      $CI = &get_instance();
+      $CI->load->library('pasospdf');
+      $obj = new $CI->pasospdf($this->tamano);
+      $contenido = $this->contenido;
+
+      //renderiza el contenido para la variables de tipo tabla
+      $contenido = $this->renderTable($etapa_actual->id, $contenido);
+      $regla = new Regla($contenido);
+      $contenido = $regla->getExpresionParaOutput($etapa_actual->id);
+
+      $obj->content = $contenido;
+      $obj->proceso_nombre = $proceso_nombre;
+      $obj->cuenta = $cuenta;
+
+      //creo el nuevo archivo pdf
+      $obj->Output('uploads/documentos/'. $file->filename, 'F');
+
+      $link = site_url('documentos/get/' . $file->id) . '?token='.$file->llave;
+
+      return $link;
+    }
+
+    function generar_pasos_pdf_tarae_sin_asignar($etapa_actual, $proceso_nombre, $cuenta) {
+      $CI = &get_instance();
+      $CI->load->library('pasospdf');
+      $obj = new $CI->pasospdf($this->tamano);
+      $contenido = $this->contenido;
+
+      //renderiza el contenido para la variables de tipo tabla
+      $contenido = $this->renderTable($etapa_actual->id, $contenido);
+      $regla = new Regla($contenido);
+      $contenido = $regla->getExpresionParaOutput($etapa_actual->id);
+
+      $obj->content = $contenido;
+      $obj->proceso_nombre = $proceso_nombre;
+      $obj->cuenta = $cuenta;
+
+      //creo el nuevo archivo pdf
+      $obj->Output($proceso_nombre, 'I');
     }
 }

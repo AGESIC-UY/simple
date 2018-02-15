@@ -37,22 +37,57 @@ class WidgetTramiteEtapas extends Widget {
 
         $elem_id = mt_rand() . '_widget';
 
+        $nombre_proceso = explode(' ', $proceso->nombre);
+        $nombre_proceso = $nombre_proceso[0] . ' ' . $nombre_proceso[1] . ' ' . $nombre_proceso[2];
+
         $display = '<div class="dashboard_wrap_chart">';
         $display .= '<canvas id="'. $elem_id .'" width="390" height="280" class="dashboard_pie_chart"></canvas>';
         $display .='
             <script type="text/javascript">
               $(document).ready(function(){
+                Chart.types.Doughnut.extend({
+                    name: "DoughnutTextInside",
+                    showTooltip: function() {
+                        this.chart.ctx.save();
+                        Chart.types.Doughnut.prototype.showTooltip.apply(this, arguments);
+                        this.chart.ctx.restore();
+                    },
+                    draw: function() {
+                        Chart.types.Doughnut.prototype.draw.apply(this, arguments);
+
+                        var width = this.chart.width,
+                            height = this.chart.height;
+
+                        var fontSize = (height / 300).toFixed(2);
+                        this.chart.ctx.font = fontSize + "em Verdana";
+                        this.chart.ctx.textBaseline = "middle";
+
+                        var text = "'. $nombre_proceso .'",
+                            textX = Math.round((width - this.chart.ctx.measureText(text).width) / 2),
+                            textY = height / 2;
+
+                        this.chart.ctx.fillText(text, textX, textY);
+                    }
+                });
+
                 var data = ['. $datos_armados .'];
 
                 var originalCalculateXLabelRotation = Chart.Scale.prototype.calculateXLabelRotation
                 Chart.Scale.prototype.calculateXLabelRotation = function () {
                     originalCalculateXLabelRotation.apply(this, arguments);
-                    this.xScalePaddingRight = 20;
+                    this.xScalePaddingRight = 20  ;
                     this.xScalePaddingLeft = 20;
                 }
 
+                var isOldIE = $("body").hasClass("ie_support");
+                var $canvas = $("body").find("canvas");
+                var canvas = $canvas[0];
+                if(isOldIE) {
+                  canvas = G_vmlCanvasManager.initElement(canvas);
+                }
                 var ctx = $("#'. $elem_id .'").get(0).getContext("2d");
-                new Chart(ctx).Doughnut(data, {maintainAspectRatio: true, responsive: true, multiTooltipTemplate: "<%=datasetLabel%> : <%= value %>"});
+
+                new Chart(ctx).DoughnutTextInside(data, {maintainAspectRatio: true, responsive: true, multiTooltipTemplate: "<%=datasetLabel%>: <%= value %>", percentageInnerCutout: 70});
               });
             </script>';
         $display .= '</div>';

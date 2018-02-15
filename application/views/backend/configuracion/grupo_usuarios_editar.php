@@ -27,12 +27,21 @@
                       </div>
                     </div>
                   <?php endif ?>
+                  <?php if($grupo_usuarios->nombre !== 'UsuarioMesaDeEntrada'):?>
                     <div class="control-group">
                       <label for="nombre" class="control-label">Nombre</label>
                       <div class="controls">
                         <input type="text" id="nombre" class="input-xlarge" name="nombre" value="<?=isset($grupo_usuarios)?$grupo_usuarios->nombre:''?>"/>
                       </div>
                     </div>
+                      <?php else:?>
+                        <div class="control-group">
+                          <label for="nombre" class="control-label">Nombre</label>
+                          <div class="controls">
+                            <label for="nombre" class="control-label"><?=isset($grupo_usuarios)?$grupo_usuarios->nombre:''?></label>
+                          </div>
+                        </div>
+                    <?php endif ?>
                     <div class="control-group">
                       <label for="select-usuarios" class="control-label">Este grupo lo componen</label>
                       <div class="controls">

@@ -166,6 +166,7 @@ class SaferEval {
             'date_create',
             'strftime',
             'strtotime',
+	          'date',
             //Serializacion
             'json_encode',
             'json_decode',
@@ -190,7 +191,7 @@ class SaferEval {
             //	'T_COMMENT',			// comments
             'T_CONCAT_EQUAL', // assignment operators
             'T_CONSTANT_ENCAPSED_STRING', // string syntax
-            'T_CONTINUE', // 
+            'T_CONTINUE', //
             'T_CURLY_OPEN', //
             'T_DEC', // incrementing/decrementing operators
             'T_DECLARE', // declare
@@ -246,7 +247,7 @@ class SaferEval {
             'T_UNSET_CAST', // (not documented; casts to NULL)
             'T_VARIABLE', // variables
             'T_WHILE', // while, do..while
-            'T_WHITESPACE', // 
+            'T_WHITESPACE', //
             'T_XOR_EQUAL', // assignment operators
         );
         $this->globalVariables = array();
@@ -254,7 +255,7 @@ class SaferEval {
         $this->disallowedExpressions = array(// Probably unsafe to change these
             '/`/', // Shell execution operator: "`"
             '/\$\W/', // Variable variables: any "$" which is not "$_" or "$alphanumeric"
-            '/(\]|\})\s*\(/', // Variable functions: "] (" or "} ("
+            '/(\|\})\s*\(/', // Variable functions: "] (" or "} ("
             '/\$\w\w*\s*\(/', // Variable functions: "$_ (" or "$alphanumeric"
             //	'/\$\w\w*\s*(\/\/|\/\*)/',	// Comment after variable: "$alphanumeric //" or "$alphanumeric /*"
             //	'/(\]|\})\s*\//',		// Comment after parentheses: "] /" or "} /"

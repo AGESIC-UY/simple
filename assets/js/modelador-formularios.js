@@ -35,12 +35,23 @@ function editarPosicionCampos(){
 }
 
 function editarCampo(campoId){
-    $("#modal").load(site_url+"backend/formularios/ajax_editar_campo/"+campoId);
+    $("#modal").load(site_url+"backend/formularios/ajax_editar_campo/"+campoId+'?id='+ uniqueId());
     $("#modal").modal({backdrop: 'static', keyboard: false});
     return false;
 }
+
 function agregarCampo(formularioId,tipo){
-    $("#modal").load(site_url+"backend/formularios/ajax_agregar_campo/"+formularioId+"/"+tipo);
-    $("#modal").modal({backdrop: 'static', keyboard: false});
-    return false;
+
+    if(tipo === "agenda_sae" && $("body").find("[agenda-campo='agenda_sae']").length === 1){
+      alert("Ya existe un campo de tipo Agenda Embebida ");
+      return false;
+    }
+    else{
+      $("#modal").load(site_url+"backend/formularios/ajax_agregar_campo/"+formularioId+"/"+tipo);
+      $("#modal").modal({backdrop: 'static', keyboard: false});
+      return false;
+    }
 }
+
+
+function uniqueId() { return new Date().getTime(); }

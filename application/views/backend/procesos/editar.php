@@ -133,13 +133,15 @@
     </li>
     <li class="active"><?= $proceso->nombre ?></li>
 </ul>
+<a href="#" class="btn btn-ayuda btn-secundary" id="ayuda_contextual_modelador"><span class="icon-white icon-question-sign"></span> Ayuda</a>
 <h2><?= $proceso->nombre ?></h2>
 <ul class="nav nav-tabs">
     <li class="active"><a href="<?= site_url('backend/procesos/editar/' . $proceso->id) ?>">Diseñador</a></li>
     <li><a href="<?= site_url('backend/formularios/listar/' . $proceso->id) ?>">Formularios</a></li>
     <li><a href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Documentos</a></li>
     <li><a href="<?= site_url('backend/acciones/listar/' . $proceso->id) ?>">Acciones</a></li>
-    <li><a href="<?= site_url('backend/trazabilidad/listar/' . $proceso->id) ?>">Trazabilidad</a></li>
+    <li id="accion-modelador"><a href="<?= site_url('backend/trazabilidad/listar/' . $proceso->id) ?>">Trazabilidad</a></li>
+    <li><a href="<?= site_url('backend/procesos/editar_codigo_tramite_ws_grep/' . $proceso->id) ?>">Código tramites.gub.uy</a></li>
 </ul>
 
 

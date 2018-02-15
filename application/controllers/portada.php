@@ -10,9 +10,10 @@ class Portada extends MY_Controller {
     }
 
     public function index() {
-        $pendientes=Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id);
-
-        if(UsuarioSesion::usuario()->registrado && $pendientes->count()>0)
+      $usuario_id =UsuarioSesion::usuario()->id;
+      $cuenta_segun_dominio = Cuenta::cuentaSegunDominio();
+      $pendientes=Doctrine::getTable('Etapa')->cantidadPendientes(UsuarioSesion::usuario()->id,  $cuenta_segun_dominio);
+        if(UsuarioSesion::usuario()->registrado && $pendientes >0)
             redirect('etapas/inbox');
         else
             redirect('tramites/disponibles');

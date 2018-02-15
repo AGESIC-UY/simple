@@ -6,8 +6,6 @@ $(document).ready(function(){
 
 });
 
-
-
 function drawFromModel(model,width,height){
 
     //Convertimos el width y height a valores numericos. Puede venir con % o con px
@@ -50,7 +48,6 @@ function drawFromModel(model,width,height){
             visible: false },
             new go.Binding("visible", "start"))
         );
-
 
       diagram.linkTemplate = $$(go.Link,
       { routing: go.Link.AvoidsNodes, corner: 5, curve: go.Link.JumpOver, toEndSegmentLength: 30, fromEndSegmentLength: 30 },  // link route should avoid nodes

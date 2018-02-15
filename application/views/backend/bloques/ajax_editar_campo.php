@@ -3,7 +3,7 @@
         $('.validacion').typeahead({
             mode: "multiple",
             delimiter: "|",
-            source: ["required","rut","min_length[num]","max_length[num]","exact_length[num]","greater_than[num]","less_than[num]","alpha","alpha_numeric","alpha_dash","alpha_space","numeric","integer","decimal","is_natural","is_natural_no_zero","valid_email","valid_emails","valid_ip","valid_base64","trim","is_unique[exp]"]
+            source: ["required","rut","ci","ci_validacionExtendida","alpha_numeric_ext","not_empty_table","consulta_pago_completo_generico","min_length_table[num]","max_length_table[num]","min_length[num]","max_length[num]","exact_length[num]","greater_than[num]","less_than[num]","alpha","alpha_numeric","alpha_dash","alpha_space","numeric","integer","decimal","is_natural","is_natural_no_zero","valid_email","valid_emails","valid_ip","valid_base64","trim","is_unique[exp]","validar_agenda_sae","validar_campo_ica"]
         });
 
         //Funcionalidad del llenado de nombre usando el boton de asistencia
@@ -224,6 +224,21 @@
         <?php endif; ?>
 
         <?=$campo->backendExtraFields()?>
+
+        <?php if($campo->tipo == 'agenda' || $campo->tipo == 'agenda_sae'):?>
+          <label for="check_requiere_agendar"><?=TEXTO_CONFIG_AGENDAR?></label>
+          <select id="check_requiere_agendar" name="check_requiere_agendar">
+
+            <?php if($campo->requiere_agendar == 1):?>
+              <option value="1" selected>Si</option>
+              <option value="0">No</option>
+            <?php else: ?>
+              <option value="0" selected>No</option>
+              <option value="1">Si</option>
+            <?php endif; ?>
+
+            </select>
+        <?php endif; ?>
 
 
 </div>

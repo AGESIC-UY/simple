@@ -3,15 +3,16 @@
         Pasarela de Pagos
     </li>
 </ul>
-<h2>Pasarela de Pagos</h2>
+<a href="#" class="btn btn-ayuda btn-secundary" id="ayuda_contextual_pasarela"><span class="icon-white icon-question-sign"></span> Ayuda</a>
+<h2 id="accion-pasarela">Pasarela de Pagos</h2>
 <div class="acciones-generales">
-  <a class="btn btn-success" href="<?=site_url('backend/pasarela_pagos/crear/')?>"><span class="icon-file"></span> Nuevo</a>
+  <a class="btn btn-success" id="accion-nueva-pasarela" href="<?=site_url('backend/pasarela_pagos/crear/')?>"><span class="icon-file"></span> Nuevo</a>
 </div>
 <table class="table">
   <caption class="hide-text">Pasarela de Pagos</caption>
     <thead>
         <tr>
-            <th>Nombre</th>
+            <th id="accion-lista-pasarelas">Nombre</th>
             <th>Activa?</th>
             <th>Acciones</th>
         </tr>

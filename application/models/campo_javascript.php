@@ -2,7 +2,7 @@
 require_once('campo.php');
 class CampoJavascript extends Campo{
 
-    public $requiere_nombre=false;
+    public $requiere_nombre=true;
     public $requiere_datos=false;
     public $estatico=true;
     public $etiqueta_tamano='xxlarge';
@@ -27,7 +27,7 @@ class CampoJavascript extends Campo{
             $etiqueta=$this->etiqueta;
         }
 
-        $display='<div class="well campo_javascript">Javascript</div><script type="text/javascript">try{'.html_entity_decode($etiqueta).'}catch(err){alert(err)}</script>';
+        $display='<div class="well campo_javascript">'.$this->nombre.'</div><script type="text/javascript">try{'.html_entity_decode($etiqueta).'}catch(err){alert(err)}</script>';
 
         return $display;
     }

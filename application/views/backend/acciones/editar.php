@@ -14,6 +14,7 @@
     <li><a href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Documentos</a></li>
     <li class="active"><a href="<?= site_url('backend/acciones/listar/' . $proceso->id) ?>">Acciones</a></li>
     <li><a href="<?= site_url('backend/trazabilidad/listar/' . $proceso->id) ?>">Trazabilidad</a></li>
+    <li><a href="<?= site_url('backend/procesos/editar_codigo_tramite_ws_grep/' . $proceso->id) ?>">Código tramites.gub.uy</a></li>
 </ul>
 
 
@@ -43,7 +44,7 @@
         </div>
       </div>
   </fieldset>
-  <fieldset><!-- TODO que no aparezca si no tiene otros datos (por ejemplo en pasarela de pagos) -->
+  <fieldset>
       <legend>Otros datos</legend>
         <?php if(isset($operacion)): ?>
             <?=$accion->displayForm($operacion)?>

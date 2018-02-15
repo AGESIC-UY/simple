@@ -21,9 +21,9 @@ class CampoBloque extends Campo{
 
     protected function display($modo, $dato, $etapa_id) {
         if($etapa_id) {
-            $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
-            $regla=new Regla($this->valor_default);
-            $bloque_id=$regla->getExpresionParaOutput($etapa->id);
+          $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+          $regla=new Regla($this->valor_default);
+          $bloque_id=$regla->getExpresionParaOutput($etapa->id);
         }
         else {
             $bloque_id=$this->valor_default;

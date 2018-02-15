@@ -19,11 +19,22 @@
           </div>
         </div>
         <div class="control-group">
+          <label class="control-label" for="tipo">Tipo</label>
+          <div class="controls">
+            <select id="tipo" name="tipo">
+              <option value="resumen" <?=$reporte->tipo == 'resumen' ? 'selected' : '' ?>>Basico</option>
+              <option value="completo" <?=$reporte->tipo == 'completo' ? 'selected' : '' ?>>Completo</option>
+            </select>
+          </div>
+        </div>
+        <div class="control-group">
           <label class="control-label" for="campos">Campos</label>
           <div class="controls">
             <select id="campos" name="campos[]" style="height: 240px;" multiple>
-                <?php foreach($proceso->getNombresDeDatos() as $c):?>
-                <option value="<?=$c?>" <?=$edit && in_array($c,$reporte->campos)?'selected':''?>><?=$c?></option>
+                <?php foreach($proceso->getNombresDeVariables() as $c):?>
+                  <?php if(!(strpos($c, 'email_tramite_inicial__e') !== FALSE) && !preg_match('/^[a-f0-9]{32}$/', $c) && !(strpos($c, 'documento_tramite_inicial__e') !== FALSE) && !(strpos($c, 'documento_tramite__') !== FALSE) && !(strpos($c, 'ws_error') !== FALSE) && !(strpos($c, 'BLOQUE_') !== FALSE)): ?>
+                      <option value="<?=$c?>" <?=$edit && in_array($c,$reporte->campos)?'selected':''?>><?=$c?></option>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             </select>
           </div>

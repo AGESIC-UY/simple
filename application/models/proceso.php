@@ -8,6 +8,7 @@ class Proceso extends Doctrine_Record {
         $this->hasColumn('width');      //ancho de la grilla
         $this->hasColumn('height');     //alto de la grilla
         $this->hasColumn('cuenta_id');
+        $this->hasColumn('codigo_tramite_ws_grep');
     }
 
     function setUp() {
@@ -296,7 +297,6 @@ class Proceso extends Doctrine_Record {
         }
 
         return $tareas[0];
-
     }
 
     //Obtiene todos los campos asociados a este proceso
@@ -327,7 +327,7 @@ class Proceso extends Doctrine_Record {
 
     //Retorna una arreglo con todos los nombres de datos usados durante el proceso
     public function getNombresDeDatos(){
-        $campos=Doctrine_Query::create()
+      $campos=Doctrine_Query::create()
                 ->select('d.nombre')
                 ->from('DatoSeguimiento d, d.Etapa.Tramite.Proceso p')
                 ->andWhere('p.id = ?',$this->id)
@@ -338,6 +338,219 @@ class Proceso extends Doctrine_Record {
             $result[]=$c->nombre;
 
         return $result;
+    }
+
+    //Retorna una arreglo con todos los nombres de datos usados durante el proceso
+    public function getNombresDeDatosTramite($tramite_id){
+      $campos=Doctrine_Query::create()
+                ->select('d.nombre')
+                ->from('DatoSeguimiento d, d.Etapa.Tramite t')
+                ->andWhere('t.id = ?',$tramite_id)
+                ->groupBy('d.nombre')
+                ->execute();
+
+        foreach($campos as $c)
+            $result[]=$c->nombre;
+
+        return $result;
+    }
+
+    //Retorna una arreglo con todos los nombres de las variables generadas por los campos que tienen reporte = true y las acciones de generar variables
+    public function getNombresDeVariables(){
+
+
+      //las variables que genera para el usuario
+      foreach($this->Tareas as $tarea) {
+
+        //los campos que generarn variables y aplica a reporte
+        foreach($tarea->Pasos as $p) {
+          foreach($p->Formulario->Campos as $campo) {
+            if ($campo->reporte){
+              if (!in_array($campo->nombre,$result)){
+                $result[]=$campo->nombre;
+              }
+              if(($campo->tipo == 'radio') || ($campo->tipo == 'select') || ($campo->tipo == 'checkbox')) {
+                if (!in_array($campo->nombre.'__etiqueta',$result)){
+                  $result[]=$campo->nombre.'__etiqueta';
+                }
+              }
+
+            }
+
+            //si un formulario tienen pasarela de pagos de ANTEL desjamos disponibles las variables que genera
+            //pasarela de pago
+            if ($campo->tipo == 'pagos'){
+              foreach($this->Acciones as $accion) {
+                if($accion->id == $campo->valor_default) {
+                  $pasarela = $accion->extra;
+                  break;
+                }
+              }
+
+              if(!isset($pasarela->metodo)) {
+                $metodo_pasarela = 'antel';
+              }
+              else {
+                $metodo_pasarela = $pasarela->metodo;
+              }
+
+              if ($pasarela && $metodo_pasarela == 'antel'){
+                if (!in_array('Solicitud_IdSolicitud',$result)){
+                  $result[]='Solicitud_IdSolicitud';
+                }
+                if (!in_array('Solicitud_IdEstado',$result)){
+                  $result[]='Solicitud_IdEstado';
+                }
+                if (!in_array('Solicitud_Fecha',$result)){
+                  $result[]='Solicitud_Fecha';
+                }
+                if (!in_array('Solicitud_Transaccion',$result)){
+                  $result[]='Solicitud_Transaccion';
+                }
+                if (!in_array('Solicitud_Autorizacion',$result)){
+                  $result[]='Solicitud_Autorizacion';
+                }
+                if (!in_array('Solicitud_IdFormaPago',$result)){
+                  $result[]='Solicitud_IdFormaPago';
+                }
+                if (!in_array('Solicitud_FechaConciliacion',$result)){
+                  $result[]='Solicitud_FechaConciliacion';
+                }
+                if (!in_array('Solicitud_ValorTasa',$result)){
+                  $result[]='Solicitud_ValorTasa';
+                }
+                if (!in_array('Solicitud_IdTramite',$result)){
+                  $result[]='Solicitud_IdTramite';
+                }
+                if (!in_array('Solicitud_ImporteTasa1',$result)){
+                  $result[]='Solicitud_ImporteTasa1';
+                }
+                if (!in_array('Solicitud_ImporteTasa2',$result)){
+                  $result[]='Solicitud_ImporteTasa2';
+                }
+                if (!in_array('Solicitud_ImporteTasa3',$result)){
+                  $result[]='Solicitud_ImporteTasa3';
+                }
+
+                if (!in_array('Solicitud_FechaVto',$result)){
+                  $result[]='Solicitud_FechaVto';
+                }
+
+                if (!in_array('Solicitud_CodDesglose',$result)){
+                  $result[]='Solicitud_CodDesglose';
+                }
+
+                if (!in_array('Solicitud_MontoDesglose',$result)){
+                  $result[]='Solicitud_MontoDesglose';
+                }
+
+                if (!in_array('Solicitud_DesRechazo',$result)){
+                  $result[]='Solicitud_DesRechazo';
+                }
+
+                if (!in_array('Solicitud_Ventanilla',$result)){
+                  $result[]='Solicitud_Ventanilla';
+                }
+
+                if (!in_array('Solicitud_DesError',$result)){
+                  $result[]='Solicitud_DesError';
+                }
+
+                if (!in_array('Solicitud_Mensaje',$result)){
+                  $result[]='Solicitud_Mensaje';
+                }
+              }elseif ($pasarela && $metodo_pasarela == 'generico'){
+                  //se busca la accion
+                  $pasarela_generica = Doctrine_Query::create()
+                              ->from('PasarelaPagoGenerica pg')
+                              ->where('pg.id = ?', $pasarela->pasarela_pago_generica_id)
+                              ->fetchOne();
+
+                  if ($pasarela_generica->codigo_operacion_soap){
+                    $operacion_soap = Doctrine_Query::create()
+                                  ->from('WsOperacion op')
+                                  ->where('op.codigo = ?', $pasarela_generica->codigo_operacion_soap)
+                                  ->fetchOne();
+
+                    $respuestas = json_decode($operacion_soap->respuestas);
+                    foreach($respuestas->respuestas as $resp){
+                      if (!in_array($resp->key,$result)){
+                        $result[]= $resp->key;
+                      }
+                    }
+                  }
+
+                  if ($pasarela_generica->codigo_operacion_soap_consulta){
+                     $operacion_soap_consulta = Doctrine_Query::create()
+                                    ->from('WsOperacion op')
+                                    ->where('op.codigo = ?', $pasarela_generica->codigo_operacion_soap_consulta)
+                                    ->fetchOne();
+
+                      $respuestas = json_decode($operacion_soap_consulta->respuestas);
+                      foreach($respuestas->respuestas as $resp){
+                        if (!in_array($resp->key,$result)){
+                          $result[]= $resp->key;
+                        }
+                      }
+                  }
+                  if ($pasarela->url_redireccion){
+                    if(!filter_var($pasarela->url_redireccion, FILTER_VALIDATE_URL)) {
+                        $codigo_operacion_post = $pasarela->url_redireccion;
+
+                        $operacion_post = Doctrine_Query::create()
+                          ->from('WsOperacion o')
+                          ->where('o.codigo = ?', $codigo_operacion_post)
+                          ->fetchOne();
+
+                        $respuestas = json_decode($operacion_post->respuestas);
+                        foreach($respuestas->respuestas as $resp){
+                            if (!in_array($resp->key,$result)){
+                              $result[]= $resp->key;
+                            }
+                        }
+                    }
+                  }
+              }
+            }
+          }
+        }
+
+        //las acciones generar variable y serb service extended
+        foreach($tarea->Eventos as $evento) {
+          //si evento de tipo variable se deja disponible
+          if ($evento->Accion->tipo == 'variable'){
+            if (!in_array($evento->Accion->extra->variable,$result)){
+              $result[]= $evento->Accion->extra->variable;
+            }
+          }
+          //si evento web service dejamos las varaibles de la respuesta disponibles
+          if ($evento->Accion->tipo == 'webservice_extended'){
+            //recorremos las repsuestas del servicio para disponibilizar las variables
+            $codigo_operacion = $evento->Accion->extra->soap_operacion;
+            $operacion = Doctrine_Query::create()
+                          ->from('WsOperacion o')
+                          ->where('o.codigo = ?', $codigo_operacion)
+                          ->execute();
+            $operacion = $operacion[0];
+            $respuestas = json_decode($operacion->respuestas);
+
+            foreach($respuestas->respuestas as $resp){
+              if (!in_array($resp->key,$result)){
+                $result[]= $resp->key;
+              }
+            }
+          }
+        }
+
+        //la variable que genera para almacenar el usuario de la tarea
+        if ($tarea->almacenar_usuario){
+          if (!in_array($tarea->almacenar_usuario_variable,$result)){
+            $result[]= $tarea->almacenar_usuario_variable;
+          }
+        }
+      }
+
+      return $result;
     }
 
     //Verifica si el usuario_id tiene permisos para iniciar este proceso como tramite.

@@ -17,7 +17,7 @@
       <script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
       <script src="<?= base_url() ?>assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices     ?>
       <script src="<?= base_url() ?>assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax     ?>
-      <script src="<?= base_url() ?>assets/js/common.js"></script>
+
       <link href="<?= base_url() ?>assets/css/font-awesome-3.2.1.min.css" rel="stylesheet" />
       <link href="<?= base_url() ?>assets/css/estilos_extendidos.css" rel="stylesheet" />
       <link rel="shortcut icon" href="<?= base_url() ?>assets/img/favicon.png" />
@@ -61,7 +61,13 @@
                   <div class="btn-group">
                     <a class="btn btn-small btn-link dropdown-toggle" data-toggle="dropdown" href="#"><span><?= UsuarioManagerSesion::usuario()->usuario ?></span> <span class="caret"></span></a>
                     <ul class="dropdown-menu pull-right">
+                      <?php if (strtoupper(TIPO_DE_AUTENTICACION) == 'CDA'): ?>
                         <li><a href="<?= site_url('autenticacion/logout_saml') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                      <?php elseif (strtoupper(TIPO_DE_AUTENTICACION) == 'LDAP'): ?>
+                        <li><a href="<?= site_url('manager/autenticacion/logout_ldap') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                      <?php else: ?>
+                        <li><a href="<?= site_url('manager/autenticacion/logout') ?>"><span class="icon-off"></span> Cerrar sesión</a></li>
+                      <?php endif; ?>
                     </ul>
                   </div>
                 </div>
@@ -90,6 +96,7 @@
                 <li class="nav-header">Administración</li>
                 <li><a href="<?= site_url('manager/cuentas') ?>">Cuentas</a></li>
                 <li><a href="<?= site_url('manager/usuarios') ?>">Usuarios Backend</a></li>
+                <li><a href="<?= site_url('manager/plugins') ?>">Plugins</a></li>
                 <li class="nav-header">Estadisticas</li>
                 <li><a href="<?= site_url('manager/estadisticas/cuentas') ?>">Trámites en curso</a></li>
               </ul>
@@ -104,12 +111,16 @@
     </div>
     <footer class="row-fluid">
       <div class="area2">
-        <div class="container">
+        <div class="container-fluid">
+      	<span class="version"><?=SIMPLE_VERSION?></span>
           <div class="pull-right">
               <img src="<?= base_url() ?>assets/img/logoTramites.png" alt="tramites.gub.uy">
           </div>
         </div>
       </div>
+      <!-- Google Analytics -->
+      <?php get_instance()->load->helper('analytics_helper'); echo display_codigo_analytics(); ?>
     </footer>
+    <script src="<?= base_url() ?>assets/js/common.js"></script>
   </body>
 </html>

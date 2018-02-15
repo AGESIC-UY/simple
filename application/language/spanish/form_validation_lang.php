@@ -21,6 +21,21 @@ $lang['is_natural'] = 'El campo "<strong>%s</strong>" debe contener sólamente n
 $lang['is_natural_no_zero'] = 'El campo "<strong>%s</strong>" debe contener un número positivo mayor que cero.';
 $lang['less_than'] = 'El campo "<strong>%s</strong>" debe contener un número menor que %s.';
 $lang['greater_than'] = 'El campo "<strong>%s</strong>" debe contener un número mayor que %s.';
-$lang['rut'] = 'El campo "<strong>%s</strong>" no es un RUN válido.';
+$lang['rut'] = 'El campo "<strong>%s</strong>" no es un RUT válido.';
+$lang['ci'] = 'El campo "<strong>%s</strong>" no es documento de identidad válido.';
 $lang['is_unique'] = 'El campo "<strong>%s</strong>" ya se encuentra en uso."';
+$lang['decimal'] = 'El campo "<strong>%s</strong>" debe contener un número decimal (separado por punto).';
+$lang['not_empty_table'] = 'La tabla "<strong>%s</strong>" debe contener al menos una fila.';
+$lang['consulta_pago_completo_generico'] = 'El estado del pago no permite continuar con el trámite.';
+$lang['validar_campos_tabla'] = 'La tabla "<strong>%s</strong>" contiene alguna fila con datos invalidos.';
+$lang['min_length_table'] = 'La tabla "<strong>%s</strong>" debe tener al menos %s filas.';
+$lang['max_length_table'] = 'La tabla "<strong>%s</strong>" no puede exceder las %s filas.';
+$lang['alpha_numeric_ext'] = 'El campo "<strong>%s</strong>" debe contener sólamente letras (incluyendo tildes y ñ) y números.';
+$lang['trazabilidad_id_oficina_check'] = 'El campo "<strong>%s</strong>"  de la pestaña Trazabilidad es requerido.';
+$lang['required_clausula'] = 'Para continuar con el trámite, debe aceptar los <strong>%s</strong> de Consentimiento.';
+$lang['validar_agenda_sae'] = 'Para continuar es necesario realizar la reserva en la agenda <strong>%s</strong>';
+$lang['validar_campo_ica'] = '<strong>%s</strong> es obligatorio';
+$lang['variable_simple_valida_envio_guid'] = 'El campo "<strong>%s</strong>" debe ser una variable de modelado válida';
+$lang['ci_validacionExtendida'] = 'El campo "<strong>%s</strong>" no es documento de identidad válido.';
+
 ?>

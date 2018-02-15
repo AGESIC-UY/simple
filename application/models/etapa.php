@@ -13,6 +13,10 @@ class Etapa extends Doctrine_Record {
         $this->hasColumn('created_at');
         $this->hasColumn('updated_at');
         $this->hasColumn('ended_at');
+
+        $this->hasColumn('usuario_original_id'); //cuando se utiliza la funcionalidad de reasgingar uusario el usuario que tenia previamente la estapa se almacena aqui
+        $this->hasColumn('usuario_original_historico'); //el historico de los usuarios originales asignados
+
     }
 
     function setUp() {
@@ -34,6 +38,10 @@ class Etapa extends Doctrine_Record {
             'local' => 'usuario_id',
             'foreign' => 'id'
         ));
+        $this->hasOne('Usuario as UsuarioOriginal', array(
+            'local' => 'usuario_original_id',
+            'foreign' => 'id'
+        ));
 
         $this->hasMany('DatoSeguimiento as DatosSeguimiento', array(
             'local' => 'id',
@@ -49,6 +57,186 @@ class Etapa extends Doctrine_Record {
             'local'=>'id',
             'foreign'=>'etapa_ancestro_split_id'
         ));
+    }
+
+
+    //verifica si el usuario del backend puede reasignar la etapa
+    public function canUsuarioReasignar($usuario_backend){
+
+
+      //lo primero a validar es que la etapa este asociado a un usuario de tipo funcionario (usuario con cuenta)
+       if ($this->Usuario->registrado && !$this->Usuario->esFuncionario()){
+         return false;
+       }
+
+
+
+       //si el rol es super se permite reasignar sin importar nada mas
+      if (UsuarioBackend::user_has_rol($usuario_backend->id, 'super')){
+        return true;
+      }
+
+
+      //si tiene el rol seguimiento se verifica que pueda reasgingar
+      if(UsuarioBackend::user_has_rol($usuario_backend->id,'seguimiento')) {
+        return $usuario_backend->seg_reasginar;
+      }
+
+      //no puede reasgingar
+      return false;
+    }
+
+    //verifica si el usuario del backend puede reasignar la etapa
+    public function canUsuarioLiberar($usuario_backend){
+      return $this->canUsuarioReasignar($usuario_backend) && $this->Tarea->asignacion == 'autoservicio';
+    }
+
+    public function canUsuarioReasignarCiudadano($usuario_backend){
+
+      if (!$this->Usuario || $this->Usuario == null || $this->Usuario->registrado == false){
+        //etapa sin usuario o usuario anonimo
+        return false;
+      }
+
+      if ($this->Usuario->cuenta_id > 0){
+        //usuario de la etapa tiene cuenta se considera un funcionario
+        return false;
+      }
+      //lo primero a validar es que la etapa este asociado a un usuario de tipo ciudadano (usuario sin cuenta y sin grupo)
+
+       //si el usuario de la etapa tienen grupos de usuario asignado entonces  es funcionario
+       if ($this->Usuario->GruposUsuarios && count($this->Usuario->GruposUsuarios)> 0){
+         return false;
+       }
+
+
+
+      //si el rol es super se permite reasignar sin importar nada mas
+     if (UsuarioBackend::user_has_rol($usuario_backend->id, 'super')){
+       return true;
+     }
+
+
+     //si tiene el rol seguimiento se verifica que pueda reasgingar
+     if(UsuarioBackend::user_has_rol($usuario_backend->id,'seguimiento')) {
+       return $usuario_backend->seg_reasginar_usu;
+     }
+
+      return false;
+    }
+
+
+    //verifica si el usuario del backend puede revisar el detalle de la etapa
+    public function canUsuarioRevisarDetalle($usuario_backend){
+
+
+      if (UsuarioBackend::user_has_rol($usuario_backend->id, 'super')){
+        return true;
+      }
+
+      if ($this->Tarea->acceso_modo == 'publico')
+          return true;
+
+      if ($this->Tarea->acceso_modo == 'claveunica' && $usuario->open_id)
+          return true;
+
+      if ($this->Tarea->acceso_modo == 'registrados' && $usuario->registrado)
+          return true;
+
+
+      if (UsuarioBackend::user_has_rol($usuario_backend->id, 'seguimiento')){
+          //si control total se puede ver el detalle de todas las tareas.
+          if ($usuario_backend->seg_alc_control_total){
+              return true;
+          }
+
+          $grupos_permitidos = $usuario_backend->seg_alc_grupos_usuarios;
+
+          if (in_array('todos',$grupos_permitidos)){
+            //si es para tdos los grupos del usuario, se levanta el usaurio del front extends
+            //y se verifica los grupos de aqui
+            $usuario = Doctrine::getTable('Usuario')->findOneByUsuarioAndCuentaId($usuario_backend->usuario, $usuario_backend->cuenta_id);
+            $grupos_permitidos = $usuario->GruposUsuarios;
+            //obtiene los grupos de usario de la tarea
+            $r=new Regla($this->Tarea->grupos_usuarios);
+            $grupos_arr = explode(',', $r->getExpresionParaOutput($this->id));
+            foreach($grupos_permitidos as $g){
+              if(in_array($g->id,$grupos_arr))
+                  return true;
+            }
+          }else{
+            //obtiene los grupos de usario de la tarea
+            //show_error($this->Tarea->id);
+            $r=new Regla($this->Tarea->grupos_usuarios);
+            $grupos_arr = explode(',', $r->getExpresionParaOutput($this->id));
+            foreach($grupos_permitidos as $g){
+              if(in_array($g,$grupos_arr))
+                  return true;
+            }
+
+          }
+      }
+
+      return false;
+
+    }
+
+    //verifica si el usuario del frontend puede revisar el detalle de la etapa
+    public function canUsuarioRevisarDetalleFrontend($usuario_frontend){
+
+      $usuario_backend = Doctrine_Query::create()
+                           ->from('UsuarioBackend u')
+                           ->where('u.usuario = ?', $usuario_frontend->usuario)
+                           ->fetchOne();
+
+      if (UsuarioBackend::user_has_rol($usuario_backend->id, 'super')){
+        return true;
+      }
+
+
+      if ($this->Tarea->acceso_modo == 'publico')
+          return true;
+
+      if ($this->Tarea->acceso_modo == 'claveunica' && $usuario->open_id)
+          return true;
+
+      if ($this->Tarea->acceso_modo == 'registrados' && $usuario->registrado)
+          return true;
+
+      //solo el rol seguimiento otro rol si tiene acceso desde el menu ve el detalle
+      if (UsuarioBackend::user_has_rol($usuario_backend->id, 'seguimiento')){
+          //si control total se puede ver el detalle de todas las tareas.
+          if ($usuario_backend->seg_alc_control_total){
+              return true;
+          }
+
+          $grupos_permitidos = $usuario_backend->seg_alc_grupos_usuarios;
+
+          if (in_array('todos',$grupos_permitidos)){
+            //si es para tdos los grupos del usuario, se levanta el usaurio del front extends
+            //y se verifica los grupos de aqui
+            $usuario = Doctrine::getTable('Usuario')->findOneByUsuarioAndCuentaId($usuario_backend->usuario, $usuario_backend->cuenta_id);
+            $grupos_permitidos = $usuario->GruposUsuarios;
+            //obtiene los grupos de usario de la tarea
+            $r=new Regla($this->Tarea->grupos_usuarios);
+            $grupos_arr = explode(',', $r->getExpresionParaOutput($this->id));
+            foreach($grupos_permitidos as $g){
+              if(in_array($g->id,$grupos_arr))
+                  return true;
+            }
+          }else{
+            //obtiene los grupos de usario de la tarea
+            //show_error($this->Tarea->id);
+            $r=new Regla($this->Tarea->grupos_usuarios);
+            $grupos_arr = explode(',', $r->getExpresionParaOutput($this->id));
+            foreach($grupos_permitidos as $g){
+              if(in_array($g,$grupos_arr))
+                  return true;
+            }
+
+          }
+      }
+
     }
 
     //Verifica si el usuario_id tiene permisos para asignarse esta etapa del tramite.
@@ -84,7 +272,7 @@ class Etapa extends Doctrine_Record {
     //Este parametro solamente es valido si la asignacion de la prox tarea es manual.
     public function avanzar($usuarios_a_asignar = null) {
         Doctrine_Manager::connection()->beginTransaction();
-        //Cerramos esta etapa
+        // Cerramos esta etapa
         $this->cerrar();
 
         $tp = $this->getTareasProximas();
@@ -249,7 +437,6 @@ class Etapa extends Doctrine_Record {
 
     public function notificarTareaPendiente(){
         if ($this->Tarea->asignacion_notificar) {
-
             if($this->usuario_id)
                 $usuarios = Doctrine::getTable('Usuario')->findById($this->usuario_id);
             else
@@ -259,11 +446,28 @@ class Etapa extends Doctrine_Record {
                 if ($usuario->email) {
                     $CI = & get_instance();
                     $cuenta=$this->Tramite->Proceso->Cuenta;
-                    $CI->email->from($cuenta->nombre.'@'.$CI->config->item('main_domain'), $cuenta->nombre_largo);
+
+                    if(!$cuenta->correo_remitente) {
+                      ($CI->config->item('main_domain') == '') ? $from = $cuenta->nombre.'@simple' : $from = $cuenta->nombre.'@'.$CI->config->item('main_domain');
+                    }
+                    else {
+                      $from = $cuenta->correo_remitente;
+                    }
+
+                    $CI->email->from($from, $cuenta->nombre_largo);
                     $CI->email->to($usuario->email);
                     $CI->email->subject('SIMPLE - Tiene una tarea pendiente');
-                    $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Tiene una tarea pendiente por realizar: ' . $this->Tarea->nombre . '</p><p>Podra realizarla en: ' . ($this->usuario_id?site_url('etapas/ejecutar/' . $this->id):site_url('etapas/sinasignar')) . '</p>');
-                    $CI->email->send();
+
+                    if($this->Tarea->asignacion_notificar_mensaje) {
+                      $CI->email->message('<p>'. $this->Tarea->asignacion_notificar_mensaje .'</p><p>Enlace a la tarea: ' . ($this->usuario_id?site_url('etapas/ejecutar/' . $this->id):site_url('etapas/sinasignar')) . '</p>');
+                    }
+                    else {
+                      $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Tiene una tarea pendiente por realizar: ' . $this->Tarea->nombre . '</p><p>Podra realizarla en: ' . ($this->usuario_id?site_url('etapas/ejecutar/' . $this->id):site_url('etapas/sinasignar')) . '</p>');
+                    }
+
+                    if (!$CI->email->send()){
+                        log_message('ERROR', "send email notificarTareaPendiente: ".$CI->email->print_debugger());
+                    }
                 }
             }
 
@@ -271,16 +475,27 @@ class Etapa extends Doctrine_Record {
     }
 
     public function cerrar() {
-        //Si ya fue cerrada, retornamos inmediatamente.
+        // Si ya fue cerrada, retornamos inmediatamente.
         if (!$this->pendiente)
             return;
 
-        if ($this->Tarea->almacenar_usuario) {
+        //si se ejecuta desde la conciliacion no se tiene session
+        //nunca se debe generar esta variable
+        if ($this->Tarea->almacenar_usuario && UsuarioSesion::usuario()) {
             $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($this->Tarea->almacenar_usuario_variable,$this->id);
             if (!$dato)
                 $dato = new DatoSeguimiento();
             $dato->nombre = $this->Tarea->almacenar_usuario_variable;
-            $dato->valor = UsuarioSesion::usuario()->id;
+
+            //en omnicanalidad no se debe setear el usaurio de la sesion que es
+            //el funcionario, sino que se debe almacenar el ciudadano
+            $CI = & get_instance();
+            if(UsuarioSesion::usuarioMesaDeEntrada() && $CI->session->userdata('id_usuario_ciudadano')) {
+              $dato->valor = $CI->session->userdata('id_usuario_ciudadano');
+            }else{
+              $dato->valor = UsuarioSesion::usuario()->id;
+            }
+
             $dato->etapa_id = $this->id;
             $dato->save();
         }
@@ -291,8 +506,10 @@ class Etapa extends Doctrine_Record {
                 ->execute();
         foreach ($eventos as $e) {
                 $r = new Regla($e->regla);
-                if ($r->evaluar($this->id))
-                    $e->Accion->ejecutar($this);
+                if ($r->evaluar($this->id)) {
+                  //$e->Accion->ejecutar($this);
+                  if ($e->Accion->ejecutar($this) != null && $e->Accion->ejecutar($this) != false) return;
+                }
         }
 
         //Cerramos la etapa
@@ -431,7 +648,6 @@ class Etapa extends Doctrine_Record {
 
     //Obtiene el listado de usuarios que tienen acceso a esta tarea y que esten disponibles (no en vacaciones).
     public function getUsuarios() {
-
         return $this->Tarea->getUsuarios($this->id);
     }
 
@@ -448,5 +664,84 @@ class Etapa extends Doctrine_Record {
         $r = new Regla($this->Tarea->previsualizacion);
 
         return $r->getExpresionParaOutput($this->id);
+    }
+
+    public function getUsuarioInicial() {
+      $documento = null;
+      $documento_tramite = Doctrine::getTable('DatoSeguimiento')->findOneByNombre('documento_tramite_inicial__e'.$this->tramite_id);
+      if($documento_tramite) {
+        $campo = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($documento_tramite->valor, $documento_tramite->etapa_id);
+        $documento = $campo->valor;
+      }
+
+      if(!$documento) {
+        $primera_etapa_del_tramite = Doctrine_Query::create()->from('Etapa e')
+                ->where('e.tramite_id = ?', $this->tramite_id)
+                ->orderby('id ASC')
+                ->execute();
+
+        if(isset($primera_etapa_del_tramite[0]) && $primera_etapa_del_tramite[0]->Usuario) {
+          $usuario_doc = $primera_etapa_del_tramite[0]->Usuario->usuario;
+          $usuario_doc_len = strlen(trim($usuario_doc));
+          if($usuario_doc_len > 16 || $usuario_doc_len < 1) {
+            $documento = '';
+          }
+          else {
+            $documento = $usuario_doc;
+          }
+        }
+      }
+
+      return $documento;
+    }
+
+
+    public function displayHistoricoUsuarios(){
+      $array = json_decode($this->usuario_original_historico, true);
+      $html='<table border="1" cellpadding="10">
+      <thead><tr><th>Fecha</th><th>Usuario Original</th><th>Usuario Asignado</th><th>Asignado Por</th></tr></thead>
+      <tbody>';
+      foreach($array as $a){
+
+        $usuarioOrig = Doctrine::getTable('Usuario')->find($a['usuarioOriginal']);
+        $usuario = Doctrine::getTable('Usuario')->find($a['usuario']);
+        $reasignacion = Doctrine::getTable('UsuarioBackend')->find($a['reasignacion']);
+
+        $html .= '<tr>';
+        $html.= '<td>'.$a['fecha'] .'</td>';
+        if ($usuarioOrig && $usuarioOrig->registrado){
+          $html.= '<td>'.$usuarioOrig->displayUsername() .' ('. $usuarioOrig->nombres .' '. $usuarioOrig->apellido_paterno.')</td>';
+        }else{
+          $html.= '<td>No Registrado</td>';
+        }
+
+        $html.= '<td>'.$usuario->displayUsername() .' (' .$usuario->nombres .' '. $usuario->apellido_paterno.')</td>';
+        $html.= '<td>'.$reasignacion->usuario .' ('. $reasignacion->nombre .' '. $reasignacion->apellidos.')</td>';
+        $html.= '</tr>';
+
+      }
+
+      $html .= '</tbody></table>';
+      return $html;
+    }
+
+
+    public function displayHistoricoEjecucionesUsuarios(){
+      $historicos = Doctrine::getTable('EtapaHistorialEjecuciones')->findByEtapaId($this->id);
+
+      $html='<table border="1" cellpadding="10">
+      <thead><tr><th>Fecha</th><th>Secuencia</th><th>Paso</th><th>Usuario</th></tr></thead>
+      <tbody>';
+      foreach($historicos as $a){
+        $usuario = $a->Usuario;
+        $html .= '<tr>';
+        $html.= '<td>'.$a->fecha .'</td>';
+        $html.= '<td>'.$a->secuencia .'</td>';
+        $html.= '<td>'.$a->nombre_paso .'</td>';
+        $html.= '<td>'.$usuario->displayUsername() .' (' .$usuario->nombres .' '. $usuario->apellido_paterno.')</td>';
+        $html.= '</tr>';
+      }
+      $html .= '</tbody></table>';
+      return $html;
     }
 }

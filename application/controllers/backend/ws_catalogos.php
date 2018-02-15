@@ -10,9 +10,7 @@ class Ws_catalogos extends MY_BackendController {
 
         UsuarioBackendSesion::force_login();
 
-        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='gestion') {
-            //echo 'No tiene permisos para acceder a esta seccion.';
-            //exit;
+        if(!UsuarioBackendSesion::has_rol('super') && !UsuarioBackendSesion::has_rol('gestion')) {
             redirect('backend');
         }
     }
@@ -33,10 +31,14 @@ class Ws_catalogos extends MY_BackendController {
         $catalogo=new WsCatalogo();
         $catalogo->activo=1;
         $catalogo->nombre='Servicio';
+        $catalogo->tipo='soap';
         $catalogo->wsdl='WSDL URL';
         $catalogo->conexion_timeout='Timeout de conexión';
         $catalogo->respuesta_timeout='Timeout de respuesta';
         $catalogo->endpoint_location='Endpoint location';
+        $catalogo->url_fisica='URL';
+        $catalogo->url_logica='URL';
+        $catalogo->rol='Rol';
 
         $catalogo->save();
 
@@ -72,28 +74,73 @@ class Ws_catalogos extends MY_BackendController {
     public function editar_form($catalogo_id){
         $catalogo=Doctrine::getTable('WsCatalogo')->find($catalogo_id);
 
-        $this->form_validation->set_rules('activo', 'Activo');
-        $this->form_validation->set_rules('nombre', 'Nombre', 'required');
-        $this->form_validation->set_rules('wsdl', 'Wsdl', 'required|prep_url');
-        $this->form_validation->set_rules('conexion_timeout', 'Conexion_Timeout', 'numeric');
-        $this->form_validation->set_rules('respuesta_timeout', 'Respuesta_Timeout', 'numeric');
-        $this->form_validation->set_rules('endpoint_location', 'Endpoint_Location', 'required|prep_url');
+        if($this->input->post('tipo') == 'soap') {
+          $this->form_validation->set_rules('activo', 'Activo');
+          $this->form_validation->set_rules('nombre', 'Nombre', 'required');
+          $this->form_validation->set_rules('wsdl', 'Wsdl', 'required|prep_url');
+          $this->form_validation->set_rules('conexion_timeout', 'Conexion_Timeout', 'numeric');
+          $this->form_validation->set_rules('respuesta_timeout', 'Respuesta_Timeout', 'numeric');
+          $this->form_validation->set_rules('endpoint_location', 'Endpoint_Location', 'required|prep_url');
 
-        if ($this->form_validation->run() == TRUE) {
-            $catalogo->activo=($this->input->post('activo') == '1') ? 1 : 0;
-            $catalogo->nombre=$this->input->post('nombre');
-            $catalogo->wsdl=$this->input->post('wsdl');
-            $catalogo->conexion_timeout=$this->input->post('conexion_timeout');
-            $catalogo->respuesta_timeout=$this->input->post('respuesta_timeout');
-            $catalogo->endpoint_location=$this->input->post('endpoint_location');
-            $catalogo->save();
+          if ($this->form_validation->run() == TRUE) {
+              $catalogo->activo=($this->input->post('activo') == '1') ? 1 : 0;
+              $catalogo->tipo=$this->input->post('tipo');
+              $catalogo->nombre=$this->input->post('nombre');
+              $catalogo->wsdl=$this->input->post('wsdl');
+              $catalogo->conexion_timeout=$this->input->post('conexion_timeout');
+              $catalogo->respuesta_timeout=$this->input->post('respuesta_timeout');
+              $catalogo->endpoint_location=$this->input->post('endpoint_location');
+              $catalogo->requiere_autenticacion=($this->input->post('requiere_autenticacion')) ? 1 : 0;
+              $catalogo->requiere_autenticacion_tipo=$this->input->post('requiere_autenticacion_tipo');
+              $catalogo->autenticacion_basica_user=$this->input->post('autenticacion_basica_user');
+              $catalogo->autenticacion_basica_pass=$this->input->post('autenticacion_basica_pass');
+              $catalogo->autenticacion_basica_cert=$this->input->post('autenticacion_basica_cert');
+              $catalogo->autenticacion_basica_cert_pass=$this->input->post('autenticacion_basica_cert_pass');
+              $catalogo->autenticacion_mutua_client=$this->input->post('autenticacion_mutua_client');
+              $catalogo->autenticacion_mutua_client_pass=$this->input->post('autenticacion_mutua_client_pass');
+              $catalogo->autenticacion_mutua_server=$this->input->post('autenticacion_mutua_server');
+              $catalogo->autenticacion_mutua_user=$this->input->post('autenticacion_mutua_user');
+              $catalogo->autenticacion_mutua_pass=$this->input->post('autenticacion_mutua_pass');
+              $catalogo->autenticacion_mutua_client_key=$this->input->post('autenticacion_mutua_client_key');
 
-            $respuesta->validacion=TRUE;
-            $respuesta->redirect = site_url('backend/ws_catalogos/index/');
+              $catalogo->save();
+
+              $respuesta->validacion=TRUE;
+              $respuesta->redirect = site_url('backend/ws_catalogos/index/');
+          }
+          else {
+              $respuesta->validacion=FALSE;
+              $respuesta->errores=validation_errors();
+          }
         }
         else {
-            $respuesta->validacion=FALSE;
-            $respuesta->errores=validation_errors();
+          $this->form_validation->set_rules('activo', 'Activo');
+          $this->form_validation->set_rules('nombre', 'Nombre', 'required');
+          $this->form_validation->set_rules('url_fisica', 'URL_fisica', 'required|prep_url');
+          $this->form_validation->set_rules('conexion_timeout', 'Conexion_Timeout', 'numeric');
+          $this->form_validation->set_rules('respuesta_timeout', 'Respuesta_Timeout', 'numeric');
+          $this->form_validation->set_rules('url_logica', 'URL_logica', 'required|prep_url');
+          $this->form_validation->set_rules('rol', 'Rol', 'required');
+
+          if ($this->form_validation->run() == TRUE) {
+              $catalogo->activo=($this->input->post('activo') == '1') ? 1 : 0;
+              $catalogo->nombre=$this->input->post('nombre');
+              $catalogo->tipo=$this->input->post('tipo');
+              $catalogo->url_fisica=$this->input->post('url_fisica');
+              $catalogo->url_logica=$this->input->post('url_logica');
+              $catalogo->rol=$this->input->post('rol');
+              $catalogo->conexion_timeout=$this->input->post('conexion_timeout_pdi');
+              $catalogo->respuesta_timeout=$this->input->post('respuesta_timeout_pdi');
+
+              $catalogo->save();
+
+              $respuesta->validacion=TRUE;
+              $respuesta->redirect = site_url('backend/ws_catalogos/index/');
+          }
+          else {
+              $respuesta->validacion=FALSE;
+              $respuesta->errores=validation_errors();
+          }
         }
 
         echo json_encode($respuesta);
@@ -189,7 +236,7 @@ class Ws_catalogos extends MY_BackendController {
 
         $this->form_validation->set_rules('codigo', 'Codigo', 'required|alpha_numeric|exact_length[12]');
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
-        $this->form_validation->set_rules('operacion', 'Operacion', 'required|alpha_dash');
+        $this->form_validation->set_rules('operacion', 'Operacion', 'required');
         $this->form_validation->set_rules('soap', 'Soap', 'required');
         $this->form_validation->set_rules('ayuda', 'Ayuda', 'required');
 

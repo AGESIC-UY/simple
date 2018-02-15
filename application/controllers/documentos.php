@@ -9,6 +9,7 @@ class Documentos extends MY_Controller {
     function firmar_documento() {
         $filename = $this->input->post('filename');
         $campo_id = $this->input->post('campo');
+        $etapa_id = $this->input->post('etapa_id');
 
         $uploadDirectory = DIRECTORIO_SUBIDA_DOCUMENTOS;
         $soap_endpoint_location = WS_FIRMA_DOCUMENTOS;
@@ -67,7 +68,7 @@ class Documentos extends MY_Controller {
                             </security>
                             <resources>
                                 <j2se version="1.6+"/>
-                                <jar href="AgesicFirmaApplet-3.4.jar" main="true"/>
+                                <jar href="AgesicFirmaApplet-AgesicFirmaApplet-4.3.jar" main="true"/>
                                 <jar href="activation-1.1.jar" main="false"/>
                                 <jar href="aerogear-crypto-0.1.5.jar" main="false"/>
                                 <jar href="avalon-framework-4.1.3.jar" main="false"/>
@@ -118,7 +119,7 @@ class Documentos extends MY_Controller {
                                 <argument>-ID_TRANSACCION='. $token_id[0] .'</argument>
                                 <argument>-TIPO_DOCUMENTO=pdf</argument>
                                 <argument>-AGESIC_FIRMA_WS='. WS_AGESIC_FIRMA .'</argument>
-                                <argument>-URL_OK_POST='. WS_AGESIC_FIRMA_OK .'?filename='. $filename .'&campo='. $campo_id .'</argument>
+                                <argument>-URL_OK_POST='. WS_AGESIC_FIRMA_OK .'?filename='. $filename .'&campo='. $campo_id .'&etapa='. $etapa_id .'</argument>
                             </application-desc>
                         </jnlp>';
 
@@ -129,6 +130,22 @@ class Documentos extends MY_Controller {
         $id_transaccion = $_POST['idtransaccion'];
         $id_file_name =  $_GET['filename'];
         $campo_id = $_GET['campo'];
+        $etapa_id = $_GET['etapa'];
+
+        $campo_documento = Doctrine::getTable('Campo')->find($campo_id);
+        if(!$campo_documento) {
+            $resultado->status=1;
+            $resultado->error='Campo de tipo documento no existente';
+            return;
+        }
+
+        //se elimina la validacion para permitir firmar un documento en la misma etapa en pasos distintos
+        /*$firmado_dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($campo_documento->nombre.'__firmado', $etapa_id);
+        if($firmado_dato){
+          $resultado->status=1;
+          $resultado->error='Documento ya contiene firma para la etapa';
+          return;
+        }*/
 
         $uploadDirectory = DIRECTORIO_SUBIDA_DOCUMENTOS;
         $soap_endpoint_location = WS_FIRMA_DOCUMENTOS;
@@ -173,8 +190,9 @@ class Documentos extends MY_Controller {
                 ->from('File f')
                 ->where('f.filename = ? AND f.tipo = ?',array($id_file_name, 'documento'))
                 ->fetchOne();
-
         $resultado = new stdClass();
+
+
         if(!$file) {
             $resultado->status=1;
             $resultado->error='Token no corresponde';
@@ -182,13 +200,26 @@ class Documentos extends MY_Controller {
         else {
             $resultado->status=0;
             file_put_contents($uploadDirectory.$file->filename, $documento);
-        }
 
-        $campo_documento = Doctrine::getTable('Campo')->find($campo_id);
+            $file->firmado = true;
+            $file->save();
+
+            //generamos el dato de seguimiento indicando que se firmó en esta estapa el documento
+            //necesario para el multiple firmas
+            $firmado_dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($campo_documento->nombre.'__firmado', $etapa_id);
+            if($firmado_dato)
+              $firmado_dato->delete();
+
+            $firmado_dato = new DatoSeguimiento();
+            $firmado_dato->nombre = $campo_documento->nombre.'__firmado';
+            $firmado_dato->valor = "1";
+            $firmado_dato->etapa_id = $etapa_id;
+            $firmado_dato->save();
+
+        }
 
         if($campo_documento) {
             $campos_extra = $campo_documento->extra;
-
             if(isset($campos_extra->firmar_servidor)) {
                 if($campos_extra->firmar_servidor == 'on') {
                     if($campos_extra->firmar_servidor_momento == 'despues') {
@@ -200,14 +231,26 @@ class Documentos extends MY_Controller {
         }
     }
 
-    function get($filename) {
-        $id=$this->input->get('id');
+    function get($id) {
+        $CI = &get_instance();
+        //verifico si el usuario pertenece el grupo MesaDeEntrada y esta actuando como un ciudadano
+        if(UsuarioSesion::usuarioMesaDeEntrada() && $CI->session->userdata('id_usuario_ciudadano')) {
+          $usuario_sesion = Doctrine_Query::create()
+              ->from('Usuario u')
+              ->where('u.id = ?', $this->session->userdata('id_usuario_ciudadano'))
+              ->fetchOne();
+        }
+        else {
+          $usuario_sesion = UsuarioSesion::usuario();
+        }
+
+        // $id=$this->input->get('id');
         $token=$this->input->get('token');
 
         //Chequeamos permisos del frontend
         $file=Doctrine_Query::create()
                 ->from('File f, f.Tramite t, t.Etapas e, e.Usuario u')
-                ->where('f.id = ? AND f.llave = ? AND u.id = ?',array($id,$token,UsuarioSesion::usuario()->id))
+                ->where('f.id = ? AND f.llave = ? AND u.id = ?',array($id,$token,$usuario_sesion->id))
                 ->fetchOne();
 
         if(!$file){

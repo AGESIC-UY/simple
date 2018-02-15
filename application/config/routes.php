@@ -2,23 +2,31 @@
 
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-
 $route['default_controller'] = 'portada';
 $route['404_override'] = '';
 
 $route['backend'] = 'backend/portada';
 $route['manager'] = 'manager/portada';
 
-/* Alias para acceso */
+/* Aliases */
 $route['admin'] = 'backend/portada';
 $route['gestion'] = 'manager/portada';
-$route['validacion'] = 'autenticacion/login';
 
 /* Frontend */
 $route['etapas/firmar_documento'] = 'documentos/firmar_documento';
 $route['etapas/confirmar_firma'] = 'documentos/confirmar_firma';
 $route['encuesta_satisfaccion/crear'] = 'encuesta_satisfaccion/crear';
 $route['cda'] = 'autenticacion/login_saml_respuesta';
+
+$route['pagos/control_generico'] = 'pagos_externo/control_generico';
+$route['pagos/control'] = 'pagos_externo/control';
+$route['pagos/ok'] = 'pagos_externo/completado';
+$route['pagos/error'] = 'pagos_externo/error';
+$route['pagos/pendiente'] = 'pagos_externo/pendiente';
+$route['pagos/rechazado'] = 'pagos_externo/rechazado';
+$route['tabla/accion'] = 'tabla/accion';
+
+$route['login_func'] = 'autenticacion/login_ldap';
 
 /* Backend */
 $route['backend/ws_catalogos/(:num)/operaciones'] = 'backend/ws_catalogos/operaciones_index/$1';
@@ -28,3 +36,4 @@ $route['backend/ws_catalogos/(:num)/operaciones/eliminar/(:num)'] = 'backend/ws_
 $route['backend/reportes/reporte_satisfaccion/(:num)'] = 'backend/reportes/reporte_satisfaccion/$1';
 $route['backend/acciones/crear/(:num)/(:any)/(:num)'] = 'backend/acciones/crear/$1/$2/$3';
 $route['backend/acciones/crear/seleccionar_form/(:num)/(:num)'] = 'backend/acciones/seleccionar_form/$1/$2';
+$route['backend/configuracion/usuario_existe'] = 'backend/configuracion/usuario_existe';

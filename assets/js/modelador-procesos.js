@@ -82,6 +82,7 @@ $(document).ready(function(){
         var id=$(this).attr("id");
         $('#modal').load(site_url+"backend/procesos/ajax_editar_tarea/"+procesoId+"/"+id);
         $('#modal').modal({backdrop: 'static', keyboard: false, show: true});
+        $('#modal').addClass("modal-grande"); 
     });
 
     //Asigno los eventos a las lineas conectoras
@@ -112,7 +113,6 @@ $(document).ready(function(){
         $('#modal').modal({backdrop: 'static', keyboard: false, show: true});
         return false;
     });
-
 
     $( "#draw .box" ).liveDraggable({
         stop: updateModel

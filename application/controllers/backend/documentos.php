@@ -10,9 +10,7 @@ class Documentos extends MY_BackendController {
 
         UsuarioBackendSesion::force_login();
 
-        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
-            //echo 'No tiene permisos para acceder a esta seccion.';
-            //exit;
+        if(!UsuarioBackendSesion::has_rol('super') && !UsuarioBackendSesion::has_rol('modelamiento')){
             redirect('backend');
         }
     }
@@ -158,7 +156,6 @@ class Documentos extends MY_BackendController {
         redirect('backend/documentos/listar/'.$proceso->id);
 
     }
-
 }
 
 /* End of file welcome.php */

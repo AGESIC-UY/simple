@@ -10,21 +10,26 @@ class Procesos extends MY_BackendController {
 
         UsuarioBackendSesion::force_login();
 
-        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
-            //echo 'No tiene permisos para acceder a esta seccion.';
-            //exit;
+        if(!UsuarioBackendSesion::has_rol('super') && !UsuarioBackendSesion::has_rol('modelamiento')){
             redirect('backend');
         }
     }
 
     public function index() {
-        $data['procesos'] = Doctrine_Query::create()
+        $query = Doctrine_Query::create()
+                ->select('p.*')
                 ->from('Proceso p, p.Cuenta c')
+                ->addSelect('(SELECT count(t.id)
+                        FROM Tramite t
+                        WHERE t.proceso_id = p.id
+                        LIMIT 1) as ntramites')
                 ->where('c.id = ?', UsuarioBackendSesion::usuario()->cuenta_id)
-                ->where('p.nombre != ?', 'BLOQUE')
-                ->orderBy('p.nombre asc')
-                ->execute();
+                ->andWhere('p.nombre != ?', 'BLOQUE')
+                ->orderBy('p.nombre asc');
 
+        //log_message('error', $query->getSqlQuery());
+
+        $data['procesos'] = $query->execute();
         $data['title'] = 'Listado de Procesos';
         $data['content'] = 'backend/procesos/index';
         $this->load->view('backend/template', $data);
@@ -33,6 +38,8 @@ class Procesos extends MY_BackendController {
     public function crear(){
         $proceso=new Proceso();
         $proceso->nombre='Proceso';
+        $proceso->width = '100%';
+        $proceso->height = '100%';
         $proceso->cuenta_id=UsuarioBackendSesion::usuario()->cuenta_id;
         $proceso->save();
 
@@ -53,7 +60,15 @@ class Procesos extends MY_BackendController {
             exit;
         }
 
-        $proceso->delete();
+        //se verifica que el proceso no tenga instancias, si tiene instancias no se
+        //permite eliminar
+        if (count($proceso->Tramites) > 0){
+          //no se permite eliminar
+          echo 'El proceso tiene instancias asociadas no se puede eliminar';
+          exit;
+        }else{
+          $proceso->delete();
+        }
 
         redirect('backend/procesos/index/');
     }
@@ -134,7 +149,6 @@ class Procesos extends MY_BackendController {
         $tarea->posx=$this->input->post('posx');
         $tarea->posy=$this->input->post('posy');
         $tarea->save();
-
     }
 
     public function ajax_editar_tarea($proceso_id,$tarea_identificador){
@@ -150,6 +164,28 @@ class Procesos extends MY_BackendController {
         $data['acciones']=Doctrine::getTable('Accion')->findByProcesoId($proceso_id);
 
         $this->load->view('backend/procesos/ajax_editar_tarea',$data);
+    }
+
+
+    public function automatica_check($str){
+      $pasos = $this->input->post('pasos',false);
+      if ($pasos){
+        if (count($pasos) > 1){
+          $this->form_validation->set_message('automatica_check', 'Si la tarea es automática solo debe contener un paso.');
+          return FALSE;
+        }
+      }
+      return TRUE;
+    }
+
+    public function trazabilidad_id_oficina_check($str){
+      if (trim($str) == '') {
+        $this->form_validation->set_message('trazabilidad_id_oficina_check', 'El campo <strong>"Oficina"</strong> en la pestaña Trazabilidad es obligatorio.');
+        return FALSE;
+      }
+      else {
+        return TRUE;
+      }
     }
 
     public function editar_tarea_form($tarea_id){
@@ -169,6 +205,14 @@ class Procesos extends MY_BackendController {
             }
         }
 
+        if ($this->input->post('automatica')){
+            $this->form_validation->set_rules('automatica', 'Tarea automáctica', 'callback_automatica_check');
+        }
+
+        if ($this->input->post('trazabilidad')) {
+          $this->form_validation->set_rules('trazabilidad_id_oficina', 'Oficina', 'callback_trazabilidad_id_oficina_check');
+        }
+
         $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             $tarea->nombre=$this->input->post('nombre');
@@ -177,6 +221,7 @@ class Procesos extends MY_BackendController {
             $tarea->asignacion=$this->input->post('asignacion');
             $tarea->asignacion_usuario=$this->input->post('asignacion_usuario');
             $tarea->asignacion_notificar=$this->input->post('asignacion_notificar');
+            $tarea->asignacion_notificar_mensaje=$this->input->post('asignacion_notificar_mensaje');
             $tarea->setGruposUsuariosFromArray($this->input->post('grupos_usuarios'));
             $tarea->setPasosFromArray($this->input->post('pasos',false));
             $tarea->paso_confirmacion=$this->input->post('paso_confirmacion');
@@ -184,6 +229,7 @@ class Procesos extends MY_BackendController {
             $tarea->almacenar_usuario=$this->input->post('almacenar_usuario');
             $tarea->almacenar_usuario_variable=$this->input->post('almacenar_usuario_variable');
             $tarea->acceso_modo=$this->input->post('acceso_modo');
+            $tarea->nivel_confianza=$this->input->post('nivel_confianza');
             $tarea->activacion=$this->input->post('activacion');
             $tarea->activacion_inicio=strtotime($this->input->post('activacion_inicio'));
             $tarea->activacion_fin=strtotime($this->input->post('activacion_fin'));
@@ -196,6 +242,18 @@ class Procesos extends MY_BackendController {
             $tarea->vencimiento_notificar_email=$this->input->post('vencimiento_notificar_email');
             $tarea->previsualizacion=$this->input->post('previsualizacion');
             $tarea->trazabilidad=$this->input->post('trazabilidad');
+            $tarea->trazabilidad_id_oficina=$this->input->post('trazabilidad_id_oficina');
+            $tarea->trazabilidad_estado=$this->input->post('trazabilidad_estado');
+            $tarea->trazabilidad_cabezal=$this->input->post('trazabilidad_cabezal');
+            $tarea->automatica = $this->input->post('automatica');
+
+            $tarea->paso_final_pendiente = $this->input->post('paso_final_pendiente');
+            $tarea->paso_final_standby = $this->input->post('paso_final_standby');
+            $tarea->paso_final_completado = $this->input->post('paso_final_completado');
+            $tarea->paso_final_sincontinuacion = $this->input->post('paso_final_sincontinuacion');
+            $tarea->texto_boton_paso_final = $this->input->post('texto_boton_paso_final');
+            $tarea->texto_boton_generar_pdf = $this->input->post('texto_boton_generar_pdf');
+
             $tarea->save();
 
             $respuesta->validacion=TRUE;
@@ -340,7 +398,7 @@ class Procesos extends MY_BackendController {
       $nombre_archivo = $_FILES['archivo']['name'];
       $ext = pathinfo($nombre_archivo, PATHINFO_EXTENSION);
       if(!in_array($ext, $permitido) ) {
-        $mensajes = '<div class="alert alert-error"><i class="icon-exclamation-sign"></i> La extención del archivo de importación no es la correcta.</div>';
+        $mensajes = '<div class="alert alert-error"><i class="icon-exclamation-sign"></i> La extensión del archivo de importación no es la correcta.</div>';
       }
       else {
         if($file_path) {
@@ -388,7 +446,39 @@ class Procesos extends MY_BackendController {
       $data['content'] = 'backend/procesos/index';
       $this->load->view('backend/template', $data);
     }
-}
 
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
+    public function editar_codigo_tramite_ws_grep($proceso_id){
+        $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
+
+        if ($proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
+            echo 'Usuario no tiene permisos para editar este proceso';
+            exit;
+        }
+        $data['proceso'] = $proceso;
+        $data['codigo_tramite_ws_grep'] = $proceso->ProcesoTrazabilidad->proceso_externo_id;
+
+        $data['title'] = 'Código tramites.gub.uy';
+        $data['content'] = 'backend/procesos/editar_codigo_tramite_ws_grep';
+
+        $this->load->view('backend/template', $data);
+    }
+
+    public function editar_form_codigo_tramite_ws_grep($proceso_id) {
+        $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
+
+        if($proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para editar este proceso';
+            exit;
+        }
+
+        $codigo_tramite_ws_grep = $this->input->post('codigo_tramite_ws_grep');
+
+        $respuesta = new stdClass();
+        $proceso->ProcesoTrazabilidad->proceso_externo_id = $codigo_tramite_ws_grep;
+        $proceso->save();
+        $respuesta->validacion=TRUE;
+        $respuesta->redirect = site_url('backend/procesos/editar_codigo_tramite_ws_grep/'.$proceso_id);
+
+        echo json_encode($respuesta);
+    }
+}

@@ -27,7 +27,7 @@ class CampoSubtitle extends Campo{
             $etiqueta=$this->etiqueta;
         }
 
-        $display='<h4 data-fieldset="'.$this->fieldset.'">'.$etiqueta.'</h4>';
+        $display='<h3 data-fieldset="'.$this->fieldset.'">'.$etiqueta.'</h3>';
 
         return $display;
     }

@@ -10,9 +10,7 @@ class Formularios extends MY_BackendController {
 
         UsuarioBackendSesion::force_login();
 
-        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
-            //echo 'No tiene permisos para acceder a esta seccion.';
-            //exit;
+        if(!UsuarioBackendSesion::has_rol('super') && !UsuarioBackendSesion::has_rol('modelamiento')){
             redirect('backend');
         }
     }
@@ -95,7 +93,7 @@ class Formularios extends MY_BackendController {
         $this->load->view('backend/formularios/ajax_editar',$data);
     }
 
-    public function editar_form($formulario_id){
+    public function editar_form($formulario_id) {
         $formulario=Doctrine::getTable('Formulario')->find($formulario_id);
 
         if($formulario->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
@@ -105,9 +103,15 @@ class Formularios extends MY_BackendController {
 
         $this->form_validation->set_rules('nombre','Nombre','required');
 
+        if($this->input->post('contenedor')) {
+          $this->form_validation->set_rules('leyenda','Leyenda','required');
+        }
+
         $respuesta=new stdClass();
         if ($this->form_validation->run()==TRUE) {
             $formulario->nombre=$this->input->post('nombre');
+            $formulario->leyenda=$this->input->post('leyenda');
+            $formulario->contenedor=$this->input->post('contenedor');
             $formulario->save();
 
             $respuesta->validacion=TRUE;
@@ -122,7 +126,7 @@ class Formularios extends MY_BackendController {
         echo json_encode($respuesta);
     }
 
-    public function ajax_editar_campo($campo_id){
+    public function ajax_editar_campo($campo_id) {
         $campo=Doctrine::getTable('Campo')->find($campo_id);
 
         if($campo->Formulario->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
@@ -130,12 +134,21 @@ class Formularios extends MY_BackendController {
             exit;
         }
 
+        $pagos = array();
+        foreach($campo->Formulario->Proceso->Acciones as $accion) {
+          if($accion->tipo == 'pasarela_pago') {
+            array_push($pagos, $accion);
+          }
+        }
+
         $bloques = Doctrine_Query::create()->from('Bloque')->execute();
 
-        $data['edit']=TRUE;
-        $data['campo']=$campo;
-        $data['formulario']=$campo->Formulario;
+        $data['edit'] = TRUE;
+        $data['campo'] = $campo;
+        $data['formulario'] = $campo->Formulario;
+        $data['pagos'] = $pagos;
         $data['bloques'] = $bloques;
+        $data['acciones'] = Doctrine::getTable('Accion')->findByProcesoId($campo->Formulario->Proceso->id);
 
         $this->load->view('backend/formularios/ajax_editar_campo',$data);
     }
@@ -162,14 +175,22 @@ class Formularios extends MY_BackendController {
             }
             else {
               $this->form_validation->set_rules('valor_default', 'valor_default', 'required');
+
+              if((!$this->input->post('nombre')) || (!$this->input->post('etiqueta'))) {
+                $respuesta->validacion=FALSE;
+                $respuesta->errores=validation_errors();
+
+                echo json_encode($respuesta);
+                exit;
+              }
             }
 
             $formulario_id = $formulario->id;
         }
 
-        $this->form_validation->set_rules('nombre','Nombre','required');
-        $this->form_validation->set_rules('etiqueta','Etiqueta','required');
-        $this->form_validation->set_rules('validacion','Validación','callback_clean_validacion');
+        $this->form_validation->set_rules('nombre','Nombre', 'required');
+        $this->form_validation->set_rules('etiqueta','Etiqueta', 'required');
+        $this->form_validation->set_rules('validacion','Validación', 'callback_clean_validacion');
 
         if(!$campo_id) {
             $this->form_validation->set_rules('formulario_id','Formulario','required|callback_check_permiso_formulario');
@@ -185,11 +206,60 @@ class Formularios extends MY_BackendController {
 
             }
             else {
-                $campo->nombre=$this->input->post('nombre');
-                $campo->etiqueta=$this->input->post('etiqueta',false);
+                $campo->nombre=str_replace(" ", "_", $this->input->post('nombre'));
+
+                if($campo->tipo == 'paragraph'){
+                  $tags = '';
+                  $html = trim($this->input->post('etiqueta',false));
+
+                  preg_match_all('/<(.+?)[\s]*\/?[\s]*>/si', $html, $tags);
+
+                  $tags_permitidas = array('<strong>','</strong>',
+                                            '<em>','</em>',
+                                            '<br>','</br>',
+                                            '<a','</a>'
+                                          );
+                  $tags_invalidas = '';
+
+                  if(count($tags) > 0){
+                    foreach ($tags[0] as $tag) {
+
+                      $tag_ok = false;
+                      $tag_min = trim(strtolower($tag));
+
+                      foreach ($tags_permitidas as $tag_permitida){
+                        if($tag_min == $tag_permitida || strpos($tag_min, '<a') !== false){
+                          //es una tag permitida
+                          $tag_ok = true;
+                          brake;
+                        }
+                      }
+
+                      if(!$tag_ok){
+                        $tags_invalidas .= $tag;
+                      }
+                    }
+                  }
+
+                  if($tags_invalidas !== ''){
+                    $respuesta->validacion=FALSE;
+                    $respuesta->errores='Etiquetas HTML inválidas <pre><code>'.htmlentities($tags_invalidas).'</code></pre>';
+                    echo json_encode($respuesta);
+                    return;
+                  }
+                  else{
+                    $campo->etiqueta = $this->input->post('etiqueta',false);
+                  }
+
+                }
+                else{
+                  $campo->etiqueta = $this->input->post('etiqueta',false);
+                }
+
                 $campo->readonly=$this->input->post('readonly');
                 $campo->valor_default=$this->input->post('valor_default',false);
                 $campo->ayuda=$this->input->post('ayuda');
+                $campo->ayuda_ampliada=$this->input->post('ayuda_ampliada');
                 $campo->validacion=explode('|',$this->input->post('validacion'));
                 $campo->dependiente_tipo=$this->input->post('dependiente_tipo');
                 $campo->dependiente_campo=$this->input->post('dependiente_campo');
@@ -198,7 +268,55 @@ class Formularios extends MY_BackendController {
                 $campo->datos=$this->input->post('datos');
                 $campo->documento_id=$this->input->post('documento_id');
                 $campo->fieldset=$this->input->post('fieldset');
-                $campo->extra=$this->input->post('extra');
+
+                $campo->requiere_accion = $this->input->post('requiere_accion');
+                $campo->requiere_accion_id = $this->input->post('requiere_accion_id');
+                $campo->requiere_accion_boton = $this->input->post('requiere_accion_boton');
+                $campo->requiere_accion_var_error = $this->input->post('requiere_accion_var_error');
+
+
+                if($campo->tipo=='pagos'){
+                  $campo->pago_online = $this->input->post('check_pago_online');
+                }
+
+                if($campo->tipo=='agenda' || $campo->tipo=='agenda_sae'){
+                  $campo->requiere_agendar = $this->input->post('check_requiere_agendar');
+                }
+
+                if($campo->tipo=='documento'){
+                  $campo->firma_electronica = $this->input->post('check_firma_electronica');
+                }
+
+                //si el tipo de campo es un tabla responsive
+                //cuando se quitan las columnas intermedias de la tabla//el array queda con indices vacios
+                //por ejemplo extra[0], extra[3] esto hace que el json_decode lo haga mal
+                //se recrea el array para que los indices queden correlativos.
+                //se procesa los extras de forma distinta a los demas campos
+                if ($campo->tipo=='tabla-responsive'){
+                  $newarray = array();
+                  $cols = array();
+                  $arra = $this->input->post('extra')["columns"];
+                  foreach ($arra as $element) {
+                    array_push($cols,$element);
+                  }
+                  $newarray["columns"] = $cols;
+                  $newarray["accion_id"] = $this->input->post('extra')["accion_id"];
+                  $newarray["accion_error"] = $this->input->post('extra')["accion_error"];
+                  $newarray["generar_fila_automatica"] = $this->input->post('extra')["generar_fila_automatica"];
+
+                  $campo->extra=$newarray;
+
+                }else{
+                  $campo->extra=$this->input->post('extra');
+                }
+
+
+
+
+
+
+                $campo->documento_tramite=$this->input->post('documento_tramite');
+                $campo->email_tramite=$this->input->post('email_tramite');
                 $campo->save();
             }
         }
@@ -212,9 +330,9 @@ class Formularios extends MY_BackendController {
                         ->where('f.bloque_id = ?', $this->input->post('valor_default'))
                         ->execute();
             $formulario_bloque = $formulario_bloque[0];
-
             $campos_bloque = Doctrine_Query::create()->from('Campo c')
                         ->where('c.formulario_id = ?', $formulario_bloque->id)
+                        ->orderBy('c.posicion')
                         ->execute();
 
             foreach($campos_bloque as $campo_bloque) {
@@ -232,6 +350,7 @@ class Formularios extends MY_BackendController {
                 $campo_nuevo->readonly=$campo_bloque->readonly;
                 $campo_nuevo->valor_default=$campo_bloque->valor_default;
                 $campo_nuevo->ayuda=$campo_bloque->ayuda;
+                $campo_nuevo->ayuda_ampliada=$campo_bloque->ayuda_ampliada;
                 $campo_nuevo->validacion=$campo_bloque->validacion;
                 $campo_nuevo->dependiente_tipo=$campo_bloque->dependiente_tipo;
                 $campo_nuevo->dependiente_campo=$campo_bloque->dependiente_campo;
@@ -240,6 +359,7 @@ class Formularios extends MY_BackendController {
                 $campo_nuevo->datos=$campo_bloque->datos;
                 $campo_nuevo->documento_id=$campo_bloque->documento_id;
                 $campo_nuevo->fieldset=$this->input->post('nombre').'.'.$campo_bloque->fieldset;
+                $campo_nuevo->posicion=$campo_bloque->posicion;
                 $campo_nuevo->extra=$campo_bloque->extra;
                 $campo_nuevo->save();
             }
@@ -264,12 +384,22 @@ class Formularios extends MY_BackendController {
         $campo=Campo::factory($tipo);
         $campo->formulario_id=$formulario_id;
 
+        $pagos = array();
+        foreach($formulario->Proceso->Acciones as $accion) {
+          if($accion->tipo == 'pasarela_pago') {
+            array_push($pagos, $accion);
+          }
+        }
+
         $bloques = Doctrine_Query::create()->from('Bloque')->execute();
 
         $data['edit']=false;
         $data['formulario']=$formulario;
         $data['campo']=$campo;
+        $data['pagos'] = $pagos;
         $data['bloques'] = $bloques;
+        $data['acciones'] = Doctrine::getTable('Accion')->findByProcesoId($campo->Formulario->Proceso->id);
+
         $this->load->view('backend/formularios/ajax_editar_campo',$data);
     }
 

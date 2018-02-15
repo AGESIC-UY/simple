@@ -30,7 +30,7 @@ class CampoTitle extends Campo{
             $etiqueta=$this->etiqueta;
         }
 
-        $display='<h3 data-fieldset="'.$this->fieldset.'">'.$etiqueta.'</h3>';
+        $display='<h2 data-fieldset="'.$this->fieldset.'">'.$etiqueta.'</h2>';
 
         return $display;
     }

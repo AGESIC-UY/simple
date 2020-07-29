@@ -11,7 +11,7 @@
       </ul>
         <h2><?=$title?></h2>
 
-        <p>Obtiene un procesos.</p>
+        <p>Obtiene un proceso.</p>
 
         <h3>Request HTTP</h3>
 

@@ -1,5 +1,5 @@
 <?php
-
+setlocale(LC_ALL, 'es_ES.utf8');
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -18,7 +18,7 @@
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-	define('ENVIRONMENT', 'production');
+       define('ENVIRONMENT', 'production');
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -34,6 +34,7 @@ if (defined('ENVIRONMENT'))
 	{
 		case 'development':
 			error_reporting(E_ALL);
+			ini_set('display_errors', 1);
 		break;
 
 		case 'testing':
@@ -151,7 +152,7 @@ if (defined('ENVIRONMENT'))
 	// Is the system path correct?
 	if ( ! is_dir($system_path))
 	{
-		exit("Your system folder path does not appear to be set correctly. Please open the following file and correct this: ".pathinfo(__FILE__, PATHINFO_BASENAME));
+		exit("La ruta de la carpeta del sistema no parece estar configurada correctamente. Por favor, edite el siguiente archivo para corregirlo:  ".pathinfo(__FILE__, PATHINFO_BASENAME));
 	}
 
 /*
@@ -175,7 +176,6 @@ if (defined('ENVIRONMENT'))
 	// Name of the "system folder"
 	define('SYSDIR', trim(strrchr(trim(BASEPATH, '/'), '/'), '/'));
 
-
 	// The path to the "application" folder
 	if (is_dir($application_folder))
 	{
@@ -185,7 +185,7 @@ if (defined('ENVIRONMENT'))
 	{
 		if ( ! is_dir(BASEPATH.$application_folder.'/'))
 		{
-			exit("Your application folder path does not appear to be set correctly. Please open the following file and correct this: ".SELF);
+			exit("La ruta de la carpeta del sistema no parece estar configurada correctamente. Por favor, edite el siguiente archivo para corregirlo: ".SELF);
 		}
 
 		define('APPPATH', BASEPATH.$application_folder.'/');
@@ -200,6 +200,3 @@ if (defined('ENVIRONMENT'))
  *
  */
 require_once BASEPATH.'core/CodeIgniter.php';
-
-/* End of file index.php */
-/* Location: ./index.php */

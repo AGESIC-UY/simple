@@ -1,36 +1,91 @@
-<h2><?=$etapa->Tarea->Proceso->nombre?></h2>
+<script type="text/javascript">
+
+</script>
+
+<input type="hidden" id="info_tramite_id_tramite" value="<?=$etapa->tramite_id?>" />
+<input type="hidden" id="info_tramite_id_interaccion" value="<?=str_replace(' ', '_', $etapa->Tarea->nombre)?>" />
+<input type="hidden" id="info_tramite_nro_paso" value="paso_fin" />
+
+<h1>
+  <?=$etapa->Tarea->Proceso->nombre?>
+
+  <?php if(isset($funcionario_actuando_como_ciudadano) && $funcionario_actuando_como_ciudadano):?>
+    <b class="blue"> - Ejecutando como ciudadano: <?php echo $usuario_nombres;?></b>
+  <?php endif; ?>
+</h1>
 
 <form method="POST" class="ajaxForm dynaForm" action="<?= site_url('etapas/ejecutar_fin_form/' . $etapa->id.($qs?'?'.$qs:'')) ?>">
-    <fieldset>
-        <legend>Paso final</legend>
+    <!--<fieldset>-->
+        <!--<legend class>Paso final</legend>-->
         <div class="validacion validacion-error"></div>
         <?php if ($tareas_proximas->estado == 'pendiente'): ?>
+            <div class="dialogo validacion-warning">
+              <span class="dialog-title">Paso final</span>
+              <div class="alert alert-warning"><?= $etapa->Tarea->paso_final_pendiente?></div>
+            </div>
             <?php foreach ($tareas_proximas->tareas as $t): ?>
-                <p>Para confirmar y enviar el formulario a la siguiente etapa haga click en Finalizar.</p>
-                <?php if ($t->asignacion == 'manual'): ?>
+              <?php if ($t->asignacion == 'manual'): ?>
+                  <?php if (count($tareas_proximas->tareas)>1): ?>
+                    <label>Asignar próxima etapa (<?= $t->nombre?>) a</label>
+                  <?php endif; ?>
+                  <?php if (count($tareas_proximas->tareas) <= 1): ?>
                     <label>Asignar próxima etapa a</label>
-                    <select class="chosen" name="usuarios_a_asignar[<?= $t->id ?>]">
-                        <?php foreach ($t->getUsuarios($etapa->id) as $u): ?>
-                            <option value="<?= $u->id ?>"><?= $u->displayUsername(true)?></option>
-                        <?php endforeach; ?>
-                    </select>
-                <?php endif; ?>
+                  <?php endif; ?>
+                  <select class="chosen" name="usuarios_a_asignar[<?= $t->id ?>]">
+                      <?php foreach ($t->getUsuarios($etapa->id) as $u): ?>
+                          <option value="<?= $u->id ?>"><?= $u->displayUsername(true)?></option>
+                      <?php endforeach; ?>
+                  </select>
+              <?php endif; ?>
             <?php endforeach; ?>
         <?php elseif($tareas_proximas->estado=='standby'): ?>
-            <p>Luego de hacer click en Finalizar esta etapa quedara detenida momentaneamente hasta que se completen el resto de etapas pendientes.</p>
+          <div class="dialogo validacion-warning">
+            <span class="dialog-title">Paso final</span>
+            <div class="alert alert-warning"><?= $etapa->Tarea->paso_final_standby?></div>
+          </div>
         <?php elseif($tareas_proximas->estado=='completado'):?>
-            <p>Luego de hacer click en Finalizar este trámite quedará completado.</p>
+          <div class="dialogo validacion-warning">
+            <span class="dialog-title">Validación previa al envío</span>
+            <div class="alert alert-warning"><?= $etapa->Tarea->paso_final_completado?></div>
+          </div>
         <?php elseif($tareas_proximas->estado=='sincontinuacion'):?>
-            <p>Este trámite no tiene una etapa donde continuar.</p>
+          <div class="dialogo validacion-warning">
+            <span class="dialog-title">Paso final</span>
+            <div class="alert alert-warning"><?= $etapa->Tarea->paso_final_sincontinuacion?></div>
+          </div>
         <?php endif; ?>
 
-    </fieldset>
+    <!--</fieldset>-->
     <ul class="form-action-buttons">
       <li class="action-buttons-primary">
         <ul>
-          <li>
-            <?php if($tareas_proximas->estado!='sincontinuacion'):?><button class="btn btn-primary btn-lg" type="submit"><span class="icon-ok icon-white"></span> Finalizar</button><?php endif?>
-            </li>
+            <?php if($tareas_proximas->estado!='sincontinuacion'):?>
+              <li>
+                <button class="btn btn-primary btn-lg" type="submit">
+                  <span class="icon-ok icon-white"></span>
+                  <?= $etapa->Tarea->texto_boton_paso_final ?>
+                </button>
+              </li>
+              <?php if(isset($hay_pasos_generar_pdf) && $hay_pasos_generar_pdf):?>
+                <li>
+                  <a href="<?php if(isset($link_pdf)) echo $link_pdf; ?>" class="btn btn-secundary btn-lg" target="_blank">
+                    <span class="icon-print icon-white"></span>
+                    <?php echo $etapa->Tarea->texto_boton_generar_pdf; ?>
+                  </a>
+                </li>
+              <?php endif;?>
+            <?php endif?>
+
+            <?php if($tareas_proximas->estado =='sincontinuacion'):?>
+              <?php if(isset($hay_pasos_generar_pdf) && $hay_pasos_generar_pdf):?>
+                <li>
+                  <a href="<?php if(isset($link_pdf)) echo $link_pdf; ?>" class="btn btn-secundary btn-lg" target="_blank">
+                    <span class="icon-print icon-white"></span>
+                    <?php echo $etapa->Tarea->texto_boton_generar_pdf; ?>
+                  </a>
+                </li>
+              <?php endif;?>
+            <?php endif;?>
           </ul>
         </li>
         <li class="action-buttons-second">

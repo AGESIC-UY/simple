@@ -36,7 +36,29 @@ class Uploader extends MY_BackendController {
         echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
     }
 
-    function firma_get($filename){
+    function pdi_certificados() {
+        $allowedExtensions = array('p12', 'pem');
+        // max file size in bytes
+        $sizeLimit = 20 * 1024 * 1024;
+
+        $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
+        $result = $uploader->handleUpload('uploads/pdi/');
+
+        echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+    }
+
+    function credenciales_pasarela_pago() {
+        $allowedExtensions = array('crt', 'key');
+        // max file size in bytes
+        $sizeLimit = 20 * 1024 * 1024;
+
+        $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
+        $result = $uploader->handleUpload('uploads/pasarela/');
+
+        echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+    }
+
+    function firma_get($filename) {
       readfile('uploads/firmas/'.$filename);
     }
 
@@ -72,5 +94,27 @@ class Uploader extends MY_BackendController {
 
     function logo_certificado_get($filename){
         readfile('uploads/logos_certificados/'.$filename);
+    }
+
+    function certificado_autenticacion_soap_basica() {
+        $allowedExtensions = array('crt', 'key', 'pem');
+        // max file size in bytes
+        $sizeLimit = 20 * 1024 * 1024;
+
+        $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
+        $result = $uploader->handleUpload(UBICACION_CERTIFICADOS_SOAP);
+
+        echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+    }
+
+    function certificado_autenticacion_soap_mutua() {
+        $allowedExtensions = array('crt', 'key', 'pem');
+        // max file size in bytes
+        $sizeLimit = 20 * 1024 * 1024;
+
+        $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
+        $result = $uploader->handleUpload(UBICACION_CERTIFICADOS_SOAP);
+
+        echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
     }
 }

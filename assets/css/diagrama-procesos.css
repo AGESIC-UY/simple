@@ -1,7 +1,7 @@
 #areaDibujo{
     width: 100%;
-    
-    
+
+
     height: 60px;
 }
 
@@ -23,9 +23,9 @@
 
 #areaDibujo .botonera{
     position: fixed;
-    top: 220px;
-    right: 20px;
-    z-index: 1000;
+    top: 312px;
+    right: 15%;
+    z-index: 999;
 }
 
 #draw .box{
@@ -43,6 +43,35 @@
 #draw .box.completado{
     background: green;
 }
+#draw .box.automatica{
+  background: #0080005c;
+  color: black;
+  border: dashed 2px #000000;
+}
+
+#draw .box.escalada{
+  background: #4519EB;
+  border: dashed 2px #000000;
+}
+
+#draw .box.avanzada_cron_pagos{
+  background: orange;
+  color: black;
+  border: dashed 2px #000000;
+}
+
+#draw .box.avanzada_cron_agenda{
+  background: orange;
+  color: black;
+  border: dashed 2px #000000;
+}
+
+#draw .box.avanzada_cron_pagos_agendas{
+  background: orange;
+  color: black;
+  border: dashed 2px #000000;
+}
+
 #draw .box.selected{
     background: #666;
 }

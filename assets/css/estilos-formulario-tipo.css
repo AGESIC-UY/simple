@@ -2515,8 +2515,8 @@ ul.rating li.five a:hover {
         display: none;
     }
     div.group ~ button {
-    display: block;
-    margin-top: 10px;
+      display: block;
+      margin-top: 10px;
     }
 }
 /* --------------- |690| --------------- */

@@ -108,6 +108,7 @@ class sspmod_saml_Auth_Source_SP extends SimpleSAML_Auth_Source {
 	 * @return SimpleSAML_Configuration  The metadata of the IdP.
 	 */
 	public function getIdPMetadata($entityId) {
+		$entityId = $this->idp;
 		assert('is_string($entityId)');
 
 		if ($this->idp !== NULL && $this->idp !== $entityId) {
@@ -469,7 +470,16 @@ class sspmod_saml_Auth_Source_SP extends SimpleSAML_Auth_Source {
 
 		$id = SimpleSAML_Auth_State::saveState($state, 'saml:slosent');
 
-		$cookie_data = base64_decode($_COOKIE['simple_bpm_saml_session_ref']);
+		if(isset($_COOKIE['simple_bpm_saml_session_ref'])) {
+			$cookie_data = base64_decode($_COOKIE['simple_bpm_saml_session_ref']);
+		}
+		elseif(isset($_COOKIE['simple_bpm_saml_session_ref_k'])) {
+			$cookie_data = base64_decode($_COOKIE['simple_bpm_saml_session_ref_k']);
+		}
+		else {
+			return false;
+		}
+
 		$cookie_data = explode('/', $cookie_data);
 
 		$idp = $cookie_data[2]; //$state['saml:logout:IdP'];
@@ -478,9 +488,8 @@ class sspmod_saml_Auth_Source_SP extends SimpleSAML_Auth_Source {
 
 		$idpMetadata = $this->getIdPMetadata($idp);
 
-		$endpoint = array("Location" => 'https://test-eid.portal.gub.uy/idp/profile/SAML2/Redirect/SLO', "Binding" => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'); //$idpMetadata->getEndpointPrioritizedByBinding('SingleLogoutService', array(
-		//	SAML2_Const::BINDING_HTTP_REDIRECT,
-		//	SAML2_Const::BINDING_HTTP_POST), FALSE);
+		$endpoint = $idpMetadata->getDefaultEndpoint('SingleLogoutService');
+
 		if ($endpoint === FALSE) {
 			SimpleSAML_Logger::info('No logout endpoint for IdP ' . var_export($idp, TRUE) . '.');
 			return;

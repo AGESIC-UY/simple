@@ -46,11 +46,6 @@
                             <img src="<?= base_url() ?>assets/img/logoPresidencia.png" alt="Presidencia">
                           </a>
                         </li>
-                        <li>
-                          <a href="http://uruguaydigital.gub.uy/" title="Ir al sitio de Uruguay Digital">
-                            <img src="<?= base_url() ?>assets/img/logo-uruguayDigital.png" alt="Uruguay Digital">
-                          </a>
-                        </li>
                       </ul>
                     </div>
                   </div>
@@ -60,26 +55,32 @@
         <div id="main" tabindex="-1">
           <div class="container-fluid">
             <h1>Ingrese a SIMPLE - Manager</h1>
-            <form method="post" class="ajaxForm" action="<?= site_url('manager/autenticacion/login_form') ?>">
+            <form method="post" id="loginForm" class="ajaxForm" action="<?= site_url('manager/autenticacion/login_form') ?>">
               <fieldset>
                 <legend>Ingreso de usuario</legend>
 
                 <div id="tab1" tabindex="-1">
+                  <?php $this->load->view('messages') ?>
                   <div class="validacion validacion-error"></div>
+                  <?php
+                    if(isset($error_login)) {
+                      echo $error_login;
+                    }
+                  ?>
                   <input type="hidden" name="redirect" value="<?= $redirect ?>" />
 
                   <div class="form-horizontal">
                       <div class="control-group">
                         <label class="control-label" for="email">Usuario:</label>
                         <div class="controls">
-                          <input id="usuario" name="usuario" type="text" >
+                          <input id="usuario" name="usuario" type="text" autofocus autocomplete="off" />
                         </div>
                       </div>
 
                       <div class="control-group">
                         <label class="control-label" for="password">Contraseña:</label>
                         <div class="controls">
-                          <input id="password" name="password" type="password">
+                          <input id="password" name="password" type="password" autocomplete="off" />
                         </div>
                       </div>
 

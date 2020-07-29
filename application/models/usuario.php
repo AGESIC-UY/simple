@@ -17,6 +17,7 @@ class Usuario extends Doctrine_Record {
         $this->hasColumn('open_id');
         $this->hasColumn('registrado');
         $this->hasColumn('reset_token');
+        $this->hasColumn('acceso_reportes');
     }
 
     function setUp() {
@@ -41,6 +42,11 @@ class Usuario extends Doctrine_Record {
         ));
 
         $this->hasMany('ReporteSatisfaccion',array(
+            'local'=>'id',
+            'foreign'=>'usuario_id'
+        ));
+
+        $this->hasMany('Pago',array(
             'local'=>'id',
             'foreign'=>'usuario_id'
         ));
@@ -130,5 +136,12 @@ class Usuario extends Doctrine_Record {
         );
 
         return $publicArray;
+    }
+
+    public function esFuncionario(){
+      return $this->cuenta_id > 0 &&  $this->registrado;
+    }
+    public function esCiudadano(){
+      return empty($this->cuenta_id) || $this->cuenta_id == 0;
     }
 }

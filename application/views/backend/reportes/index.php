@@ -11,6 +11,7 @@
     <thead>
         <tr>
             <th>Proceso</th>
+            <th>Versión</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -18,6 +19,7 @@
         <?php foreach($procesos as $p): ?>
         <tr>
             <td><?=$p->nombre?></td>
+            <td><?=$p->version?></td>
             <td class="actions">
                 <a href="<?=site_url('backend/reportes/listar/'.$p->id)?>" class="btn btn-primary"><span class="icon-eye-open icon-white"></span> Ver Reportes<span class="hide-text"> de <?= $p->nombre ?> <?=$p->id?></span></a>
             </td>
@@ -26,5 +28,5 @@
     </tbody>
 </table>
 
-<p class="strong">Reporte de satisfacción</p>
+<h2>Reporte de Satisfacción</h2>
 <a href="<?=site_url('backend/reportes/reporte_satisfaccion/')?>" class="btn btn-primary"><span class="icon-signal icon-white"></span> Ver resultados</a>

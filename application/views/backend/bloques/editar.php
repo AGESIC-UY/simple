@@ -10,11 +10,9 @@
     </li>
     <li class="active"><?=$bloque->nombre ?></li>
 </ul>
-<div class="titulo-form">
-  <h2><?= $bloque->nombre ?></h2>
-</div>
 <form id="formEditarFormulario" action="<?=site_url('backend/bloques/editar_form/'.$bloque->id)?>" method="post" class="form-horizontal dynaForm debugForm">
 	<input type="hidden" name="bloque_id" value="<?= $bloque->id ?>" />
+  <!--
   <div class="control-group">
     <label for="nombre_bloque" class="control-label">Nombre</label>
     <div class="controls">
@@ -22,32 +20,39 @@
       <input class="btn btn-primary" type="submit" value="Guardar" />
     </div>
   </div>
+  -->
 
     <div id="areaFormulario">
+      <div class="titulo-form">
+        <h2><?= $bloque->nombre ?><a href="#" onclick="return editarBloque(<?= $bloque->id ?>)"><span class="icon-edit" style="vertical-align:middle;"></span></a></h2>
+      </div>
+
 	    <div class="btn-toolbar toolbar-formulario">
 	        <div class="btn-group">
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'title')">Título</button>
+	            <!--button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'title')">Título</button-->
 	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'subtitle')">Subtítulo</button>
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'step_title')">Título del paso</button>
+	            <!--<button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'step_title')">Título del paso</button>-->
 	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'paragraph')">Parrafo</button>
 	        </div>
 	        <div class="btn-group">
 	            <button class="btn btn-inverse campo_no_requerido" onclick="return agregarCampo(<?= $formulario->id ?>,'error')">Mensaje de error</button>
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'fieldset')">Fieldset</button>
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'text')">Textbox</button>
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'textarea')">Textarea</button>
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'select')">Select</button>
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'radio')">Radio</button>
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'checkbox')">Checkbox</button>
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'file')">File</button>
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'date')">Date</button>
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'grid')">Grilla</button>
+	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'fieldset')" title="Grupo de campos" >Fieldset</button>
+	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'text')" title="Línea de texto">Textbox</button>
+	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'textarea')" title="Texto largo">Textarea</button>
+	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'select')" title="Lista desplegable">Select</button>
+	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'radio')" title="Lista de selección única">Radio</button>
+	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'checkbox')" title="Lista de selección múltiple">Checkbox</button>
+	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'file')" title="Archivo adjunto">Archivo</button>
+	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'date')">Fecha</button>
+	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'tabla-responsive')">Tabla</button>
 	        </div>
 	        <div class="btn-group">
 	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'encuesta')">Encuesta</button>
-	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'paises')">Paises</button>
+	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'paises')">País</button>
 	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'moneda')">Moneda</button>
 	            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'javascript')">Javascript</button>
+              <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'agenda_sae')">Agenda Embebida</button>
+              <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'domicilio_ica')">Domicilio ICA</button>
 	        </div>
 	    </div>
 

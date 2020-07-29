@@ -3,12 +3,13 @@
 class Migration_13 extends Doctrine_Migration_Base {
 
     public function up() {
-        $this->addColumn('tarea', 'paso_confirmacion', 'boolean', null, array('notnull'=>1, 'default' => 1));
+        //pasarela_antel
+        $this->addColumn('pasarela_pago_antel', 'referencia_pago', 'varchar(255) default ""');
+       
     }
 
-
     public function down() {
-        $this->removeColumn('tarea', 'paso_confirmacion');
+        
     }
 
 }

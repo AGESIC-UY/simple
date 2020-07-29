@@ -28,6 +28,8 @@
     "proceso":{
         "id":10,
         "nombre":"Proceso de Inscripción a Beca Educacional"
+        "version":"1"
+        "estado":"public | draft | arch"
     }
 }</pre>
 

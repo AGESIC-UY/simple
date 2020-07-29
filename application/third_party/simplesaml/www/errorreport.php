@@ -112,7 +112,9 @@ $toAddress = $config->getString('technicalcontact_email', 'na@example.org');
 if ($config->getBoolean('errorreporting', true) && $toAddress !== 'na@example.org') {
     $email = new SimpleSAML_XHTML_EMail($toAddress, 'SimpleSAMLphp error report', $from);
     $email->setBody($message);
-    $email->send();
+    if (!$email->send()){
+        log_message('ERROR', "send email accion enviar email: ".$email->print_debugger());
+    }
     SimpleSAML_Logger::error('Report with id '.$reportId.' sent to <'.$toAddress.'>.');
 }
 

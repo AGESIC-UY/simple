@@ -1,56 +1,33 @@
 <?php
 
 class Migration_15 extends Doctrine_Migration_Base {
-  public function up() {
-    // --
-    // -- Modifica tabla Campo
-    // --
-    $this->addColumn('campo', 'fieldset', 'varchar', 100, array('notnull' => 1));
-    $this->changeColumn('campo', 'nombre', 'VARCHAR(100)', null, array('notnull' => 1));
 
-    // --
-    // -- Modifica tabla Formulario
-    // --
-    $this->addColumn('formulario', 'bloque_id', 'integer', 10, array('notnull' => 0));
+    public function up() {
+        $q = Doctrine_Manager::getInstance()->getCurrentConnection();
+        //migraciones necesarias para la versión 2.0
+        
+        //trazabilidad v2
+        //tabla tarea
+         $q->execute("UPDATE tarea SET trazabilidad_estado='INICIO' WHERE trazabilidad_estado=1");
+         $q->execute("UPDATE tarea SET trazabilidad_estado='EN_EJECUCION' WHERE trazabilidad_estado=2");
+         $q->execute("UPDATE tarea SET trazabilidad_estado='CERRADO' WHERE trazabilidad_estado=3");
+         $q->execute("UPDATE tarea SET trazabilidad_estado='FINALIZADO' WHERE trazabilidad_estado=4");
+         $q->execute("UPDATE tarea AS t SET t.trazabilidad_nombre_oficina = t.trazabilidad_id_oficina where t.trazabilidad_nombre_oficina='' OR t.trazabilidad_nombre_oficina=NULL");
+        
+        //tabla evento
+        
+        $q->execute("UPDATE evento SET tipo_registro_traza='COMUN' WHERE tipo_registro_traza=3");
+        
+        //tabla paso
+        
+        //tabla evento_pago
+        
+        $q->execute("UPDATE evento_pago SET tipo_registro_traza='COMUN' WHERE tipo_registro_traza=3");
+        
+    }
 
-    // --
-    // -- Modifica tabla Paso
-    // --
-    $this->addColumn('paso', 'nombre', 'varchar', 255, array('notnull' => 0));
+    public function down() {
+        
+    }
 
-    // --
-    // -- Modifica tabla Tarea
-    // --
-    $this->addColumn('tarea', 'trazabilidad', 'integer', 1, array('notnull' => 1, 'default' => 1));
-
-    // --
-    // -- Modifica tabla UsuarioBackend
-    // --
-    $this->addColumn('usuario_backend', 'usuario', 'varchar', 128, array('notnull' => 0));
-  }
-
-  public function down() {
-    // --
-    // -- Elimina columna fieldset de tabla Campo
-    // --
-    $this->removeColumn('campo', 'fieldset');
-    $this->removeColumn('campo', 'nombre');
-
-    // --
-    // -- Elimina columna bloque_id de tabla Formulario
-    // --
-    $this->removeColumn('formulario', 'bloque_id');
-
-    // --
-    // -- Elimina columna nombre de tabla Paso
-    // --
-    $this->removeColumn('paso', 'nombre');
-
-    // --
-    // -- Elimina columna trazabilidad de tabla Tarea
-    // --
-    $this->removeColumn('tarea', 'trazabilidad');
-
-    $this->removeColumn('usuario_backend', 'usuario');
-  }
 }

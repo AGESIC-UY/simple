@@ -3,16 +3,30 @@ require_once('campo.php');
 class CampoPaises extends Campo{
 
     public $requiere_datos=false;
+    public $reporte = true;
 
-    protected function display($modo, $dato) {
+    protected function display($modo, $dato, $etapa_id) {
+
+        $regla = new Regla($this->valor_default);
+        $valor_default = $regla->getExpresionParaOutput($etapa_id);
+
         $display = '<div class="control-group">';
-        $display.= '<label class="control-label" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ' (Opcional):') . '</label>';
+        $display.= '<label class="control-label" for="'.$this->id.'" data-fieldset="'.$this->fieldset.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '*:' : ':') . '</label>';
         $display.='<div class="controls" data-fieldset="'.$this->fieldset.'">';
-        $display.='<select class="paises" data-id="'.$this->id.'" name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
+        $display.='<select class="paises" id="'.$this->id.'" data-id="'.$this->id.'" name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display.='<option value="">Seleccione país</option>';
         $display.='</select>';
+
+        if($this->ayuda_ampliada) {
+          $display .= '<span><button type="button" class="tooltip_help_click" onclick="return false;"><span class="icn icn-circle-help"></span><span class="hide-read">Ayuda</span></button>';
+          $display .= '<span class="hidden tooltip_help_line">'. strip_tags($this->ayuda_ampliada) .'</span></span>';
+        }
+
         if($this->ayuda)
             $display.='<span class="help-block">'.$this->ayuda.'</span>';
+
+
+
         $display.='</div>';
         $display.='</div>';
 
@@ -20,7 +34,7 @@ class CampoPaises extends Campo{
             <script>
                 $(document).ready(function(){
                     var justLoadedPais=true;
-                    var defaultPais="'.($dato && $dato->valor?$dato->valor:'').'";
+                    var defaultPais="'.($dato && $dato->valor?$dato->valor:$valor_default).'";
 
                     updatePaises();
 

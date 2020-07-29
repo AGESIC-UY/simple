@@ -10,11 +10,10 @@ class Documentos extends MY_BackendController {
 
         UsuarioBackendSesion::force_login();
 
-        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
-            //echo 'No tiene permisos para acceder a esta seccion.';
-            //exit;
+        if (!UsuarioBackendSesion::has_rol('super') && !UsuarioBackendSesion::has_rol('modelamiento')) {
             redirect('backend');
         }
+        $this->load->helper('auditoria_helper');
     }
 
     public function listar($proceso_id) {
@@ -26,7 +25,8 @@ class Documentos extends MY_BackendController {
         }
         $data['proceso'] = $proceso;
         $data['documentos'] = $data['proceso']->Documentos;
-
+        $procesosArchivados = $proceso->findProcesosArchivados((($proceso->root) ? $proceso->root : $proceso->id));
+        $data['procesos_arch'] = $procesosArchivados;
         $data['title'] = 'Documentos';
         $data['content'] = 'backend/documentos/index';
 
@@ -43,6 +43,8 @@ class Documentos extends MY_BackendController {
 
         $data['edit'] = FALSE;
         $data['proceso'] = $proceso;
+        $procesosArchivados = $proceso->findProcesosArchivados((($proceso->root) ? $proceso->root : $proceso->id));
+        $data['procesos_arch'] = $procesosArchivados;
         $data['title'] = 'Edición de Documento';
         $data['content'] = 'backend/documentos/editar';
 
@@ -59,83 +61,89 @@ class Documentos extends MY_BackendController {
 
         $data['documento'] = $documento;
         $data['edit'] = TRUE;
-        $data['proceso']=$documento->Proceso;
+        $data['proceso'] = $documento->Proceso;
+        $procesosArchivados = $documento->Proceso->findProcesosArchivados((($documento->Proceso->root) ? $documento->Proceso->root : $documento->Proceso->id));
+        $data['procesos_arch'] = $procesosArchivados;
         $data['title'] = 'Edición de Documento';
         $data['content'] = 'backend/documentos/editar';
 
         $this->load->view('backend/template', $data);
     }
 
-    public function editar_form($documento_id=NULL){
-        $documento=NULL;
-        if($documento_id){
-            $documento=Doctrine::getTable('Documento')->find($documento_id);
-        }else{
-            $documento=new Documento();
-            $documento->proceso_id=$this->input->post('proceso_id');
+    public function editar_form($documento_id = NULL) {
+        $documento = NULL;
+        $op="update";
+        if ($documento_id) {
+            $documento = Doctrine::getTable('Documento')->find($documento_id);
+        } else {
+            $documento = new Documento();
+            $documento->proceso_id = $this->input->post('proceso_id');
+            $op="insert";
         }
 
-        if($documento->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
-                echo 'Usuario no tiene permisos para editar este documento.';
-                exit;
-            }
-
-        $this->form_validation->set_rules('nombre','Nombre','required');
-        $this->form_validation->set_rules('tipo','Tipo','required');
-        $this->form_validation->set_rules('contenido','Contenido','required');
-
-        if($this->input->post('tipo')=='certificado'){
-            $this->form_validation->set_rules('titulo','Título','required');
-            $this->form_validation->set_rules('subtitulo','Subtítulo','required');
-            $this->form_validation->set_rules('servicio','Servicio','required');
-            $this->form_validation->set_rules('servicio_url','URL del Servicio','required|prep_url');
-            $this->form_validation->set_rules('firmador_nombre','Nombre del firmador');
-            $this->form_validation->set_rules('firmador_cargo','Cargo del firmador');
-            $this->form_validation->set_rules('firmador_servicio','Servicio del firmador');
-            $this->form_validation->set_rules('firmador_imagen','Imagen de la firmas');
-            $this->form_validation->set_rules('validez','Dias de validez','is_natural_no_zero');
-            $this->form_validation->set_rules('validez_habiles','Habiles');
+        if ($documento->Proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
+            echo 'Usuario no tiene permisos para editar este documento.';
+            exit;
         }
 
-        $respuesta=new stdClass();
-        if($this->form_validation->run()==TRUE){
-            $documento->nombre=$this->input->post('nombre');
-            $documento->tipo=$this->input->post('tipo');
-            $documento->contenido=$this->input->post('contenido',false);
-            $documento->tamano=$this->input->post('tamano');
-            $documento->hsm_configuracion_id=$this->input->post('hsm_configuracion_id');
+        $this->form_validation->set_rules('nombre', 'Nombre', 'required');
+        $this->form_validation->set_rules('tipo', 'Tipo', 'required');
+        $this->form_validation->set_rules('contenido', 'Contenido', 'required');
 
-            if($documento->tipo=='certificado'){
-                $documento->titulo=$this->input->post('titulo');
-                $documento->subtitulo=$this->input->post('subtitulo');
-                $documento->servicio=$this->input->post('servicio');
-                $documento->servicio_url=$this->input->post('servicio_url');
-                $documento->logo=$this->input->post('logo');
-                $documento->timbre=$this->input->post('timbre');
-                $documento->firmador_nombre=$this->input->post('firmador_nombre');
-                $documento->firmador_cargo=$this->input->post('firmador_cargo');
-                $documento->firmador_servicio=$this->input->post('firmador_servicio');
-                $documento->firmador_imagen=$this->input->post('firmador_imagen');
-                $documento->validez=$this->input->post('validez');
-                $documento->validez_habiles=$this->input->post('validez_habiles');
+        if ($this->input->post('tipo') == 'certificado') {
+            $this->form_validation->set_rules('titulo', 'Título', 'required');
+            $this->form_validation->set_rules('subtitulo', 'Subtítulo', 'required');
+            $this->form_validation->set_rules('servicio', 'Servicio', 'required');
+            $this->form_validation->set_rules('servicio_url', 'URL del Servicio', 'required|prep_url');
+            $this->form_validation->set_rules('firmador_nombre', 'Nombre del firmador');
+            $this->form_validation->set_rules('firmador_cargo', 'Cargo del firmador');
+            $this->form_validation->set_rules('firmador_servicio', 'Servicio del firmador');
+            $this->form_validation->set_rules('firmador_imagen', 'Imagen de la firmas');
+            $this->form_validation->set_rules('validez', 'Dias de validez', 'validar_id_recurso');
+            $this->form_validation->set_rules('validez_habiles', 'Habiles');
+        }
+
+        $respuesta = new stdClass();
+        if ($this->form_validation->run() == TRUE) {
+            $documento->nombre = $this->input->post('nombre');
+            $documento->tipo = $this->input->post('tipo');
+            $documento->contenido = $this->input->post('contenido', false);
+            $documento->tamano = $this->input->post('tamano');
+            $documento->hsm_configuracion_id = $this->input->post('hsm_configuracion_id');
+            $documento->imagenes = json_encode(array_values($this->input->post('imagen')));
+            $documento->lista_pdf = json_encode(array_values($this->input->post('lista_pdf')));
+
+            if ($documento->tipo == 'certificado') {
+                $documento->titulo = $this->input->post('titulo');
+                $documento->subtitulo = $this->input->post('subtitulo');
+                $documento->servicio = $this->input->post('servicio');
+                $documento->servicio_url = $this->input->post('servicio_url');
+                $documento->logo = $this->input->post('logo');
+                $documento->timbre = $this->input->post('timbre');
+                $documento->firmador_nombre = $this->input->post('firmador_nombre');
+                $documento->firmador_cargo = $this->input->post('firmador_cargo');
+                $documento->firmador_servicio = $this->input->post('firmador_servicio');
+                $documento->firmador_imagen = $this->input->post('firmador_imagen');
+                $documento->validez = $this->input->post('validez');
+                $documento->validez_habiles = $this->input->post('validez_habiles');
             }
 
             $documento->save();
-
-            $respuesta->validacion=TRUE;
-            $respuesta->redirect=site_url('backend/documentos/listar/'.$documento->Proceso->id);
-        }else{
-            $respuesta->validacion=FALSE;
-            $respuesta->errores=validation_errors();
+            auditar('Documento', $op, $documento->id, UsuarioBackendSesion::usuario()->usuario);
+            $respuesta->validacion = TRUE;
+            $respuesta->redirect = site_url('backend/documentos/listar/' . $documento->Proceso->id);
+        } else {
+            $respuesta->validacion = FALSE;
+            $respuesta->errores = validation_errors();
         }
 
         echo json_encode($respuesta);
     }
 
-    public function previsualizar($documento_id){
-        $documento=Doctrine::getTable('Documento')->find($documento_id);
+    public function previsualizar($documento_id) {
+        $documento = Doctrine::getTable('Documento')->find($documento_id);
 
-        if($documento->Proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id){
+        if ($documento->Proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
             echo 'Usuario no tiene permisos';
             exit;
         }
@@ -143,20 +151,19 @@ class Documentos extends MY_BackendController {
         $documento->previsualizar();
     }
 
+    public function eliminar($documento_id) {
+        $documento = Doctrine::getTable('Documento')->find($documento_id);
 
-    public function eliminar($documento_id){
-        $documento=Doctrine::getTable('Documento')->find($documento_id);
-
-        if($documento->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+        if ($documento->Proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
             echo 'Usuario no tiene permisos para eliminar este documento.';
             exit;
         }
 
-        $proceso=$documento->Proceso;
+        $proceso = $documento->Proceso;
+        auditar('Documento', "delete", $documento->id, UsuarioBackendSesion::usuario()->usuario);
         $documento->delete();
 
-        redirect('backend/documentos/listar/'.$proceso->id);
-
+        redirect('backend/documentos/listar/' . $proceso->id);
     }
 
 }

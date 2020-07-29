@@ -4,20 +4,25 @@
     </li>
     <li class="active"><?=$proceso->nombre?></li>
 </ul>
-<h2><?=$proceso->nombre?></h2>
+<?php $this->load->view('backend/proceso_descripcion') ?>
 <ul class="nav nav-tabs">
     <li><a href="<?=site_url('backend/procesos/editar/'.$proceso->id)?>">Diseñador</a></li>
-    <li class="active"><a href="<?=site_url('backend/formularios/listar/'.$proceso->id)?>">Formularios</a></li>
+    <li <?= ($tipo=="comun"? 'class="active"':'')?>><a href="<?=site_url('backend/formularios/listar/comun/'.$proceso->id)?>">Formularios</a></li>
+    <li <?= ($tipo=="obn"? 'class="active"':'')?>><a href="<?= site_url('backend/formularios/listar/obn/' . $proceso->id) ?>">Formularios para Tablas de Datos</a></li>
     <li><a href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Documentos</a></li>
+    <li><a href="<?= site_url('backend/validaciones/listar/' . $proceso->id) ?>">Validaciones</a></li>
     <li><a href="<?=site_url('backend/acciones/listar/'.$proceso->id)?>">Acciones</a></li>
     <li><a href="<?= site_url('backend/trazabilidad/listar/' . $proceso->id) ?>">Trazabilidad</a></li>
+    <li><a href="<?= site_url('backend/procesos/editar_codigo_tramite_ws_grep/' . $proceso->id) ?>">Código tramites.gub.uy</a></li>
+    <li><a href="<?= site_url('backend/procesos/editar_api/' . $proceso->id) ?>">API</a></li>
+    
 </ul>
 <div class="acciones-generales">
-<a class="btn" href="<?=site_url('backend/formularios/crear/'.$proceso->id)?>"><span class="icon-file"></span> Nuevo</a>
+<a class="btn" href="<?=site_url('backend/formularios/crear/'.$proceso->id.($tipo=="comun"? '/comun':'/obn'))?>"><span class="icon-file"></span> Nuevo</a>
 </div>
 
 <table class="table" id="mainTable">
-  <caption class="hide-text">Formularios</caption>
+  <caption class="hide-text"><?= ($tipo=="comun"? 'Formularios':'Formularios para Tablas de Datos')?></caption>
     <thead>
         <tr>
             <th>Formulario</th>

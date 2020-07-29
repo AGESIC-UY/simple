@@ -86,7 +86,7 @@ class CI_Input {
 		log_message('debug', "Input Class Initialized");
 
 		$this->_allow_get_array	= (config_item('allow_get_array') === TRUE);
-		$this->_enable_xss		= (config_item('global_xss_filtering') === TRUE);
+	  $this->_enable_xss		= (config_item('global_xss_filtering') === TRUE);
 		$this->_enable_csrf		= (config_item('csrf_protection') === TRUE);
 
 		global $SEC;
@@ -615,7 +615,13 @@ class CI_Input {
 		{
 			foreach ($_POST as $key => $val)
 			{
-				$_POST[$this->_clean_input_keys($key)] = $this->_clean_input_data($val);
+				//TODO pensar si es la mejor forma!
+				if ($key == 'codigo_analytics'){
+					$_POST[$this->_clean_input_keys($key)] = $val;
+				}else{
+					$_POST[$this->_clean_input_keys($key)] = $this->_clean_input_data($val);
+				}
+
 			}
 		}
 
@@ -728,7 +734,8 @@ class CI_Input {
 	{
 		if ( ! preg_match("/^[a-z0-9:_\/-]+$/i", $str))
 		{
-			exit('Disallowed Key Characters.');
+			//exit('Disallowed Key Characters.');
+			exit('Disallowed Key Characters: '.$str);
 		}
 
 		// Clean UTF-8 if supported

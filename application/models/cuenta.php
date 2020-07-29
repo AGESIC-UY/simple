@@ -9,6 +9,13 @@ class Cuenta extends Doctrine_Record {
         $this->hasColumn('mensaje');
         $this->hasColumn('logo');
         $this->hasColumn('api_token');
+        $this->hasColumn('codigo_analytics');
+        $this->hasColumn('correo_remitente');
+        $this->hasColumn('envio_guid_automatico');
+        $this->hasColumn('asunto_email_guid');
+        $this->hasColumn('cuerpo_email_guid');
+        $this->hasColumn('traza_involucrado');
+
     }
 
     function setUp() {
@@ -23,7 +30,7 @@ class Cuenta extends Doctrine_Record {
             'local' => 'id',
             'foreign' => 'cuenta_id'
         ));
-        
+
         $this->hasMany('GrupoUsuarios as GruposUsuarios', array(
             'local' => 'id',
             'foreign' => 'cuenta_id'
@@ -39,8 +46,13 @@ class Cuenta extends Doctrine_Record {
             'foreign' => 'cuenta_id',
             'orderBy' => 'posicion'
         ));
-        
+
         $this->hasMany('HsmConfiguracion as HsmConfiguraciones', array(
+            'local' => 'id',
+            'foreign' => 'cuenta_id'
+        ));
+
+        $this->hasOne('Pdi', array(
             'local' => 'id',
             'foreign' => 'cuenta_id'
         ));
@@ -65,24 +77,28 @@ class Cuenta extends Doctrine_Record {
         if ($firstTime) {
             $firstTime=false;
             $CI = &get_instance();
-            $host=$CI->input->server('HTTP_HOST');
+            $host = $CI->input->server('HTTP_HOST');
             $main_domain=$CI->config->item('main_domain');
-            if($main_domain){
-                $main_domain=addcslashes($main_domain,'.');
-                preg_match('/(.+)\.'.$main_domain.'/', $host, $matches);
-                if (isset ($matches[1])){
-                    $cuentaSegunDominio = Doctrine::getTable('Cuenta')->findOneByNombre($matches[1]);
+            if($main_domain) {
+              $main_domain = addcslashes($main_domain,'.');
+              preg_match('/(.+)\.'.$main_domain.'/', $host, $matches);
+              if (isset ($matches[1])) {
+                  $cuentaSegunDominio = Doctrine::getTable('Cuenta')->findOneByNombre($matches[1]);
+              }
+              else {
+                if(CUENTA_DEFAULT_RAIZ) {
+                  $cuentaSegunDominio=Doctrine_Query::create()->from('Cuenta c')->limit(1)->fetchOne();
                 }
-            }else{
-                $cuentaSegunDominio=Doctrine_Query::create()->from('Cuenta c')->limit(1)->fetchOne();
+              }
             }
-            
-                
+            else {
+              $cuentaSegunDominio=Doctrine_Query::create()->from('Cuenta c')->limit(1)->fetchOne();
+            }
         }
 
         return $cuentaSegunDominio;
     }
-    
+
     public function getLogoADesplegar(){
         if($this->logo)
             return base_url('uploads/logos/'.$this->logo);
@@ -99,5 +115,4 @@ class Cuenta extends Doctrine_Record {
 
         return true;
     }
-
 }

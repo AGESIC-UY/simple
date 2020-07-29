@@ -1,5 +1,21 @@
 <script type="text/javascript">
     $(document).ready(function(){
+
+        <?php for($i = 0; $i <= count($conexiones); $i++):?>
+
+          $('select[name="conexiones[<?php echo $i;?>][tarea_id_destino]"]').change(function() {
+            if($(this).val() == ''){
+                $('select[name="conexiones[<?php echo $i;?>][estado_fin_trazabilidad]"]').show();
+                $('#no_traza_'+<?= $i ?>).hide();
+            }
+            else {
+              $('select[name="conexiones[<?php echo $i;?>][estado_fin_trazabilidad]"]').hide();
+              $('#no_traza_'+<?= $i ?>).show();
+            }
+
+          });
+        <?php endfor;?>
+
         $("[title]").tooltip();
 
         //Funcionalidad del llenado de nombre usando el boton de asistencia
@@ -17,6 +33,26 @@
                     el.name=el.name.replace(/\[\w+\]/,"["+i+"]");
                 });
 
+            });
+
+            var nueva_pos = ($("#formEditarConexion table tr").length-2);
+
+            $("#formEditarConexion table tbody tr:last").find('p').attr('id','no_traza_'+nueva_pos);
+
+            $('select[name="conexiones['+nueva_pos+'][tarea_id_destino]"]').change(function() {
+              if($(this).val() == ''){
+                  $('select[name="conexiones['+nueva_pos+'][estado_fin_trazabilidad]"]').show();
+                  $('#no_traza_'+nueva_pos).hide();
+              }
+              else {
+                $('select[name="conexiones['+nueva_pos+'][estado_fin_trazabilidad]"]').hide();
+                $('#no_traza_'+nueva_pos).show();
+              }
+
+            });
+
+            $("#formEditarConexion .botonEliminarConexion").click(function(){
+                $(this).closest("tr").remove();
             });
         });
 
@@ -48,6 +84,9 @@
                 <tr>
                     <th>Origen</th>
                     <th>Destino</th>
+                    <?php if ($conexiones[0]->tipo == 'evaluacion'|| $conexiones[0]->tipo == 'paralelo_evaluacion'): ?>
+                    <th style="min-width: 100px;">Estado Traza</th>
+                    <?php endif; ?>
                     <th>Regla</th>
                     <th>Acciones</th>
                 </tr>
@@ -64,6 +103,19 @@
                             <?php endforeach; ?>
                         </select>
                     </td>
+
+                    <?php if ($conexion->tipo == 'evaluacion' || $conexion->tipo == 'paralelo_evaluacion'): ?>
+                    <td>
+                      <?php $estados_posibles = unserialize(ID_ESTADOS_POSIBLES_CONEXION_EVALUACION_TRAZABILIDAD); ?>
+                      <select name="conexiones[<?=$key?>][estado_fin_trazabilidad]"  style="<?= (!$conexion->tarea_id_destino ? '' : 'display:none') ?>" >
+                      <?php foreach($estados_posibles as $estado_k => $estado_v): ?>
+                        <option value="<?=$estado_k?>" <?= ($conexion->estado_fin_trazabilidad ==  $estado_k ? 'selected' : '') ?>> <?=$estado_v?> </option>
+                      <?php endforeach; ?>
+                      </select>
+                      <p id="no_traza_<?=$key?>" style="<?= ($conexion->tarea_id_destino ? 'display:block' : 'display:none') ?>">No envía</p>
+                    </td>
+                    <?php endif; ?>
+
                     <td>
                         <?php if ($conexion->tipo == 'evaluacion' || $conexion->tipo == 'paralelo_evaluacion'): ?>
                         <input type="text" name="conexiones[<?=$key?>][regla]" value="<?= htmlspecialchars($conexion->regla) ?>" title="Los nombres de campos escribalos anteponiendo @@. Ej: @@edad >= 18" />

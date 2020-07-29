@@ -23,11 +23,17 @@ class CampoParagraph extends Campo{
             $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
             $regla=new Regla($this->etiqueta);
             $etiqueta=$regla->getExpresionParaOutput($etapa->id);
-        }else{
+        }
+        else {
             $etiqueta=$this->etiqueta;
         }
 
-        $display='<p data-fieldset="'.$this->fieldset.'">'.$etiqueta.'</p>';
+        $display = '<div><div data-fieldset="'.$this->fieldset.'"><p>'.$etiqueta.'</p></div></div>';
+
+        // -- Boton disparador de accion del campo
+        if($this->requiere_accion == 1 && $modo != 'visualizacion') {
+          $display .= ' <button type="button" class="btn requiere_accion_disparador" data-campo="'. $this->id .'">'.$this->requiere_accion_boton.'</button>';
+        }
 
         return $display;
     }

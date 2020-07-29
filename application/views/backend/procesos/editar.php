@@ -105,7 +105,35 @@
     </div>
 </div>
 -->
-
+<script>
+    /*function eliminarProceso(procesoId) {
+     $("#modal").load(site_url + "backend/procesos/ajax_auditar_eliminar_proceso/" + procesoId);
+     $("#modal").modal();
+     return false;
+     }
+     
+     function activarProceso(procesoId) {
+     $("#modal").load(site_url + "backend/procesos/ajax_auditar_activar_proceso/" + procesoId);
+     $("#modal").modal();
+     return false;
+     }
+     
+     function mostrarEliminados() {
+     $(".procesos_eliminados").slideToggle('slow', callbackEliminadosFn);
+     return false;
+     }
+     
+     function callbackEliminadosFn() {
+     var $link = $("#link_eliminados");
+     $(this).is(":visible") ? $link.text("Ocultar Eliminados «") : $link.text("Mostrar Eliminados »");
+     }
+     */
+     function publicarProceso(procesoId) {
+     $("#modal").load(site_url + "backend/procesos/ajax_publicar_proceso/" + procesoId);
+     $("#modal").modal();
+     return false;
+     }
+</script>
 
 <?php if($this->config->item('js_diagram')=='gojs'):?>
 <link href="<?= base_url() ?>assets/css/diagrama-procesos2.css" property='stylesheet' rel="stylesheet">
@@ -133,25 +161,39 @@
     </li>
     <li class="active"><?= $proceso->nombre ?></li>
 </ul>
-<h2><?= $proceso->nombre ?></h2>
+<a href="#" class="btn btn-ayuda btn-secundary" id="ayuda_contextual_modelador"><span class="icon-white icon-question-sign"></span> Ayuda</a>
+<?php $this->load->view('backend/proceso_descripcion') ?>
 <ul class="nav nav-tabs">
     <li class="active"><a href="<?= site_url('backend/procesos/editar/' . $proceso->id) ?>">Diseñador</a></li>
-    <li><a href="<?= site_url('backend/formularios/listar/' . $proceso->id) ?>">Formularios</a></li>
+    <li><a href="<?= site_url('backend/formularios/listar/comun/' . $proceso->id) ?>">Formularios</a></li>
+    <li><a href="<?= site_url('backend/formularios/listar/obn/' . $proceso->id) ?>">Formularios para Tablas de Datos</a></li>
     <li><a href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Documentos</a></li>
+    <li ><a href="<?= site_url('backend/validaciones/listar/' . $proceso->id) ?>">Validaciones</a></li>
     <li><a href="<?= site_url('backend/acciones/listar/' . $proceso->id) ?>">Acciones</a></li>
-    <li><a href="<?= site_url('backend/trazabilidad/listar/' . $proceso->id) ?>">Trazabilidad</a></li>
+    <li id="accion-modelador"><a href="<?= site_url('backend/trazabilidad/listar/' . $proceso->id) ?>">Trazabilidad</a></li>
+    <li><a href="<?= site_url('backend/procesos/editar_codigo_tramite_ws_grep/' . $proceso->id) ?>">Código tramites.gub.uy</a></li>
+    <li><a href="<?= site_url('backend/procesos/editar_api/' . $proceso->id) ?>">API</a></li>
 </ul>
-
 
 <div id="areaDibujo">
   <div class="titulo-form">
     <h3><?= $proceso->nombre ?> <a href="#" title="Editar"><span class="icon-edit" style="vertical-align:middle;"></span></a></h3>
   </div>
     <div class="botonera btn-toolbar">
+        <?php if ($proceso->estado != 'public'){?>
+        <div class="btn-group">
+            <a class="btn" href="#" title="Publicar versión" onclick="return publicarProceso(<?= $proceso->id ?>);"><img src="<?= base_url() ?>assets/img/publicar.png" alt="publicar" /></i></a>
+            
+        </div>
+        <?php }else{?>
+<!--            <div class="btn-group">
+            <a class="btn" href="#" title="Ocultar versión" href="#" onclick="return confirm('¿Esta seguro que desea ocultar el proceso?')"><img src="<?= base_url() ?>assets/img/ocultar.png" alt="ocultar" /></a>
+            </div>-->
+        <?php  } ?>
         <div class="btn-group">
             <button class="btn createBox" title="Crear tarea"><img src="<?= base_url() ?>assets/img/tarea.png" alt="tarea" /></button>
         </div>
-        <div class="btn-group">
+        <div class="btn-group">            
             <button class="btn createConnection" data-tipo="secuencial" title="Crear conexión secuencial" ><img src="<?= base_url() ?>assets/img/secuencial-bar.gif" alt="secuencial" /></button>
             <button class="btn createConnection" data-tipo="evaluacion" title="Crear conexión por evaluación" ><img src="<?= base_url() ?>assets/img/evaluacion.gif" alt="evaluación" /></button>
             <button class="btn createConnection" data-tipo="paralelo" title="Crear conexión paralela" ><img src="<?= base_url() ?>assets/img/paralelo.gif" alt="paralelo" /></button>

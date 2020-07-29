@@ -1,25 +1,26 @@
 <?php
+class Migration_5 extends Doctrine_Migration_Base
+{
+    public function up()
+    {
+      // --migraciones necesarias para la versión 1.6
 
-class Migration_5 extends Doctrine_Migration_Base {
+      $this->addColumn('monitoreo', 'tramite_id', 'INT(11) DEFAULT null');
+      $this->addColumn('monitoreo', 'etapa_id', 'INT(11) DEFAULT null');
+      $this->addColumn('monitoreo', 'paso_id', 'INT(11) DEFAULT null');
+      $this->addColumn('monitoreo', 'fecha_respuesta_servicio', 'DATETIME DEFAULT null');
+      
+      // modifica tabla tarea
+      $this->addColumn('tarea', 'escalado_automatico', 'TINYINT(1) default 0');
+      $this->addColumn('tarea', 'vencimiento_a_partir_de_variable', 'VARCHAR(255) default null');
+      $this->addColumn('tarea', 'notificar_vencida', 'TINYINT(1) default 0');
 
-    public function up() {
-        $this->addColumn('tarea', 'grupos_usuarios', 'string', null);
+      // modifica tabla campo
+      $this->changeColumn('campo', 'dependiente_campo',"VARCHAR(255) default null");
+
     }
 
-    public function postUp() {
-        $tareas = Doctrine_Query::create()->from('Tarea t, t.GruposUsuarios g')->select('t.id,g.id')->execute();
-
-        foreach ($tareas as $t) {
-            $grupos = array();
-            foreach ($t->GruposUsuarios as $g)
-                $grupos[] = $g->id;
-            $t->grupos_usuarios = implode(',', $grupos);
-            $t->save();
-        }
+    public function down()
+    {
     }
-
-    public function down() {
-        $this->removeColumn('tarea', 'grupos_usuarios');
-    }
-
 }

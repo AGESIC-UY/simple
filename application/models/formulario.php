@@ -7,6 +7,9 @@ class Formulario extends Doctrine_Record {
         $this->hasColumn('nombre');
         $this->hasColumn('proceso_id');
         $this->hasColumn('bloque_id');
+        $this->hasColumn('leyenda');
+        $this->hasColumn('contenedor');
+        $this->hasColumn('tipo');
     }
 
     function setUp() {
@@ -27,13 +30,10 @@ class Formulario extends Doctrine_Record {
             'local'=>'proceso_id',
             'foreign'=>'id'
         ));
-
-
     }
 
-
     public function updatePosicionesCamposFromJSON($json){
-        $posiciones=  json_decode($json);
+        $posiciones = json_decode($json);
 
         Doctrine_Manager::connection()->beginTransaction();
         foreach($this->Campos as $c){
@@ -43,7 +43,7 @@ class Formulario extends Doctrine_Record {
         Doctrine_Manager::connection()->commit();
     }
 
-    //Obtiene la ultima posicion de los campos de este formulario
+    // Obtiene la ultima posicion de los campos de este formulario
     public function getUltimaPosicionCampo(){
         $max=0;
         foreach($this->Campos as $c){

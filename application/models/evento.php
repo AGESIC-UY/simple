@@ -9,6 +9,14 @@ class Evento extends Doctrine_Record {
         $this->hasColumn('accion_id');
         $this->hasColumn('tarea_id');
         $this->hasColumn('paso_id');
+        $this->hasColumn('instanciar_api');
+        $this->hasColumn('traza');
+        $this->hasColumn('tipo_registro_traza');
+        $this->hasColumn('descripcion_traza');
+        $this->hasColumn('etiqueta_traza');
+        $this->hasColumn('visible_traza');
+        $this->hasColumn('descripcion_error_soap');
+        $this->hasColumn('variable_error_soap');
     }
 
     function setUp() {

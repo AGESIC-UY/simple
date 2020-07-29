@@ -28,7 +28,7 @@ class CampoFieldset extends Campo{
             $valor_default=$this->valor_default;
         }
 
-        $display = '<fieldset class="custom-fieldset" id="'.$this->id.'" ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' name="' . $this->nombre . '">';
+        $display = '<fieldset class="custom-fieldset" id="'.$this->id.'" name="' . $this->nombre . '">';
         $display .= '<legend><span class="custom-fieldset-legend">'. $this->etiqueta .'</span></legend>';
         $display .= '</fieldset>';
 

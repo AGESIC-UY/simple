@@ -135,6 +135,9 @@ class CI_Form_validation {
 			$is_array	= FALSE;
 		}
 
+		// -- 06/06/2016  Modificado para poder desplegar mensajes de error locales.
+		$label = $field ."@". $label;
+
 		// Build our master array
 		$this->_field_data[$field] = array(
 			'field'				=> $field,
@@ -337,7 +340,6 @@ class CI_Form_validation {
 					$this->_field_data[$field]['postdata'] = $_POST[$field];
 				}
 			}
-
 			$this->_execute($row, explode('|', $row['rules']), $this->_field_data[$field]['postdata']);
 		}
 
@@ -584,6 +586,7 @@ class CI_Form_validation {
 			// Call the function that corresponds to the rule
 			if ($callback === TRUE)
 			{
+					$cc = $this->CI;
 				if ( ! method_exists($this->CI, $rule))
 				{
 					continue;
@@ -937,7 +940,7 @@ class CI_Form_validation {
 
 		return ($str !== $field) ? FALSE : TRUE;
 	}
-	
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -952,7 +955,7 @@ class CI_Form_validation {
 	{
 		list($table, $field)=explode('.', $field);
 		$query = $this->CI->db->limit(1)->get_where($table, array($field => $str));
-		
+
 		return $query->num_rows() === 0;
     }
 
@@ -1374,7 +1377,6 @@ class CI_Form_validation {
 	{
 		return str_replace(array('<?php', '<?PHP', '<?', '?>'),  array('&lt;?php', '&lt;?PHP', '&lt;?', '?&gt;'), $str);
 	}
-
 }
 // END Form Validation Class
 

@@ -168,6 +168,7 @@ h2 {
     width: 500px;
     height: 100px;
     background: #1874B2;
+    margin: 0;
 }
 
 .selector-header {
@@ -175,6 +176,7 @@ h2 {
     padding: 15px;
     text-align: center;
     background: #337ab7;
+    margin: 0px;
 }
 
 .selector {

@@ -31,6 +31,32 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('paso_confirmacion');              //Boolean que indica si se debe incorporar una ultima pantalla de confirmacion antes de avanzar la tarea
         $this->hasColumn('previsualizacion');               //Texto de previsualizacion de la tarea al aparecer en las bandejas de entrada.
         $this->hasColumn('trazabilidad');
+        $this->hasColumn('trazabilidad_id_oficina');
+        $this->hasColumn('trazabilidad_cabezal');
+        $this->hasColumn('trazabilidad_estado');
+        $this->hasColumn('etiqueta_traza');
+        $this->hasColumn('visible_traza');
+        $this->hasColumn('trazabilidad_nombre_oficina');
+        $this->hasColumn('asignacion_notificar_mensaje');   //Texto personalizado que se envia por correo si se debe notificar la asignacion de la tarea al usuario.
+        $this->hasColumn('automatica'); //Boolean que indica si es una tarea automatica o no
+        $this->hasColumn('nivel_confianza'); //Texto  que indica el nivel de confianza en el caso de acceso_modo registrado
+
+        //texto para los mensajes finales
+        $this->hasColumn('paso_final_pendiente');
+        $this->hasColumn('paso_final_standby');
+        $this->hasColumn('paso_final_completado');
+        $this->hasColumn('paso_final_sincontinuacion');
+        $this->hasColumn('texto_boton_paso_final');
+        $this->hasColumn('texto_boton_generar_pdf');
+
+        //escalado automatico
+        $this->hasColumn('escalado_automatico');
+        $this->hasColumn('vencimiento_a_partir_de_variable');
+        $this->hasColumn('notificar_vencida');
+        
+        //versionado
+        $this->hasColumn('id_x_tarea');
+
     }
 
     function setUp() {
@@ -73,6 +99,11 @@ class Tarea extends Doctrine_Record {
             'refClass' => 'TareaHasGrupoUsuarios'
         ));
 
+         $this->hasMany('EjecutarValidacion as Validaciones', array(
+            'local' => 'id',
+            'foreign' => 'tarea_id'
+        ));
+
     }
 
     public function hasGrupoUsuarios($grupo_id) {
@@ -82,7 +113,6 @@ class Tarea extends Doctrine_Record {
 
         return false;
     }
-
 
     //Obtiene el listado de usuarios que tienen acceso a esta tarea y que esten disponibles (no en vacaciones).
     //$etapa_id indica la etapa hasta la cual se debe calcular la variable para obtener el grupo de usuario.
@@ -150,8 +180,6 @@ class Tarea extends Doctrine_Record {
         return $query->execute();
     }
 
-
-
     //Obtiene el ultimo usuario que fue a asignado a esta tarea dentro del tramite tramite_id
     public function getUltimoUsuarioAsignado($proceso_id) {
         return Doctrine_Query::create()
@@ -168,15 +196,19 @@ class Tarea extends Doctrine_Record {
 
         //Agregamos los nuevos
         if (is_array($conexiones_array)) {
-            $tipo = $conexiones_array[0]['tipo'];     //Todas deben ser del mismo tipo si vienen de un origen
+            $keys = array_keys($conexiones_array);            
+            $tipo = $conexiones_array[$keys[0]]['tipo'];
+                 //Todas deben ser del mismo tipo si vienen de un origen
             foreach ($conexiones_array as $key => $p) {
                 $conexion = new Conexion();
                 $conexion->tipo = $tipo;
                 $conexion->tarea_id_destino = $p['tarea_id_destino'] ? $p['tarea_id_destino'] : null;
                 $conexion->regla = isset($p['regla']) ? $p['regla'] : null;
+                $conexion->estado_fin_trazabilidad = isset($p['estado_fin_trazabilidad']) ? $p['estado_fin_trazabilidad'] : null;
                 $this->ConexionesOrigen[] = $conexion;
             }
         }
+       
     }
 
     public function setPasosFromArray($pasos_array) {
@@ -200,6 +232,10 @@ class Tarea extends Doctrine_Record {
                     $paso->nombre = $p['nombre'];
                     $paso->regla = $p['regla'];
                     $paso->modo = $p['modo'];
+                    $paso->generar_pdf = $p['generar_pdf'];
+                    $paso->enviar_traza = $p['enviar_traza'];
+                    $paso->etiqueta_traza = $p['etiqueta_traza'];
+                    $paso->visible_traza = $p['visible_traza'];
                     $paso->formulario_id = $formulario_id;
                     $this->Pasos[] = $paso;
                 }
@@ -215,6 +251,7 @@ class Tarea extends Doctrine_Record {
     }
 
     public function setEventosFromArray($eventos_array) {
+        
         //Limpiamos la lista antigua
         foreach ($this->Eventos as $key => $val)
             unset($this->Eventos[$key]);
@@ -233,8 +270,48 @@ class Tarea extends Doctrine_Record {
                 $evento->instante = $p['instante'];
                 $evento->accion_id = $p['accion_id'];
                 $evento->paso_id = $paso_id;
+                $evento->instanciar_api = $p['instanciar_api'];
+                $evento->traza = $p['traza'];
+                if($evento->traza){
+                   // print_r($p);
+                  $evento->tipo_registro_traza = $p['tipo_registro_traza'];
+                  $evento->etiqueta_traza = $p['etiqueta_traza'];
+                  $evento->visible_traza = $p['visible_traza'];
+                  $evento->descripcion_traza = $p['descripcion_traza'];
+                  $evento->descripcion_error_soap = $p['descripcion_error_soap'];
+                  $evento->variable_error_soap = $p['variable_error_soap'];
+                }
                 $this->Eventos[] = $evento;
             }
+           // show_error(1);
+        }
+    }
+
+    public function setValidacionesFromArray($validaciones_array) {
+        //Limpiamos la lista antigua
+
+        foreach ($this->Validaciones as $key => $val)
+            unset($this->Validaciones[$key]);
+        
+        //Agregamos los nuevos
+        if (is_array($validaciones_array)) {
+            foreach ($validaciones_array as $key => $p) {
+                 
+                //Seteamos el paso_id solamente si el paso es parte de esta tarea.
+                $paso_id=null;
+                foreach($this->Pasos as $paso)
+                    if($paso->id==$p['paso_id'])
+                        $paso_id=$p['paso_id'];
+
+                $ex_validacion = new EjecutarValidacion();
+                $ex_validacion->regla=$p['regla'];
+                $ex_validacion->instante = $p['instante'];
+                $ex_validacion->validacion_id = $p['validacion_id'];
+                $ex_validacion->paso_id = $paso_id;
+                $this->Validaciones[] = $ex_validacion;
+                
+            }
+            
         }
     }
 
@@ -349,5 +426,4 @@ class Tarea extends Doctrine_Record {
 
         return $publicArray;
     }
-
 }

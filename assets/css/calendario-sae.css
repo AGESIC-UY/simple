@@ -1,0 +1,125 @@
+.calendar-disponibilidad input.hasDatepicker.ui-inputfield, .calendar-disponibilidad input.hasDatepicker, .calendar-disponibilidad input.datepicker, input.datepicker-dis{
+width: 100%;
+max-width: 110px;
+/*background: #FFFFFF url("../img/calendar.png") no-repeat center right;*/
+padding-right: 25px;
+}
+.calendar-disponibilidad .ui-datepicker{
+font-size: 16px;
+padding: .2em .4em 0;
+}
+#datepickerinline .ui-datepicker{
+max-width: 26em;
+width: auto;
+border: none;
+padding: 0;
+font-size: 18px;
+}
+.calendar-disponibilidad .ui-datepicker .ui-datepicker-header {
+background: none;
+border: none;
+text-shadow: none;
+padding: 0;
+margin-bottom: 5px;
+}
+.calendar-disponibilidad .ui-datepicker table{
+font-size: .95em;
+}
+.calendar-disponibilidad .ui-datepicker .ui-datepicker-title select{
+font-size: .9em;
+}
+.calendar-disponibilidad .ui-datepicker table tr{
+background: transparent;
+}
+.calendar-disponibilidad .ui-datepicker th {
+background: transparent;
+padding: .3em;
+font-weight: normal;
+}
+.calendar-disponibilidad .ui-datepicker td {
+border: 1px solid #CECECE;
+text-align: center;
+padding: 0;
+}
+.calendar-disponibilidad .ui-datepicker td.fechaFutura, .calendar-disponibilidad .ui-datepicker td.fechaHoy {
+opacity: 1;
+}
+
+#datepickerinline > div > table {
+    border: 1px solid #d3d3d3;
+}
+
+#dia_seleccionado{
+  border: none;
+  background: #006837;
+  color: white;
+  text-align: center;
+  font-size: 20px;
+  width: 468px;
+}
+
+#sin_fechas_disponibles{
+  border: none;
+  background: #c62f07;
+  color: white;
+  text-align: center;
+  font-size: 20px;
+  width: 468px;
+}
+
+.calendar-disponibilidad .ui-datepicker .ui-datepicker-calendar .ui-state-default { /*los dias seleccionables de cualquier calendar*/
+background: transparent;
+color: #141414;
+padding: .4em .2em .3em;
+text-align: center;
+text-shadow: none;
+box-shadow: none;
+font-size: 1.2em;
+}
+.calendar-disponibilidad .ui-datepicker .ui-datepicker-calendar .ui-state-default { /*los dias disponibles para las reserva*/background: #d5edc3;color: #006837;border: none;}
+.calendar-disponibilidad .ui-datepicker .ui-datepicker-calendar .ui-state-hover {
+color: #FFFFFF;
+background: #006837;
+}
+.calendar-disponibilidad .ui-datepicker td.ui-datepicker-unselectable .ui-state-default{ /*los dias NO disponibles*/
+background: transparent;
+font-weight: normal;
+color: #141414;
+border: none;
+}
+.calendar-disponibilidad .ui-datepicker td.ui-datepicker-other-month{
+border: none;
+}
+.calendar-disponibilidad .ui-datepicker td.ui-datepicker-current-day .ui-state-default{/*dia seleccionado*/
+color: #FFFFFF;
+background: #006837;
+text-shadow: none;
+}
+
+.calendar-disponibilidad .ui-datepicker td.ui-datepicker-today.ui-datepicker-unselectable .ui-state-default{/*hoy no seleccionable*/
+color: #141414 !important;
+background: url(../img/hoy_calendario.png) no-repeat center;
+font-weight: bold;
+}
+.calendar-disponibilidad .ui-datepicker td.ui-datepicker-today a.ui-state-default{/*hoy seleccionable*/
+background-image: url(../img/hoy_calendario.png);
+background-position: center;
+background-repeat: no-repeat;
+font-weight: bold;
+}
+.calendar-disponibilidad .ui-datepicker .ui-datepicker-prev, .calendar-disponibilidad .ui-datepicker .ui-datepicker-next{
+height: 1.6em;
+}
+.calendar-disponibilidad .ui-datepicker .ui-datepicker-next-hover, .calendar-disponibilidad .ui-datepicker .ui-datepicker-prev-hover{
+border:none;
+top: 2px;
+}
+.calendar-disponibilidad .ui-datepicker .ui-datepicker-prev-hover {
+left: 2px;
+}
+.calendar-disponibilidad .ui-datepicker .ui-datepicker-next-hover {
+right: 2px;
+}
+.hora{
+max-width: 70px;
+}

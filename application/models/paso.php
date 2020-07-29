@@ -10,6 +10,10 @@ class Paso extends Doctrine_Record {
         $this->hasColumn('nombre');
         $this->hasColumn('formulario_id');
         $this->hasColumn('tarea_id');
+        $this->hasColumn('generar_pdf');
+        $this->hasColumn('enviar_traza');
+        $this->hasColumn('etiqueta_traza');
+        $this->hasColumn('visible_traza');
     }
 
     function setUp() {

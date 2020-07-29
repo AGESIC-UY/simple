@@ -46,11 +46,6 @@
                             <img src="<?= base_url() ?>assets/img/logoPresidencia.png" alt="Presidencia">
                           </a>
                         </li>
-                        <li>
-                          <a href="http://uruguaydigital.gub.uy/" title="Ir al sitio de Uruguay Digital">
-                            <img src="<?= base_url() ?>assets/img/logo-uruguayDigital.png" alt="Uruguay Digital">
-                          </a>
-                        </li>
                       </ul>
                     </div>
                   </div>
@@ -78,14 +73,14 @@
                       <div class="control-group">
                         <label class="control-label" for="email">Usuario:</label>
                         <div class="controls">
-                          <input id="email" name="email" type="text" >
+                          <input id="email" name="email" type="text" autofocus autocomplete="off" />
                         </div>
                       </div>
 
                       <div class="control-group">
                         <label class="control-label" for="password">Contraseña:</label>
                         <div class="controls">
-                          <input id="password" name="password" type="password">
+                          <input id="password" name="password" type="password" autocomplete="off" />
                         </div>
                       </div>
 
